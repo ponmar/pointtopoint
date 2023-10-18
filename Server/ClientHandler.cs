@@ -5,13 +5,6 @@ using System.Net.Sockets;
 
 namespace Server
 {
-    public interface IMessageSender
-    {
-        void SendMessage(object message, Guid receiverId);
-        void SendMessage(object message, TcpMessenger receiver);
-        void SendMessageToAll(object message);
-    }
-
     public class ClientHandler : IClientHandler, IMessageSender, IMessengerErrorHandler
     {
         public List<IMessenger> Clients { get; } = new();
@@ -44,12 +37,7 @@ namespace Server
             }
         }
 
-        public void SendMessage(object message, TcpMessenger receiver)
-        {
-            receiver.Send(message);
-        }
-
-        public void SendMessageToAll(object message)
+        public void SendBroadcast(object message)
         {
             Clients.ForEach(x => x.Send(message));
         }

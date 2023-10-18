@@ -19,12 +19,13 @@ namespace PointToPoint.Network
         protected readonly IMessageRouter messageRouter;
         protected readonly IMessengerErrorHandler messengerErrorHandler;
 
-        private volatile bool runThreads = true;
-
         private readonly Thread receiveThread;
         private readonly Thread sendThread;
 
         private readonly BlockingCollection<byte[]> sendQueue = new();
+
+        // TODO: replace bool flags with a state enum?
+        private volatile bool runThreads = true;
         private bool started = false;
 
         private readonly MessageByteBuffer receiveBuffer = new();
@@ -119,12 +120,10 @@ namespace PointToPoint.Network
                         receiveBuffer.Reset();
                         return;
                     }
-
-                    // TODO: move namespace checks to PayloadToMessage to make the check before parsing json data?
-                    
+                                        
                     if (message.GetType() == typeof(KeepAlive))
                     {
-                        Console.WriteLine($"Received {nameof(KeepAlive)}");
+                        //Console.WriteLine($"Received {nameof(KeepAlive)}");
                         return;
                     }
 
@@ -175,7 +174,7 @@ namespace PointToPoint.Network
                     var now = DateTime.Now;
                     if (now - keepAliveSentAt > KeepAliveSendInterval)
                     {
-                        Console.WriteLine($"Sending {nameof(KeepAlive)}");
+                        //Console.WriteLine($"Sending {nameof(KeepAlive)}");
                         keepAliveSentAt = now;
                         Send(new KeepAlive());
                     }

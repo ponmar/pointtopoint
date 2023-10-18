@@ -8,6 +8,8 @@ namespace PointToPoint.Network
         Guid Id { get; }
         void Start();
         void Close();
+
+        // This method is thread safe
         void Send(object message);
     }
 }

@@ -58,11 +58,6 @@ namespace PointToPoint.Network
                 //var span = new Span<byte>(bytes, numSentBytes, bytes.Length - numSentBytes);
                 //numSentBytes += socket.Send(span);
                 numSentBytes += socket.Send(bytes, numSentBytes, bytes.Length - numSentBytes, SocketFlags.None);
-
-                if (numSentBytes != bytes.Length)
-                {
-                    //log.Warn("Complete message not sent in one go");
-                }
             }
         }
     }

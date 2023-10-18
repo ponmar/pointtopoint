@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace PointToPoint.Network
@@ -22,32 +23,24 @@ namespace PointToPoint.Network
 
         public void Run(IClientHandler clientHandler)
         {
-            IPAddress ipAddress = IPAddress.Any;
+            var ipAddress = IPAddress.Any;
 
             if (networkInterface != string.Empty &&
                 !IPAddress.TryParse(networkInterface, out ipAddress))
             {
-                //log.Error("Invalid network interface");
-                Stop();
-                return;
+                throw new Exception("Invalid network interface");
             }
 
-            TcpListener listener = new TcpListener(ipAddress, port);
-            try
-            {
-                run = true;
-                listener.Start();
-            }
-            catch (SocketException e)
-            {
-                //log.Error("Unable to open server socket", e);
-                Stop();
-            }
+            var listener = new TcpListener(ipAddress, port);
 
+            // May throw SocketException
+            listener.Start();
+
+            run = true;
             while (run)
             {
                 // TODO: how to timeout to stop earlier? listener.Server.Blocking = false?
-                Socket socket = listener.AcceptSocket();
+                var socket = listener.AcceptSocket();
                 clientHandler.NewConnection(socket);
             }
         }
