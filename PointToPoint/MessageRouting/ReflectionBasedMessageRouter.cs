@@ -2,42 +2,37 @@
 
 namespace PointToPoint.MessageRouting
 {
-    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-    public class MessageReceiverAttribute : Attribute
-    {
-    }
-
     /// <summary>
     /// Handles forwarding of messages to the specified handler class.
     /// </summary>
     /// The handler class needs to implement one method per handled message according to:
     ///
-    /// [MessageReceiver]
     /// void HandleMessage(MyMessage message)
     /// {
     ///     // Message handling code
     /// }
     public class ReflectionBasedMessageRouter : IMessageRouter
     {
+        private readonly string handleMethodName;
+
         public object MessageHandler { get; set; }
+
+        public ReflectionBasedMessageRouter(string handleMethodName = "HandleMessage")
+        {
+            this.handleMethodName = handleMethodName;
+        }
 
         public bool RouteMessage(object message)
         {
             var argTypes = new Type[] { message.GetType() };
 
-            var handleMethod = MessageHandler.GetType().GetMethod("HandleMessage", argTypes);
+            var handleMethod = MessageHandler.GetType().GetMethod(handleMethodName, argTypes);
             if (handleMethod == null)
             {
-                return false;
+                throw new Exception($"Message handling method ({handleMethodName}) not implemented for message type {message.GetType()}");
             }
 
-            var attributes = handleMethod.GetCustomAttributes(typeof(MessageReceiverAttribute), false);
-            if (attributes.Length != 1)
-            {
-                return false;
-            }
-
-            var args = new Object[] { message };
+            var args = new object[] { message };
             handleMethod.Invoke(MessageHandler, args);
             return true;
         }

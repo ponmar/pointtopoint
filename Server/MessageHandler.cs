@@ -12,7 +12,6 @@ namespace Server
             this.messageSender = messageSender;
         }
 
-        [MessageReceiver]
         public void HandleMessage(Hello _)
         {
             Console.WriteLine("Received message. Sending reply.");
