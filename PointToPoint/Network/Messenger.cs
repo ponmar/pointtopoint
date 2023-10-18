@@ -24,12 +24,11 @@ namespace PointToPoint.Network
 
         private readonly BlockingCollection<byte[]> sendQueue = new();
 
-        // TODO: replace bool flags with a state enum?
         private volatile bool runThreads = true;
         private bool started = false;
 
-        private readonly MessageByteBuffer messageLengthBuffer = new(4);
-        private readonly MessageByteBuffer messageBuffer = new(4);
+        private readonly MessageByteBuffer lengthBuffer = new(4);
+        private readonly MessageByteBuffer messageBuffer = new(0);
 
         protected Messenger(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
         {
@@ -67,7 +66,7 @@ namespace PointToPoint.Network
             {
                 try
                 {
-                    if (!messageLengthBuffer.Finished)
+                    if (!lengthBuffer.Finished)
                     {
                         ReceiveMessageLength();
                     }
@@ -86,62 +85,54 @@ namespace PointToPoint.Network
 
         private void ReceiveMessageLength()
         {
-            var numBytesReceived = ReceiveBytes(messageLengthBuffer.buffer, 0, 4 - messageLengthBuffer.offset);
-            if (numBytesReceived > 0)
+            ReceiveBytes(lengthBuffer);
+            if (lengthBuffer.Finished)
             {
-                messageLengthBuffer.offset += numBytesReceived;
-                if (messageLengthBuffer.Finished)
-                {
-                    var messageLength = DeserializeInt(messageLengthBuffer.buffer, 0);
-                    messageBuffer.SetTarget(messageLength);
-                }
+                var messageLength = DeserializeInt(lengthBuffer.buffer, 0);
+                messageBuffer.SetTarget(messageLength);
             }
         }
 
-        abstract protected int ReceiveBytes(byte[] buffer, int bufferOffset, int size);
+        abstract protected void ReceiveBytes(MessageByteBuffer buffer);
 
         private void ReceiveMessage()
         {
-            var numBytesReceived = ReceiveBytes(messageBuffer.buffer, messageBuffer.offset, messageBuffer.NumBytesLeft);
-            if (numBytesReceived > 0)
+            ReceiveBytes(messageBuffer);
+            if (messageBuffer.Finished)
             {
-                messageBuffer.offset += numBytesReceived;
-                if (messageBuffer.Finished)
+                object message;
+                try
                 {
-                    object message;
-                    try
-                    {
-                        message = payloadSerializer.PayloadToMessage(messageBuffer.buffer, messageBuffer.numBytesToRead);
-                        messageLengthBuffer.SetTarget(4);
-                    }
-                    catch (Exception e)
-                    {
-                        messengerErrorHandler.PayloadException(e, Id);
-                        messageLengthBuffer.SetTarget(4);
-                        return;
-                    }
+                    message = payloadSerializer.PayloadToMessage(messageBuffer.buffer, messageBuffer.numBytesToRead);
+                    lengthBuffer.SetTarget(4);
+                }
+                catch (Exception e)
+                {
+                    messengerErrorHandler.PayloadException(e, Id);
+                    lengthBuffer.SetTarget(4);
+                    return;
+                }
                                         
-                    if (message.GetType() == typeof(KeepAlive))
-                    {
-                        Console.WriteLine($"Received {nameof(KeepAlive)}");
-                        return;
-                    }
+                if (message.GetType() == typeof(KeepAlive))
+                {
+                    Console.WriteLine($"Received {nameof(KeepAlive)}");
+                    return;
+                }
 
-                    if (message.GetType().Namespace != messagesNamespace)
-                    {
-                        messengerErrorHandler.NonProtocolMessageReceived(message, Id);
-                        return;
-                    }
+                if (message.GetType().Namespace != messagesNamespace)
+                {
+                    messengerErrorHandler.NonProtocolMessageReceived(message, Id);
+                    return;
+                }
 
-                    try
-                    {
-                        messageRouter.RouteMessage(message, Id);
-                    }
-                    catch (Exception e)
-                    {
-                        messengerErrorHandler.MessageRoutingException(e, Id);
-                        return;
-                    }
+                try
+                {
+                    messageRouter.RouteMessage(message, Id);
+                }
+                catch (Exception e)
+                {
+                    messengerErrorHandler.MessageRoutingException(e, Id);
+                    return;
                 }
             }
         }
