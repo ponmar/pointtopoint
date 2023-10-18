@@ -18,11 +18,8 @@ namespace PointToPoint.Network
         {
             var servers = Dns.GetHostEntry(serverHostname);
             var server = servers.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
-            socket = new(server.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
-            {
-                NoDelay = true,
-                ReceiveTimeout = 500
-            };
+            socket = new(server.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            SetSocketOptions();
             socket.Connect(new IPEndPoint(new IPAddress(server.GetAddressBytes()), serverPort));
         }
 
@@ -31,6 +28,11 @@ namespace PointToPoint.Network
             : base(payloadSerializer, messagesNamespace, messageRouter, messengerErrorHandler)
         {
             this.socket = socket;
+            SetSocketOptions();
+        }
+
+        private void SetSocketOptions()
+        {
             socket.NoDelay = true;
             socket.ReceiveTimeout = 500;
         }
