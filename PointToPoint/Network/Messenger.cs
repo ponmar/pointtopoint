@@ -1,5 +1,6 @@
 ﻿using PointToPoint.MessageRouting;
 using PointToPoint.Payload;
+using PointToPoint.Protocol;
 using System;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
@@ -7,48 +8,6 @@ using System.Threading;
 
 namespace PointToPoint.Network
 {
-    public record KeepAlive();
-
-    public interface IMessengerErrorHandler
-    {
-        void PayloadException(Exception e, Guid messengerId);
-        void NonProtocolMessageReceived(object message, Guid messengerId);
-        void MessageRoutingException(Exception e, Guid messengerId);
-        void Disconnected(Guid messengerId);
-    }
-
-    public class MessageByteBuffer
-    {
-        public byte[] buffer = new byte[4];
-        public int offset;
-
-        public int MessageLengthBytesLeft => Math.Max(4 - offset, 0);
-        public int MessageLength { get; private set; }
-
-        public int MessageBytesLeft => Math.Max(MessageLength - offset + 4, 0);
-
-        public MessageByteBuffer()
-        {
-            Reset();
-        }
-
-        public void Reset()
-        {
-            offset = 0;
-            MessageLength = 0;
-        }
-
-        public void SetMessageLength(int messageLength)
-        {
-            MessageLength = messageLength;
-            if (buffer.Length < 4 + messageLength)
-            {
-                // Make message fit in buffer if needed
-                buffer = new byte[4 + messageLength];
-            }
-        }
-    }
-
     public abstract class Messenger : IMessenger
     {
         private readonly TimeSpan KeepAliveSendInterval = TimeSpan.FromSeconds(1);
@@ -122,7 +81,6 @@ namespace PointToPoint.Network
             }
             messengerErrorHandler.Disconnected(Id);
         }
-
 
         private void ReceiveMessageLength()
         {
