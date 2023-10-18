@@ -17,8 +17,8 @@ namespace PointToPoint.Network
             : base(payloadSerializer, messagesNamespace, messageRouter, messengerErrorHandler)
         {
             var servers = Dns.GetHostEntry(serverHostname);
-            var server = servers.AddressList.First();
-            socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+            var server = servers.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
+            socket = new(server.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
             {
                 NoDelay = true,
                 ReceiveTimeout = 500
