@@ -17,6 +17,38 @@ namespace PointToPoint.Network
         void Disconnected(Guid messengerId);
     }
 
+    public class MessageByteBuffer
+    {
+        public byte[] buffer = new byte[4];
+        public int offset;
+
+        public int MessageLengthBytesLeft => Math.Max(4 - offset, 0);
+        public int MessageLength { get; private set; }
+
+        public int MessageBytesLeft => Math.Max(MessageLength - offset + 4, 0);
+
+        public MessageByteBuffer()
+        {
+            Reset();
+        }
+
+        public void Reset()
+        {
+            offset = 0;
+            MessageLength = 0;
+        }
+
+        public void SetMessageLength(int messageLength)
+        {
+            MessageLength = messageLength;
+            if (buffer.Length < 4 + messageLength)
+            {
+                // Make message fit in buffer if needed
+                buffer = new byte[4 + messageLength];
+            }
+        }
+    }
+
     public abstract class Messenger : IMessenger
     {
         private readonly TimeSpan KeepAliveSendInterval = TimeSpan.FromSeconds(1);
@@ -36,10 +68,7 @@ namespace PointToPoint.Network
         private readonly BlockingCollection<byte[]> sendQueue = new();
         private bool started = false;
 
-        // TODO: move to own class?
-        private byte[] receiveBuffer = new byte[4]; // Size is adapted for largest received message
-        private int receiveBufferOffset;
-        private int receivedMessageLength;
+        private readonly MessageByteBuffer receiveBuffer = new();
 
         protected Messenger(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
         {
@@ -50,8 +79,6 @@ namespace PointToPoint.Network
 
             receiveThread = new Thread(ReceiveThread);
             sendThread = new Thread(SendThread);
-
-            ResetReceiveCounters();
         }
 
         public void Start()
@@ -79,7 +106,7 @@ namespace PointToPoint.Network
             {
                 try
                 {
-                    if (!MessageLengthReceived)
+                    if (receiveBuffer.MessageLengthBytesLeft > 0)
                     {
                         ReceiveMessageLength();
                     }
@@ -96,23 +123,17 @@ namespace PointToPoint.Network
             messengerErrorHandler.Disconnected(Id);
         }
 
-        private bool MessageLengthReceived => receivedMessageLength != -1;
 
         private void ReceiveMessageLength()
         {
-            var numBytesReceived = ReceiveBytes(receiveBuffer, 0, 4 - receiveBufferOffset);
+            var numBytesReceived = ReceiveBytes(receiveBuffer.buffer, 0, 4 - receiveBuffer.offset);
             if (numBytesReceived > 0)
             {
-                receiveBufferOffset += numBytesReceived;
-                if (receiveBufferOffset == 4)
+                receiveBuffer.offset += numBytesReceived;
+                if (receiveBuffer.offset == 4)
                 {
-                    receivedMessageLength = DeserializeInt(receiveBuffer, 0);
-
-                    if (receiveBuffer.Length < 4 + receivedMessageLength)
-                    {
-                        // Make message fit in buffer if needed
-                        receiveBuffer = new byte[4 + receivedMessageLength];
-                    }
+                    var messageLength = DeserializeInt(receiveBuffer.buffer, 0);
+                    receiveBuffer.SetMessageLength(messageLength);
                 }
             }
         }
@@ -121,23 +142,23 @@ namespace PointToPoint.Network
 
         private void ReceiveMessage()
         {
-            int payloadBytesLeft = receivedMessageLength - receiveBufferOffset + 4;
-            var numBytesReceived = ReceiveBytes(receiveBuffer, receiveBufferOffset, payloadBytesLeft);
+            var payloadBytesLeft = receiveBuffer.MessageBytesLeft;
+            var numBytesReceived = ReceiveBytes(receiveBuffer.buffer, receiveBuffer.offset, payloadBytesLeft);
             if (numBytesReceived > 0)
             {
-                receiveBufferOffset += numBytesReceived;
-                if (receiveBufferOffset == receivedMessageLength + 4)
+                receiveBuffer.offset += numBytesReceived;
+                if (receiveBuffer.MessageBytesLeft == 0)
                 {
                     object message;
                     try
                     {
-                        message = payloadSerializer.PayloadToMessage(receiveBuffer, 4, receivedMessageLength);
-                        ResetReceiveCounters();
+                        message = payloadSerializer.PayloadToMessage(receiveBuffer.buffer, 4, receiveBuffer.MessageLength);
+                        receiveBuffer.Reset();
                     }
                     catch (Exception e)
                     {
                         messengerErrorHandler.PayloadException(e, Id);
-                        ResetReceiveCounters();
+                        receiveBuffer.Reset();
                         return;
                     }
 
@@ -166,12 +187,6 @@ namespace PointToPoint.Network
                     }
                 }
             }
-        }
-
-        private void ResetReceiveCounters()
-        {
-            receivedMessageLength = -1;
-            receiveBufferOffset = 0;
         }
 
         public void Send(object message)
