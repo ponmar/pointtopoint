@@ -28,7 +28,8 @@ namespace PointToPoint.Network
         private volatile bool runThreads = true;
         private bool started = false;
 
-        private readonly MessageByteBuffer receiveBuffer = new();
+        private readonly MessageByteBuffer messageLengthBuffer = new(4);
+        private readonly MessageByteBuffer messageBuffer = new(4);
 
         protected Messenger(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
         {
@@ -66,7 +67,7 @@ namespace PointToPoint.Network
             {
                 try
                 {
-                    if (receiveBuffer.MessageLengthBytesLeft > 0)
+                    if (!messageLengthBuffer.Finished)
                     {
                         ReceiveMessageLength();
                     }
@@ -85,14 +86,14 @@ namespace PointToPoint.Network
 
         private void ReceiveMessageLength()
         {
-            var numBytesReceived = ReceiveBytes(receiveBuffer.buffer, 0, 4 - receiveBuffer.offset);
+            var numBytesReceived = ReceiveBytes(messageLengthBuffer.buffer, 0, 4 - messageLengthBuffer.offset);
             if (numBytesReceived > 0)
             {
-                receiveBuffer.offset += numBytesReceived;
-                if (receiveBuffer.offset == 4)
+                messageLengthBuffer.offset += numBytesReceived;
+                if (messageLengthBuffer.Finished)
                 {
-                    var messageLength = DeserializeInt(receiveBuffer.buffer, 0);
-                    receiveBuffer.SetMessageLength(messageLength);
+                    var messageLength = DeserializeInt(messageLengthBuffer.buffer, 0);
+                    messageBuffer.SetTarget(messageLength);
                 }
             }
         }
@@ -101,29 +102,28 @@ namespace PointToPoint.Network
 
         private void ReceiveMessage()
         {
-            var payloadBytesLeft = receiveBuffer.MessageBytesLeft;
-            var numBytesReceived = ReceiveBytes(receiveBuffer.buffer, receiveBuffer.offset, payloadBytesLeft);
+            var numBytesReceived = ReceiveBytes(messageBuffer.buffer, messageBuffer.offset, messageBuffer.NumBytesLeft);
             if (numBytesReceived > 0)
             {
-                receiveBuffer.offset += numBytesReceived;
-                if (receiveBuffer.MessageBytesLeft == 0)
+                messageBuffer.offset += numBytesReceived;
+                if (messageBuffer.Finished)
                 {
                     object message;
                     try
                     {
-                        message = payloadSerializer.PayloadToMessage(receiveBuffer.buffer, 4, receiveBuffer.MessageLength);
-                        receiveBuffer.Reset();
+                        message = payloadSerializer.PayloadToMessage(messageBuffer.buffer, messageBuffer.numBytesToRead);
+                        messageLengthBuffer.SetTarget(4);
                     }
                     catch (Exception e)
                     {
                         messengerErrorHandler.PayloadException(e, Id);
-                        receiveBuffer.Reset();
+                        messageLengthBuffer.SetTarget(4);
                         return;
                     }
                                         
                     if (message.GetType() == typeof(KeepAlive))
                     {
-                        //Console.WriteLine($"Received {nameof(KeepAlive)}");
+                        Console.WriteLine($"Received {nameof(KeepAlive)}");
                         return;
                     }
 
@@ -174,7 +174,7 @@ namespace PointToPoint.Network
                     var now = DateTime.Now;
                     if (now - keepAliveSentAt > KeepAliveSendInterval)
                     {
-                        //Console.WriteLine($"Sending {nameof(KeepAlive)}");
+                        Console.WriteLine($"Sending {nameof(KeepAlive)}");
                         keepAliveSentAt = now;
                         Send(new KeepAlive());
                     }

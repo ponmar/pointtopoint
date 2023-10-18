@@ -18,9 +18,9 @@ namespace PointToPoint.Payload
             return SerializeString(messageString);
         }
 
-        public object PayloadToMessage(byte[] payloadBytes, int offset, int length)
+        public object PayloadToMessage(byte[] payloadBytes, int length)
         {
-            var payload = DeserializeString(payloadBytes, offset, length);
+            var payload = DeserializeString(payloadBytes, length);
 
             var separatorIndex = payload.IndexOf(IdPayloadSeparator);
             if (separatorIndex < 1)
@@ -50,9 +50,9 @@ namespace PointToPoint.Payload
             return PayloadTextEncoding.GetBytes(data);
         }
 
-        private string DeserializeString(byte[] bytes, int offset, int length)
+        private string DeserializeString(byte[] bytes, int length)
         {
-            return PayloadTextEncoding.GetString(bytes, offset, length);
+            return PayloadTextEncoding.GetString(bytes, 0, length);
         }
     }
 }

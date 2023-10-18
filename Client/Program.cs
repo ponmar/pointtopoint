@@ -21,8 +21,6 @@ var client = new TcpMessenger(serverHostname,
 client.Start();
 client.Send(new Hello(1));
 
-//client.Close();
-
 while (true)
 {
 }

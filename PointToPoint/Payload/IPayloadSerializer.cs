@@ -3,6 +3,6 @@
     public interface IPayloadSerializer
     {
         byte[] MessageToPayload(object message);
-        object PayloadToMessage(byte[] payloadBytes, int offset, int length);
+        object PayloadToMessage(byte[] payloadBytes, int length);
     }
 }

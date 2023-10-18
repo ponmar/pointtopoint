@@ -1,35 +1,28 @@
-﻿using System;
-
-namespace PointToPoint.Network
+﻿namespace PointToPoint.Network
 {
     public class MessageByteBuffer
     {
-        public byte[] buffer = new byte[4];
+        public byte[] buffer;
         public int offset;
+        public int numBytesToRead;
 
-        public int MessageLengthBytesLeft => Math.Max(4 - offset, 0);
-        public int MessageLength { get; private set; }
+        public int NumBytesLeft => numBytesToRead - offset;
+        public bool Finished => offset == numBytesToRead;
 
-        public int MessageBytesLeft => Math.Max(MessageLength - offset + 4, 0);
-
-        public MessageByteBuffer()
+        public MessageByteBuffer(int target)
         {
-            Reset();
+            buffer = new byte[0];
+            SetTarget(target);
         }
 
-        public void Reset()
+        public void SetTarget(int numBytesToRead)
         {
             offset = 0;
-            MessageLength = 0;
-        }
-
-        public void SetMessageLength(int messageLength)
-        {
-            MessageLength = messageLength;
-            if (buffer.Length < 4 + messageLength)
+            this.numBytesToRead = numBytesToRead;
+            if (buffer.Length < numBytesToRead)
             {
                 // Make message fit in buffer if needed
-                buffer = new byte[4 + messageLength];
+                buffer = new byte[numBytesToRead];
             }
         }
     }
