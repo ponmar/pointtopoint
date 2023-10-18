@@ -1,4 +1,5 @@
 ﻿using PointToPoint.Network;
+using PointToPoint.Protocol;
 using Protocol.Messages;
 
 namespace Client
@@ -7,7 +8,12 @@ namespace Client
     {
         public void HandleMessage(Hello message, Guid senderId)
         {
-            Console.WriteLine("Received message");
+            Console.WriteLine($"Received message {message.GetType()}");
+        }
+
+        public void HandleMessage(KeepAlive message, Guid senderId)
+        {
+            Console.WriteLine($"Received KeepAlive");
         }
 
         public void MessageRoutingException(Exception e, Guid messengerId)

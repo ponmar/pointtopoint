@@ -52,8 +52,9 @@
     <Compile Include="Network\IMessenger.cs" />
     <Compile Include="Network\IClientHandler.cs" />
     <Compile Include="Network\IMessengerErrorHandler.cs" />
-    <Compile Include="Network\MessageByteBuffer.cs" />
+    <Compile Include="Network\ByteBuffer.cs" />
     <Compile Include="Network\Messenger.cs" />
+    <Compile Include="Network\Utils.cs" />
     <Compile Include="Payload\IPayloadSerializer.cs" />
     <Compile Include="IsExternalInit.cs" />
     <Compile Include="Payload\JsonPayload.cs" />

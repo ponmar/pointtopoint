@@ -27,8 +27,8 @@ namespace PointToPoint.Network
         private volatile bool runThreads = true;
         private bool started = false;
 
-        private readonly MessageByteBuffer lengthBuffer = new(4);
-        private readonly MessageByteBuffer messageBuffer = new(0);
+        private readonly ByteBuffer lengthBuffer = new(4);
+        private readonly ByteBuffer messageBuffer = new(0);
 
         protected Messenger(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
         {
@@ -88,12 +88,10 @@ namespace PointToPoint.Network
             ReceiveBytes(lengthBuffer);
             if (lengthBuffer.Finished)
             {
-                var messageLength = DeserializeInt(lengthBuffer.buffer, 0);
+                var messageLength = Utils.DeserializeInt(lengthBuffer.buffer, 0);
                 messageBuffer.SetTarget(messageLength);
             }
         }
-
-        abstract protected void ReceiveBytes(MessageByteBuffer buffer);
 
         private void ReceiveMessage()
         {
@@ -112,14 +110,9 @@ namespace PointToPoint.Network
                     lengthBuffer.SetTarget(4);
                     return;
                 }
-                                        
-                if (message.GetType() == typeof(KeepAlive))
-                {
-                    Console.WriteLine($"Received {nameof(KeepAlive)}");
-                    return;
-                }
 
-                if (message.GetType().Namespace != messagesNamespace)
+                if (message.GetType() != typeof(KeepAlive) &&
+                    message.GetType().Namespace != messagesNamespace)
                 {
                     messengerErrorHandler.NonProtocolMessageReceived(message, Id);
                     return;
@@ -140,7 +133,7 @@ namespace PointToPoint.Network
         public void Send(object message)
         {
             var payloadBytes = payloadSerializer.MessageToPayload(message);
-            var lengthBytes = SerializeInt(payloadBytes.Length);
+            var lengthBytes = Utils.SerializeInt(payloadBytes.Length);
 
             var bytes = new byte[4 + payloadBytes.Length];
             lengthBytes.CopyTo(bytes, 0);
@@ -178,28 +171,7 @@ namespace PointToPoint.Network
             messengerErrorHandler.Disconnected(Id);
         }
 
+        protected abstract void ReceiveBytes(ByteBuffer buffer);
         protected abstract void SendBytes(byte[] bytes);
-
-
-        private static byte[] SerializeInt(int value)
-        {
-            /*
-            var bytes = new byte[4];
-            var span = new Span<byte>(bytes);
-            BinaryPrimitives.WriteInt32BigEndian(span, value);
-            return bytes;
-            */
-
-            return BitConverter.GetBytes(value);
-        }
-
-        private static int DeserializeInt(byte[] bytes, int offset)
-        {
-            /*
-            var span = new Span<byte>(bytes, offset, 4);
-            return BinaryPrimitives.ReadInt32BigEndian(span);
-            */
-            return BitConverter.ToInt32(bytes, offset);
-        }
     }
 }

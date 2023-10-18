@@ -47,7 +47,7 @@ namespace PointToPoint.Network
             socket.Dispose();
         }
 
-        protected override void ReceiveBytes(MessageByteBuffer buffer)
+        protected override void ReceiveBytes(ByteBuffer buffer)
         {
             var numBytesReceived = socket.Receive(buffer.buffer, buffer.offset, buffer.NumBytesLeft, SocketFlags.None);
             buffer.offset += numBytesReceived;

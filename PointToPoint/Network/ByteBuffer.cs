@@ -1,6 +1,6 @@
 ﻿namespace PointToPoint.Network
 {
-    public class MessageByteBuffer
+    public class ByteBuffer
     {
         public byte[] buffer;
         public int offset;
@@ -9,7 +9,7 @@
         public int NumBytesLeft => numBytesToRead - offset;
         public bool Finished => offset == numBytesToRead;
 
-        public MessageByteBuffer(int target)
+        public ByteBuffer(int target)
         {
             buffer = new byte[0];
             SetTarget(target);

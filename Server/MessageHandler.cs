@@ -1,4 +1,5 @@
-﻿using Protocol.Messages;
+﻿using PointToPoint.Protocol;
+using Protocol.Messages;
 
 namespace Server
 {
@@ -11,10 +12,15 @@ namespace Server
             this.messageSender = messageSender;
         }
 
-        public void HandleMessage(Hello _, Guid senderId)
+        public void HandleMessage(Hello message, Guid senderId)
         {
-            Console.WriteLine("Received message. Sending reply.");
+            Console.WriteLine($"Received message {message.GetType()}. Sending reply.");
             messageSender.SendMessage(new Hello(2), senderId);
+        }
+
+        public void HandleMessage(KeepAlive message, Guid senderId)
+        {
+            Console.WriteLine("Received KeepAlive");
         }
     }
 }
