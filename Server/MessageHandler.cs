@@ -1,5 +1,4 @@
-﻿using PointToPoint.MessageRouting;
-using Protocol.Messages;
+﻿using Protocol.Messages;
 
 namespace Server
 {
@@ -12,11 +11,10 @@ namespace Server
             this.messageSender = messageSender;
         }
 
-        public void HandleMessage(Hello _)
+        public void HandleMessage(Hello _, Guid senderId)
         {
             Console.WriteLine("Received message. Sending reply.");
-            // TODO: only reply to the appropriate client
-            messageSender.SendMessageToAll(new Hello(2));
+            messageSender.SendMessage(new Hello(2), senderId);
         }
     }
 }

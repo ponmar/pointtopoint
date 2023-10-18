@@ -7,7 +7,7 @@ namespace PointToPoint.MessageRouting
     /// </summary>
     /// The handler class needs to implement one method per handled message according to:
     ///
-    /// void HandleMessage(MyMessage message)
+    /// void HandleMessage(MyMessage message, Guid senderId)
     /// {
     ///     // Message handling code
     /// }
@@ -22,9 +22,9 @@ namespace PointToPoint.MessageRouting
             this.handleMethodName = handleMethodName;
         }
 
-        public bool RouteMessage(object message)
+        public bool RouteMessage(object message, Guid senderId)
         {
-            var argTypes = new Type[] { message.GetType() };
+            var argTypes = new Type[] { message.GetType(), typeof(Guid) };
 
             var handleMethod = MessageHandler.GetType().GetMethod(handleMethodName, argTypes);
             if (handleMethod == null)
@@ -32,7 +32,7 @@ namespace PointToPoint.MessageRouting
                 throw new Exception($"Message handling method ({handleMethodName}) not implemented for message type {message.GetType()}");
             }
 
-            var args = new object[] { message };
+            var args = new object[] { message, senderId };
             handleMethod.Invoke(MessageHandler, args);
             return true;
         }

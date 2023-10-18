@@ -122,7 +122,7 @@ namespace PointToPoint.Network
                         var messageType = message.GetType();
                         if (messageType.Namespace == messagesNamespace)
                         {
-                            messageRouter.RouteMessage(message);
+                            messageRouter.RouteMessage(message, Id);
                         }
                         else
                         {

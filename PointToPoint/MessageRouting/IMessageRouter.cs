@@ -1,9 +1,9 @@
-﻿using PointToPoint.Network;
+﻿using System;
 
 namespace PointToPoint.MessageRouting
 {
     public interface IMessageRouter
     {
-        public bool RouteMessage(object message);
+        public bool RouteMessage(object message, Guid senderId);
     }
 }
