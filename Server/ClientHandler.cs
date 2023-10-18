@@ -5,7 +5,14 @@ using System.Net.Sockets;
 
 namespace Server
 {
-    public class ClientHandler : IClientHandler
+    public interface IMessageSender
+    {
+        void SendMessage(object message, Guid receiverId);
+        void SendMessage(object message, TcpMessenger receiver);
+        void SendMessageToAll(object message);
+    }
+
+    public class ClientHandler : IClientHandler, IMessageSender
     {
         public List<TcpMessenger> Clients { get; } = new();
 
@@ -28,5 +35,23 @@ namespace Server
             client.StartCommunication();
         }
 
+        public void SendMessage(object message, Guid receiverId)
+        {
+            var client = Clients.FirstOrDefault(x => x.Id == receiverId);
+            if (client is not null)
+            {
+                client.Send(message);
+            }
+        }
+
+        public void SendMessage(object message, TcpMessenger receiver)
+        {
+            receiver.Send(message);
+        }
+
+        public void SendMessageToAll(object message)
+        {
+            Clients.ForEach(x => x.Send(message));
+        }
     }
 }

@@ -7,11 +7,11 @@ using System.Threading;
 
 namespace PointToPoint.Network
 {
-    public record ReceivedMessage(object Message, DateTime ReceivedAt);
-
     // Sends and receives messages over TCP in format: <length (4 bytes)> <payload>
     public abstract class Messenger
     {
+        public Guid Id { get; } = Guid.NewGuid();
+
         protected readonly IPayloadSerializer payloadSerializer;
         protected readonly string messagesNamespace;
         protected readonly IMessageRouter messageRouter;

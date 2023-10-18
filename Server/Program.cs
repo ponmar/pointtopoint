@@ -14,7 +14,7 @@ var tcpServer = new TcpServer(serverPort);
 var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));
 tcpServerThread.Start();
 
-Console.WriteLine($"Listening for connection on port {serverPort}");
+Console.WriteLine($"Listening for connections on port {serverPort}");
 
 while (true)
 {

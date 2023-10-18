@@ -1,24 +1,23 @@
 ﻿using PointToPoint.MessageRouting;
-using PointToPoint.Network;
 using Protocol.Messages;
 
 namespace Server
 {
     public class MessageHandler
     {
-        private readonly IClientHandler clientHandler;
+        private readonly IMessageSender messageSender;
 
-        public MessageHandler(IClientHandler clientHandler)
+        public MessageHandler(IMessageSender messageSender)
         {
-            this.clientHandler = clientHandler;
+            this.messageSender = messageSender;
         }
 
         [MessageReceiver]
-        public void HandleMessage(Hello message)
+        public void HandleMessage(Hello _)
         {
             Console.WriteLine("Received message. Sending reply.");
             // TODO: only reply to the appropriate client
-            clientHandler.Clients.ForEach(x => x.Send(new Hello(2)));
+            messageSender.SendMessageToAll(new Hello(2));
         }
     }
 }
