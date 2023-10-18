@@ -7,8 +7,7 @@ using System.Threading;
 
 namespace PointToPoint.Network
 {
-    // Sends and receives messages over TCP in format: <length (4 bytes)> <payload>
-    public abstract class Messenger
+    public abstract class Messenger : IMessenger
     {
         public Guid Id { get; } = Guid.NewGuid();
 
@@ -38,7 +37,7 @@ namespace PointToPoint.Network
             sendThread = new Thread(SendThread);
         }
 
-        public void StartCommunication()
+        public void Start()
         {
             if (!started)
             {
@@ -57,7 +56,6 @@ namespace PointToPoint.Network
 
         public bool IsHealthy()
         {
-            // TODO: check that not too many messages has been queued? Meaning that client is too slow at receiving messages...
             return !started || (sendThread.IsAlive && receiveThread.IsAlive);
         }
 

@@ -17,7 +17,7 @@ var client = new TcpMessenger(serverHostname,
     typeof(Hello).Namespace,
     new ReflectionBasedMessageRouter() { MessageHandler = messageHandler });
 
-client.StartCommunication();
+client.Start();
 client.Send(new Hello(1));
 
 while (client.IsHealthy())

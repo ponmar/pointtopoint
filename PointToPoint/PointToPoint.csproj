@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MessageRouting\IMessageRouter.cs" />
+    <Compile Include="Network\IMessenger.cs" />
     <Compile Include="Network\IClientHandler.cs" />
     <Compile Include="Network\Messenger.cs" />
     <Compile Include="Payload\IPayloadSerializer.cs" />

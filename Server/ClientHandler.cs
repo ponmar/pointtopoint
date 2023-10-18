@@ -14,7 +14,7 @@ namespace Server
 
     public class ClientHandler : IClientHandler, IMessageSender
     {
-        public List<TcpMessenger> Clients { get; } = new();
+        public List<IMessenger> Clients { get; } = new();
 
         private readonly IPayloadSerializer payloadSerializer;
         private readonly string messagesNamespace;
@@ -32,7 +32,7 @@ namespace Server
             Console.WriteLine("Client connected");
             var client = new TcpMessenger(socket, payloadSerializer, messagesNamespace, messageRouter);
             Clients.Add(client);
-            client.StartCommunication();
+            client.Start();
         }
 
         public void SendMessage(object message, Guid receiverId)
