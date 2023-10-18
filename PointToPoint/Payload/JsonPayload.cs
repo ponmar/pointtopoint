@@ -6,7 +6,6 @@ namespace PointToPoint.Payload
 {
     public class JsonPayload : IPayloadSerializer
     {
-        //private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly Encoding PayloadTextEncoding = Encoding.Unicode;
         private const string IdPayloadSeparator = " ";
 

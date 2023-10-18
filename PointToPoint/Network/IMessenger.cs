@@ -8,7 +8,6 @@ namespace PointToPoint.Network
         Guid Id { get; }
         void Start();
         void Close();
-        bool IsHealthy();
         void Send(object message);
     }
 }

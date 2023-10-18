@@ -15,11 +15,14 @@ var client = new TcpMessenger(serverHostname,
     serverPort,
     new JsonPayload(),
     typeof(Hello).Namespace,
-    new ReflectionBasedMessageRouter() { MessageHandler = messageHandler });
+    new ReflectionBasedMessageRouter() { MessageHandler = messageHandler },
+    messageHandler);
 
 client.Start();
 client.Send(new Hello(1));
 
-while (client.IsHealthy())
+//client.Close();
+
+while (true)
 {
 }

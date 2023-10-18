@@ -13,7 +13,8 @@ namespace PointToPoint.Network
         private readonly Socket socket;
 
         // Client side
-        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter) : base(payloadSerializer, messagesNamespace, messageRouter)
+        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
+            : base(payloadSerializer, messagesNamespace, messageRouter, messengerErrorHandler)
         {
             var servers = Dns.GetHostEntry(serverHostname);
             var server = servers.AddressList.First();
@@ -26,7 +27,8 @@ namespace PointToPoint.Network
         }
 
         // Server side
-        public TcpMessenger(Socket socket, IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter) : base(payloadSerializer, messagesNamespace, messageRouter)
+        public TcpMessenger(Socket socket, IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
+            : base(payloadSerializer, messagesNamespace, messageRouter, messengerErrorHandler)
         {
             this.socket = socket;
             socket.NoDelay = true;
@@ -40,6 +42,7 @@ namespace PointToPoint.Network
             {
                 socket.Close();
             }
+            socket.Dispose();
         }
 
         protected override int ReceiveBytes(byte[] buffer, int bufferOffset, int size)
