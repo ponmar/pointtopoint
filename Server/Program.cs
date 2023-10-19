@@ -12,6 +12,9 @@ var clientHandler = new ClientHandler(new JsonPayload(),
     messageRouter,
     new ConsoleLoggerErrorHandler());
 
+clientHandler.ClientConnected += (sender, guid) => Console.WriteLine($"Client connected: {guid}");
+clientHandler.ClientDisconnected += (sender, guid) => Console.WriteLine($"Client disconnected: {guid}");
+
 var messageHandler = new MessageHandler(clientHandler);
 messageRouter.MessageHandler = messageHandler;
 

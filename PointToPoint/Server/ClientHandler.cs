@@ -16,22 +16,28 @@ namespace PointToPoint.Server
         private readonly IPayloadSerializer payloadSerializer;
         private readonly string messagesNamespace;
         private readonly IMessageRouter messageRouter;
-        private readonly IMessengerErrorHandler messengerErrorHandler;
+        private readonly IMessengerErrorHandler errorLogger;
 
-        public ClientHandler(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
+        // Note: this event is fired from the server socket accept thread
+        public EventHandler<Guid> ClientConnected;
+
+        // Note: this event is fired from one of the socket communication threads
+        public EventHandler<Guid> ClientDisconnected;
+
+        public ClientHandler(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler errorLogger)
         {
             this.payloadSerializer = payloadSerializer;
             this.messagesNamespace = messagesNamespace;
             this.messageRouter = messageRouter;
-            this.messengerErrorHandler = messengerErrorHandler;
+            this.errorLogger = errorLogger;
         }
 
         public void NewConnection(Socket socket)
         {
-            Console.WriteLine("Client connected");
             var client = new TcpMessenger(socket, payloadSerializer, messagesNamespace, messageRouter, this);
             Clients.Add(client);
             client.Start();
+            ClientConnected?.Invoke(this, client.Id);
         }
 
         public void SendMessage(object message, Guid receiverId)
@@ -52,7 +58,7 @@ namespace PointToPoint.Server
         {
             if (RemoveClient(messengerId))
             {
-                messengerErrorHandler.PayloadException(e, messengerId);
+                errorLogger.PayloadException(e, messengerId);
             }
         }
 
@@ -60,7 +66,7 @@ namespace PointToPoint.Server
         {
             if (RemoveClient(messengerId))
             {
-                messengerErrorHandler.NonProtocolMessageReceived(message, messengerId);
+                errorLogger.NonProtocolMessageReceived(message, messengerId);
             }
         }
 
@@ -68,7 +74,7 @@ namespace PointToPoint.Server
         {
             if (RemoveClient(messengerId))
             {
-                messengerErrorHandler.MessageRoutingException(e, messengerId);
+                errorLogger.MessageRoutingException(e, messengerId);
             }
         }
 
@@ -76,18 +82,21 @@ namespace PointToPoint.Server
         {
             if (RemoveClient(messengerId))
             {
-                messengerErrorHandler.Disconnected(messengerId);
+                errorLogger.Disconnected(messengerId);
             }
         }
 
         private bool RemoveClient(Guid clientId)
         {
             var client = Clients.FirstOrDefault(x => x.Id == clientId);
-            if (client is not null)
+            if (client is null)
             {
-                return Clients.Remove(client);
+                return false;
             }
-            return false;
+
+            var result = Clients.Remove(client);
+            ClientDisconnected?.Invoke(this, client.Id);
+            return result;
         }
     }
 }
