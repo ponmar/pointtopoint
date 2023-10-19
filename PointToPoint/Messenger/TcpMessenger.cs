@@ -5,7 +5,7 @@ using System.Net;
 //using System.Buffers.Binary;
 using System.Net.Sockets;
 
-namespace PointToPoint.Network.Messenger
+namespace PointToPoint.Messenger
 {
     // Message sending over TCP/IP
     public class TcpMessenger : Messenger

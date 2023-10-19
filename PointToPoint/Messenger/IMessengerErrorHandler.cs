@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PointToPoint.Network.Messenger
+namespace PointToPoint.Messenger
 {
     /// <summary>
     /// Notifications to the applications about communication problems

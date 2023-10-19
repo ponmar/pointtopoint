@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace PointToPoint.Network.Messenger
+namespace PointToPoint.Messenger
 {
     public abstract class Messenger : IMessenger
     {

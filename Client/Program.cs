@@ -1,6 +1,6 @@
 ﻿using Client;
 using PointToPoint.MessageRouting;
-using PointToPoint.Network.Messenger;
+using PointToPoint.Messenger;
 using PointToPoint.Payload;
 using Protocol.Messages;
 

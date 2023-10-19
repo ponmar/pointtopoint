@@ -1,5 +1,5 @@
 ﻿using PointToPoint.MessageRouting;
-using PointToPoint.Network.Server;
+using PointToPoint.Server;
 using PointToPoint.Payload;
 using Protocol.Messages;
 using Server;

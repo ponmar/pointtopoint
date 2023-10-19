@@ -1,4 +1,4 @@
-﻿namespace PointToPoint.Network.Messenger
+﻿namespace PointToPoint.Messenger
 {
     public class ByteBuffer
     {

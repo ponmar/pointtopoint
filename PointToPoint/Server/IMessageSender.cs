@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PointToPoint.Network.Server
+namespace PointToPoint.Server
 {
     public interface IMessageSender
     {

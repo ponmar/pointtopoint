@@ -1,12 +1,12 @@
 ﻿using PointToPoint.MessageRouting;
-using PointToPoint.Network.Messenger;
+using PointToPoint.Messenger;
 using PointToPoint.Payload;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 
-namespace PointToPoint.Network.Server
+namespace PointToPoint.Server
 {
     public class ClientHandler : IClientHandler, IMessageSender, IMessengerErrorHandler
     {
