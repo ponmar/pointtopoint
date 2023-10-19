@@ -1,6 +1,6 @@
 ﻿using PointToPoint.Messenger.ErrorHandler;
 using PointToPoint.Protocol;
-using Protocol.Messages;
+using Protocol;
 
 namespace Client
 {

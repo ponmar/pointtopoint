@@ -1,6 +1,6 @@
 ﻿using PointToPoint.Server;
 using PointToPoint.Payload;
-using Protocol.Messages;
+using Protocol;
 using Server;
 using PointToPoint.Messenger.ErrorHandler;
 using PointToPoint.MessageRouting;
@@ -27,4 +27,5 @@ Console.WriteLine($"Listening for connections on port {serverPort}");
 
 while (true)
 {
+    Thread.Sleep(1000);
 }

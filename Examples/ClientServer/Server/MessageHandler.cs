@@ -1,6 +1,6 @@
 ﻿using PointToPoint.Server;
 using PointToPoint.Protocol;
-using Protocol.Messages;
+using Protocol;
 
 namespace Server
 {

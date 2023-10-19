@@ -2,7 +2,7 @@
 using PointToPoint.MessageRouting;
 using PointToPoint.Messenger;
 using PointToPoint.Payload;
-using Protocol.Messages;
+using Protocol;
 
 var serverHostname = "127.0.0.1";
 var serverPort = 12345;
