@@ -40,7 +40,9 @@
             </WrapPanel>
         </Border>
 
-        <TextBlock Text="{Binding Texts}" Grid.Row="1" Grid.Column="0" Margin="5" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="5" HorizontalScrollBarVisibility="Auto">
+            <TextBlock Text="{Binding Texts}" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+        </ScrollViewer>
 
         <Border Grid.Row="2" Grid.Column="0" BorderThickness="1" Margin="3" CornerRadius="5" BorderBrush="Black" Background="LightGray">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
