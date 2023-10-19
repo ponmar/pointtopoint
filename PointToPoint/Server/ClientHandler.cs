@@ -1,5 +1,6 @@
 ﻿using PointToPoint.MessageRouting;
 using PointToPoint.Messenger;
+using PointToPoint.Messenger.ErrorHandler;
 using PointToPoint.Payload;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,14 @@ namespace PointToPoint.Server
         private readonly IPayloadSerializer payloadSerializer;
         private readonly string messagesNamespace;
         private readonly IMessageRouter messageRouter;
+        private readonly IMessengerErrorHandler messengerErrorHandler;
 
-        public ClientHandler(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter)
+        public ClientHandler(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
         {
             this.payloadSerializer = payloadSerializer;
             this.messagesNamespace = messagesNamespace;
             this.messageRouter = messageRouter;
+            this.messengerErrorHandler = messengerErrorHandler;
         }
 
         public void NewConnection(Socket socket)
@@ -47,37 +50,44 @@ namespace PointToPoint.Server
 
         public void PayloadException(Exception e, Guid messengerId)
         {
-            Console.WriteLine($"Payload exception: {e.Message}");
-            CloseAndRemoveClient(messengerId);
+            if (RemoveClient(messengerId))
+            {
+                messengerErrorHandler.PayloadException(e, messengerId);
+            }
         }
 
         public void NonProtocolMessageReceived(object message, Guid messengerId)
         {
-            Console.WriteLine($"Non protocol message received: {message.GetType()}");
-            CloseAndRemoveClient(messengerId);
+            if (RemoveClient(messengerId))
+            {
+                messengerErrorHandler.NonProtocolMessageReceived(message, messengerId);
+            }
         }
 
         public void MessageRoutingException(Exception e, Guid messengerId)
         {
-            Console.WriteLine($"Message routing exception: {e.Message}");
-            CloseAndRemoveClient(messengerId);
+            if (RemoveClient(messengerId))
+            {
+                messengerErrorHandler.MessageRoutingException(e, messengerId);
+            }
         }
 
         public void Disconnected(Guid messengerId)
         {
-            Console.WriteLine("Client disconnected");
-            CloseAndRemoveClient(messengerId);
+            if (RemoveClient(messengerId))
+            {
+                messengerErrorHandler.Disconnected(messengerId);
+            }
         }
 
-        private void CloseAndRemoveClient(Guid clientId)
+        private bool RemoveClient(Guid clientId)
         {
             var client = Clients.FirstOrDefault(x => x.Id == clientId);
             if (client is not null)
             {
-                client.Close();
-                Clients.Remove(client);
-                Console.WriteLine("Client removed");
+                return Clients.Remove(client);
             }
+            return false;
         }
     }
 }

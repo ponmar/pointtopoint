@@ -1,4 +1,5 @@
 ﻿using PointToPoint.MessageRouting;
+using PointToPoint.Messenger.ErrorHandler;
 using PointToPoint.Payload;
 using System.Linq;
 using System.Net;
@@ -8,7 +9,7 @@ using System.Net.Sockets;
 namespace PointToPoint.Messenger
 {
     // Message sending over TCP/IP
-    public class TcpMessenger : Messenger
+    public class TcpMessenger : AbstractMessenger
     {
         private readonly Socket socket;
 

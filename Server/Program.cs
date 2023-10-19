@@ -3,9 +3,15 @@ using PointToPoint.Server;
 using PointToPoint.Payload;
 using Protocol.Messages;
 using Server;
+using PointToPoint.Messenger.ErrorHandler;
 
 var messageRouter = new ReflectionBasedMessageRouter();
-var clientHandler = new ClientHandler(new JsonPayload(), typeof(Hello).Namespace!, messageRouter);
+
+var clientHandler = new ClientHandler(new JsonPayload(),
+    typeof(Hello).Namespace!,
+    messageRouter,
+    new ConsoleLoggerErrorHandler());
+
 var messageHandler = new MessageHandler(clientHandler);
 messageRouter.MessageHandler = messageHandler;
 

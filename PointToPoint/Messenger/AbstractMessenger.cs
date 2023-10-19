@@ -3,12 +3,11 @@ using PointToPoint.Payload;
 using PointToPoint.Protocol;
 using System;
 using System.Collections.Concurrent;
-using System.Net.Sockets;
 using System.Threading;
 
-namespace PointToPoint.Messenger
+namespace PointToPoint.Messenger.ErrorHandler
 {
-    public abstract class Messenger : IMessenger
+    public abstract class AbstractMessenger : IMessenger
     {
         private readonly TimeSpan KeepAliveSendInterval = TimeSpan.FromSeconds(1);
 
@@ -30,7 +29,7 @@ namespace PointToPoint.Messenger
         private readonly ByteBuffer lengthBuffer = new(4);
         private readonly ByteBuffer messageBuffer = new(0);
 
-        protected Messenger(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
+        protected AbstractMessenger(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
         {
             this.payloadSerializer = payloadSerializer;
             this.messagesNamespace = messagesNamespace;
@@ -75,7 +74,7 @@ namespace PointToPoint.Messenger
                         ReceiveMessage();
                     }
                 }
-                catch (SocketException)
+                catch
                 {
                     // Socket receive timeout
                 }
@@ -164,7 +163,7 @@ namespace PointToPoint.Messenger
                     }
                 }
             }
-            catch (SocketException)
+            catch
             {
                 // Socket write error (disconnected)
             }
