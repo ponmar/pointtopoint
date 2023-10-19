@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PointToPoint.Network
+namespace PointToPoint.Network.Messenger
 {
     public static class Utils
     {

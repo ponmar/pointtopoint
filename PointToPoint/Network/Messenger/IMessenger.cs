@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PointToPoint.Network
+namespace PointToPoint.Network.Messenger
 {
     // Sends and receives messages over TCP in format: <length (4 bytes)> <payload>
     public interface IMessenger

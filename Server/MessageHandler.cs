@@ -1,4 +1,4 @@
-﻿using PointToPoint.Network;
+﻿using PointToPoint.Network.Server;
 using PointToPoint.Protocol;
 using Protocol.Messages;
 

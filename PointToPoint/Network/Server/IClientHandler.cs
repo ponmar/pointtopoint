@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace PointToPoint.Network
+namespace PointToPoint.Network.Server
 {
     public interface IClientHandler
     {

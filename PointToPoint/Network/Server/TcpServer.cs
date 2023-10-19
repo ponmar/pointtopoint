@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace PointToPoint.Network
+namespace PointToPoint.Network.Server
 {
     public class TcpServer
     {
