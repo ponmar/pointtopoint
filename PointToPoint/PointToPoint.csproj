@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MessageRouting\IMessageRouter.cs" />
+    <Compile Include="Network\ClientHandler.cs" />
+    <Compile Include="Network\IMessageSender.cs" />
     <Compile Include="Network\IMessenger.cs" />
     <Compile Include="Network\IClientHandler.cs" />
     <Compile Include="Network\IMessengerErrorHandler.cs" />

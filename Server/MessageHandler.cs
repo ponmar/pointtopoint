@@ -1,4 +1,5 @@
-﻿using PointToPoint.Protocol;
+﻿using PointToPoint.Network;
+using PointToPoint.Protocol;
 using Protocol.Messages;
 
 namespace Server
