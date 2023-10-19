@@ -166,6 +166,8 @@ namespace PointToPoint.Messenger.ErrorHandler
             catch
             {
                 // Socket write error (disconnected)
+                // Make receive thread stop
+                runThreads = false;
             }
             messengerErrorHandler.Disconnected(Id);
         }

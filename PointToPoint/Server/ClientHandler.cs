@@ -12,6 +12,7 @@ namespace PointToPoint.Server
     public class ClientHandler : IClientHandler, IMessageSender, IMessengerErrorHandler
     {
         public List<IMessenger> Clients { get; } = new();
+        private readonly object clientsLock = new();
 
         private readonly IPayloadSerializer payloadSerializer;
         private readonly string messagesNamespace;
@@ -35,14 +36,23 @@ namespace PointToPoint.Server
         public void NewConnection(Socket socket)
         {
             var client = new TcpMessenger(socket, payloadSerializer, messagesNamespace, messageRouter, this);
-            Clients.Add(client);
+            
+            lock (clientsLock)
+            {
+                Clients.Add(client);
+            }
+            
             client.Start();
             ClientConnected?.Invoke(this, client.Id);
         }
 
         public void SendMessage(object message, Guid receiverId)
         {
-            var client = Clients.FirstOrDefault(x => x.Id == receiverId);
+            IMessenger client = null;
+            lock (clientsLock)
+            {
+                client = Clients.FirstOrDefault(x => x.Id == receiverId);
+            }
             if (client is not null)
             {
                 client.Send(message);
@@ -51,7 +61,10 @@ namespace PointToPoint.Server
 
         public void SendBroadcast(object message)
         {
-            Clients.ForEach(x => x.Send(message));
+            lock (clientsLock)
+            {
+                Clients.ForEach(x => x.Send(message));
+            }
         }
 
         public void PayloadException(Exception e, Guid messengerId)
@@ -88,15 +101,19 @@ namespace PointToPoint.Server
 
         private bool RemoveClient(Guid clientId)
         {
-            var client = Clients.FirstOrDefault(x => x.Id == clientId);
-            if (client is null)
+            IMessenger client;
+            bool clientRemoved;
+            lock (clientsLock)
             {
-                return false;
+                client = Clients.FirstOrDefault(x => x.Id == clientId);
+                clientRemoved = client is not null && Clients.Remove(client);
             }
 
-            var result = Clients.Remove(client);
-            ClientDisconnected?.Invoke(this, client.Id);
-            return result;
+            if (clientRemoved)
+            {
+                ClientDisconnected?.Invoke(this, client.Id);
+            }            
+            return clientRemoved;
         }
     }
 }
