@@ -1,11 +1,11 @@
-﻿using PointToPoint.MessageRouting;
-using PointToPoint.Server;
+﻿using PointToPoint.Server;
 using PointToPoint.Payload;
 using Protocol.Messages;
 using Server;
 using PointToPoint.Messenger.ErrorHandler;
+using PointToPoint.MessageRouting;
 
-var messageRouter = new ReflectionBasedMessageRouter();
+var messageRouter = new ReflectionMessageRouter();
 
 var clientHandler = new ClientHandler(new NewtonsoftJsonPayload(),
     typeof(Hello).Namespace!,

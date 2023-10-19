@@ -13,18 +13,18 @@ namespace PointToPoint.MessageRouting
     /// }
     /// 
     /// Note that the handle method is called on the internal message receiver thread.
-    public class ReflectionBasedMessageRouter : IMessageRouter
+    public class ReflectionMessageRouter : IMessageRouter
     {
         private readonly string handleMethodName;
 
         public object MessageHandler { get; set; }
 
-        public ReflectionBasedMessageRouter(string handleMethodName = "HandleMessage")
+        public ReflectionMessageRouter(string handleMethodName = "HandleMessage")
         {
             this.handleMethodName = handleMethodName;
         }
 
-        public bool RouteMessage(object message, Guid senderId)
+        public void RouteMessage(object message, Guid senderId)
         {
             var argTypes = new Type[] { message.GetType(), typeof(Guid) };
 
@@ -36,7 +36,6 @@ namespace PointToPoint.MessageRouting
 
             var args = new object[] { message, senderId };
             handleMethod.Invoke(MessageHandler, args);
-            return true;
         }
     }
 }

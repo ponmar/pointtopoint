@@ -9,9 +9,20 @@ namespace PointToPoint.Payload
         private static readonly Encoding PayloadTextEncoding = Encoding.Unicode;
         private const string IdPayloadSeparator = " ";
 
+        private readonly JsonSerializerSettings serializerSettings;
+
+        public NewtonsoftJsonPayload(Formatting formatting = Formatting.None) : this(new JsonSerializerSettings() { Formatting = formatting })
+        {
+        }
+
+        public NewtonsoftJsonPayload(JsonSerializerSettings serializerSettings)
+        {
+            this.serializerSettings = serializerSettings;
+        }
+
         public byte[] MessageToPayload(object message)
         {
-            var json = JsonConvert.SerializeObject(message);
+            var json = JsonConvert.SerializeObject(message, serializerSettings);
             var messageType = message.GetType();
             var assemblyName = messageType.Assembly.FullName.Split(',')[0];
             var messageString = $"{messageType},{assemblyName}{IdPayloadSeparator}{json}";
