@@ -7,6 +7,7 @@ using PointToPoint.Payload;
 using PointToPoint.Protocol;
 using Protocol;
 using System;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace Client.ViewModels;
@@ -39,9 +40,9 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorHandler
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsConnected))]
     [NotifyPropertyChangedFor(nameof(IsDisconnected))]
-    private TcpMessenger? messenger = null;
+    private IMessenger? messenger = null;
 
-    partial void OnMessengerChanged(TcpMessenger? value)
+    partial void OnMessengerChanged(IMessenger? value)
     {
         EvaluateAutoConnectTimer();
     }
@@ -79,7 +80,7 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorHandler
         {
             Messenger = new TcpMessenger(HostnameInput, port,
                 new NewtonsoftJsonPayload(typeof(PublishText).Namespace),
-                new ReflectionMessageRouter() { MessageHandler = this },
+                new ReflectionMessageRouter(executor: Application.Current.Dispatcher.Invoke) { MessageHandler = this },
                 this);
 
             ShowText($"Connected to {HostnameInput}:{PortInput}");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 
 namespace PointToPoint.MessageRouting
 {
@@ -16,12 +17,19 @@ namespace PointToPoint.MessageRouting
     public class ReflectionMessageRouter : IMessageRouter
     {
         private readonly string handleMethodName;
+        private readonly Action<Action> executor;
 
         public object MessageHandler { get; set; }
 
-        public ReflectionMessageRouter(string handleMethodName = "HandleMessage")
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="handleMethodName">Name of the handler method</param>
+        /// <param name="executor">Can be used to route message on the UI thread in a WPF application by setting executor:Application.Current.Dispatcher.Invoke</param>
+        public ReflectionMessageRouter(string handleMethodName = "HandleMessage", Action<Action> executor = null)
         {
             this.handleMethodName = handleMethodName;
+            this.executor = executor;
         }
 
         public void RouteMessage(object message, Guid senderId)
@@ -35,7 +43,14 @@ namespace PointToPoint.MessageRouting
             }
 
             var args = new object[] { message, senderId };
-            handleMethod.Invoke(MessageHandler, args);
+            if (executor is not null)
+            {
+                executor.Invoke(() => handleMethod.Invoke(MessageHandler, args));
+            }
+            else
+            {
+                handleMethod.Invoke(MessageHandler, args);
+            }
         }
     }
 }
