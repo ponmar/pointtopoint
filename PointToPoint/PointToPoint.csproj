@@ -60,7 +60,7 @@
     <Compile Include="Messenger\Utils.cs" />
     <Compile Include="Payload\IPayloadSerializer.cs" />
     <Compile Include="IsExternalInit.cs" />
-    <Compile Include="Payload\JsonPayload.cs" />
+    <Compile Include="Payload\NewtonsoftJsonPayload.cs" />
     <Compile Include="MessageRouting\ReflectionBasedMessageRouter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Messenger\TcpMessenger.cs" />

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace PointToPoint.Payload
 {
-    public class JsonPayload : IPayloadSerializer
+    public class NewtonsoftJsonPayload : IPayloadSerializer
     {
         private static readonly Encoding PayloadTextEncoding = Encoding.Unicode;
         private const string IdPayloadSeparator = " ";
