@@ -24,8 +24,8 @@ namespace PointToPoint.Messenger
             socket.Connect(new IPEndPoint(new IPAddress(server.GetAddressBytes()), serverPort));
         }
 
-        // Server side
-        public TcpMessenger(Socket socket, IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
+        // Server side (when server socket accepted new client socket)
+        internal TcpMessenger(Socket socket, IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
             : base(payloadSerializer, messagesNamespace, messageRouter, messengerErrorHandler)
         {
             this.socket = socket;
