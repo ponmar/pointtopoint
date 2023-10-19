@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PointToPoint\PointToPoint.csproj" />
+    <ProjectReference Include="..\..\..\PointToPoint\PointToPoint.csproj" />
     <ProjectReference Include="..\Protocol\Protocol.csproj" />
   </ItemGroup>
 
