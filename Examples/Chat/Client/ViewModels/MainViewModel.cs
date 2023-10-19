@@ -78,8 +78,7 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorHandler
         try
         {
             Messenger = new TcpMessenger(HostnameInput, port,
-                new NewtonsoftJsonPayload(),
-                typeof(PublishText).Namespace,
+                new NewtonsoftJsonPayload(typeof(PublishText).Namespace),
                 new ReflectionMessageRouter() { MessageHandler = this },
                 this);
 
@@ -121,11 +120,6 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorHandler
     public void MessageRoutingException(Exception e, Guid messengerId)
     {
         ShowText($"Message routing exception: {e.Message}");
-    }
-
-    public void NonProtocolMessageReceived(object message, Guid messengerId)
-    {
-        ShowText($"Non protocol message received: {message.GetType()}");
     }
 
     public void PayloadException(Exception e, Guid messengerId)

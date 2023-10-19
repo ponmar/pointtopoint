@@ -15,7 +15,6 @@ namespace PointToPoint.Server
         private readonly object clientsLock = new();
 
         private readonly IPayloadSerializer payloadSerializer;
-        private readonly string messagesNamespace;
         private readonly IMessageRouter messageRouter;
         private readonly IMessengerErrorHandler errorLogger;
 
@@ -25,17 +24,16 @@ namespace PointToPoint.Server
         // Note: this event is fired from one of the socket communication threads
         public EventHandler<Guid> ClientDisconnected;
 
-        public ClientHandler(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler errorLogger)
+        public ClientHandler(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorHandler errorLogger)
         {
             this.payloadSerializer = payloadSerializer;
-            this.messagesNamespace = messagesNamespace;
             this.messageRouter = messageRouter;
             this.errorLogger = errorLogger;
         }
 
         public void NewConnection(Socket socket)
         {
-            var client = new TcpMessenger(socket, payloadSerializer, messagesNamespace, messageRouter, this);
+            var client = new TcpMessenger(socket, payloadSerializer, messageRouter, this);
             
             lock (clientsLock)
             {
@@ -72,14 +70,6 @@ namespace PointToPoint.Server
             if (RemoveClient(messengerId))
             {
                 errorLogger.PayloadException(e, messengerId);
-            }
-        }
-
-        public void NonProtocolMessageReceived(object message, Guid messengerId)
-        {
-            if (RemoveClient(messengerId))
-            {
-                errorLogger.NonProtocolMessageReceived(message, messengerId);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Newtonsoft.Json;
+using PointToPoint.Protocol;
 
 namespace PointToPoint.Payload
 {
@@ -10,9 +11,11 @@ namespace PointToPoint.Payload
         private const string IdPayloadSeparator = " ";
 
         private readonly JsonSerializerSettings serializerSettings;
+        private readonly string messagesNamespace;
 
-        public NewtonsoftJsonPayload(Formatting formatting = Formatting.None) : this(new JsonSerializerSettings() { Formatting = formatting })
+        public NewtonsoftJsonPayload(string messagesNamespace, Formatting formatting = Formatting.None) : this(new JsonSerializerSettings() { Formatting = formatting })
         {
+            this.messagesNamespace = messagesNamespace;
         }
 
         public NewtonsoftJsonPayload(JsonSerializerSettings serializerSettings)
@@ -47,8 +50,15 @@ namespace PointToPoint.Payload
             var jsonType = Type.GetType(jsonTypeString);
             if (jsonType == null)
             {
-                throw new Exception("Unknown message type");
+                throw new Exception($"Unknown message type: {jsonTypeString}");
             }
+
+            if (jsonType != typeof(KeepAlive) &&
+                jsonType.Namespace != messagesNamespace)
+            {
+                throw new Exception($"Non protocol message type received: {jsonTypeString}");
+            }
+
 
             var json = payload.Substring(separatorIndex + 1);
 

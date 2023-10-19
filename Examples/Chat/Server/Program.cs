@@ -7,8 +7,8 @@ using PointToPoint.MessageRouting;
 
 var messageRouter = new ReflectionMessageRouter();
 
-var clientHandler = new ClientHandler(new NewtonsoftJsonPayload(),
-    typeof(Text).Namespace!,
+var clientHandler = new ClientHandler(
+    new NewtonsoftJsonPayload(typeof(Text).Namespace!),
     messageRouter,
     new ConsoleLoggerErrorHandler());
 

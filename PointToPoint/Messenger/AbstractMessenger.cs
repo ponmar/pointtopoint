@@ -29,10 +29,9 @@ namespace PointToPoint.Messenger.ErrorHandler
         private readonly ByteBuffer lengthBuffer = new(4);
         private readonly ByteBuffer messageBuffer = new(0);
 
-        protected AbstractMessenger(IPayloadSerializer payloadSerializer, string messagesNamespace, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
+        protected AbstractMessenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
         {
             this.payloadSerializer = payloadSerializer;
-            this.messagesNamespace = messagesNamespace;
             this.messageRouter = messageRouter;
             this.messengerErrorHandler = messengerErrorHandler;
 
@@ -107,13 +106,6 @@ namespace PointToPoint.Messenger.ErrorHandler
                 {
                     messengerErrorHandler.PayloadException(e, Id);
                     lengthBuffer.SetTarget(4);
-                    return;
-                }
-
-                if (message.GetType() != typeof(KeepAlive) &&
-                    message.GetType().Namespace != messagesNamespace)
-                {
-                    messengerErrorHandler.NonProtocolMessageReceived(message, Id);
                     return;
                 }
 
