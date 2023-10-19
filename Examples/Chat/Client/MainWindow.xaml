@@ -33,6 +33,10 @@
                     <Button Content="Connect" Command="{Binding ConnectCommand}" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
                     <Button Content="Disconnect" Command="{Binding DisconnectCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
                 </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <CheckBox VerticalAlignment="Center" Margin="3" IsChecked="{Binding AutoConnect}">Auto-connect</CheckBox>
+                </StackPanel>
             </WrapPanel>
         </Border>
 

@@ -7,19 +7,28 @@ using PointToPoint.Payload;
 using PointToPoint.Protocol;
 using Protocol;
 using System;
+using System.Windows.Threading;
 
 namespace Client.ViewModels;
 
 public partial class MainViewModel : ObservableObject, IMessengerErrorHandler
 {
     public bool IsConnected => Messenger is not null;
-    public bool IsDisconnected => Messenger is null;
+    public bool IsDisconnected => !IsConnected;
 
     [ObservableProperty]
     private string hostnameInput = "127.0.0.1";
 
     [ObservableProperty]
     private string portInput = Constants.Port.ToString();
+
+    [ObservableProperty]
+    private bool autoConnect;
+
+    partial void OnAutoConnectChanged(bool value)
+    {
+        EvaluateAutoConnectTimer();
+    }
 
     [ObservableProperty]
     private string textInput = string.Empty;
@@ -32,8 +41,24 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorHandler
     [NotifyPropertyChangedFor(nameof(IsDisconnected))]
     private TcpMessenger? messenger = null;
 
+    partial void OnMessengerChanged(TcpMessenger? value)
+    {
+        EvaluateAutoConnectTimer();
+    }
+
+    private readonly DispatcherTimer autoConnectTimer = new() { Interval = TimeSpan.FromSeconds(3) };
+
     public MainViewModel()
     {
+        autoConnectTimer.Tick += AutoConnectTimer_Tick;
+    }
+
+    private void AutoConnectTimer_Tick(object? sender, EventArgs e)
+    {
+        if (IsDisconnected)
+        {
+            Connect();
+        }
     }
 
     [RelayCommand]
@@ -116,6 +141,19 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorHandler
     private void ShowText(string text)
     {
         Texts += $"\n{text}";
+    }
+
+    private void EvaluateAutoConnectTimer()
+    {
+        if (IsDisconnected && AutoConnect)
+        {
+            ShowText("Reconnecting in 3 seconds...");
+            autoConnectTimer.Start();
+        }
+        else
+        {
+            autoConnectTimer.Stop();
+        }
     }
 
     public void Close()
