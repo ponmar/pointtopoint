@@ -14,11 +14,13 @@ Features:
 * No encryption
 
 Message format and example:
+
 | Serializer            | Length (4 bytes in local byte order) | Payload (X bytes)                                   |
 |:---------------------:|:------------------------------------:|:---------------------------------------------------:|
 | NewtonsoftJsonPayload |             170                      | protocol.PublishText,Protocol { Message = "Hello" } |
 
 Payload notes for the NewtonsoftJsonPayload serializer:
+
 * The payload string is serialized and sent as Unicode encoded data
 * protocol.PublishText is the serialized object type namespace
 * Protocol is the serialized object assembly
