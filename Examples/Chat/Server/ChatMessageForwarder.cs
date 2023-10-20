@@ -4,11 +4,11 @@ using Protocol;
 
 namespace Server;
 
-public class MessageHandler
+public class ChatMessageForwarder
 {
     private readonly IMessageSender messageSender;
 
-    public MessageHandler(IMessageSender messageSender)
+    public ChatMessageForwarder(IMessageSender messageSender)
     {
         this.messageSender = messageSender;
     }

@@ -10,7 +10,7 @@ var clientHandler = new ClientHandler(new NewtonsoftJsonPayload(typeof(Text).Nam
 clientHandler.ClientConnected += (sender, guid) => Console.WriteLine($"Client connected: {guid}");
 clientHandler.ClientDisconnected += (sender, guid) => Console.WriteLine($"Client disconnected: {guid}");
 
-var messageHandler = new MessageHandler(clientHandler);
+var messageHandler = new ChatMessageForwarder(clientHandler);
 messageRouter.MessageHandler = messageHandler;
 
 var tcpServer = new TcpServer(Constants.Port);
