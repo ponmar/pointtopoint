@@ -7,6 +7,19 @@
         mc:Ignorable="d"
         Title="Chat" Height="450" Width="800"
         Closed="Window_Closed">
+    <Window.Resources>
+        <Style x:Key="NormalButton" TargetType="Button">
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Height" Value="25"/>
+        </Style>
+        <Style x:Key="NormalBorder" TargetType="Border">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="LightGray"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -17,7 +30,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Grid.Column="0" BorderThickness="1" Margin="3" CornerRadius="5" BorderBrush="Black" Background="LightGray">
+        <Border Grid.Row="0" Grid.Column="0" Margin="3" Style="{StaticResource NormalBorder}">
             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Server:" Margin="3" VerticalAlignment="Center"/>
@@ -30,8 +43,8 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="5">
-                    <Button Content="Connect" Command="{Binding ConnectCommand}" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
-                    <Button Content="Disconnect" Command="{Binding DisconnectCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
+                    <Button Style="{StaticResource NormalButton}" Content="Connect" Command="{Binding ConnectCommand}" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
+                    <Button Style="{StaticResource NormalButton}" Content="Disconnect" Command="{Binding DisconnectCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="5">
@@ -44,11 +57,11 @@
             <TextBlock Text="{Binding Texts}" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
         </ScrollViewer>
 
-        <Border Grid.Row="2" Grid.Column="0" BorderThickness="1" Margin="3" CornerRadius="5" BorderBrush="Black" Background="LightGray">
+        <Border Grid.Row="2" Grid.Column="0" Margin="3" Style="{StaticResource NormalBorder}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                 <TextBlock Text="Message:" Margin="3" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding TextInput}" Width="300" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
-                <Button Content="Send" Command="{Binding SendTextCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
+                <Button Style="{StaticResource NormalButton}" Content="Send" Command="{Binding SendTextCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
             </StackPanel>
         </Border>
     </Grid>
