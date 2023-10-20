@@ -12,7 +12,7 @@ using System.Windows.Threading;
 
 namespace Client.ViewModels;
 
-public partial class MainViewModel : ObservableObject, IMessengerErrorHandler
+public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
 {
     public bool IsConnected => Messenger is not null;
     public bool IsDisconnected => !IsConnected;
@@ -79,7 +79,7 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorHandler
         try
         {
             Messenger = new TcpMessenger(HostnameInput, port,
-                new NewtonsoftJsonPayload(typeof(PublishText).Namespace),
+                new NewtonsoftJsonPayload(typeof(PublishText).Namespace!),
                 new ReflectionMessageRouter(executor: Application.Current.Dispatcher.Invoke) { MessageHandler = this },
                 this);
 
@@ -118,19 +118,13 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorHandler
     {
     }
 
-    public void MessageRoutingException(Exception e, Guid messengerId)
+    public void Disconnected(Guid messengerId, Exception e)
     {
-        ShowText($"Message routing exception: {e.Message}");
-    }
-
-    public void PayloadException(Exception e, Guid messengerId)
-    {
-        ShowText($"Payload exception: {e.Message}");
-    }
-
-    public void Disconnected(Guid messengerId)
-    {
-        ShowText("Disconnected from server");
+        if (IsConnected)
+        {
+            ShowText("Disconnected from server" + (e is not null ? $" ({e.Message})" : ""));
+            Messenger = null;
+        }
     }
 
     private void ShowText(string text)

@@ -51,11 +51,11 @@
     <Compile Include="MessageRouting\IMessageRouter.cs" />
     <Compile Include="MessageRouting\EventMessageRouter.cs" />
     <Compile Include="Messenger\ErrorHandler\ConsoleLoggerErrorHandler.cs" />
+    <Compile Include="Messenger\ErrorHandler\IMessengerErrorReporter.cs" />
     <Compile Include="Server\ClientHandler.cs" />
     <Compile Include="Server\IMessageSender.cs" />
     <Compile Include="Messenger\IMessenger.cs" />
     <Compile Include="Server\IClientHandler.cs" />
-    <Compile Include="Messenger\ErrorHandler\IMessengerErrorHandler.cs" />
     <Compile Include="Messenger\ByteBuffer.cs" />
     <Compile Include="Messenger\AbstractMessenger.cs" />
     <Compile Include="Messenger\Utils.cs" />

@@ -2,26 +2,11 @@
 
 namespace PointToPoint.Messenger.ErrorHandler
 {
-    public class ConsoleLoggerErrorHandler : IMessengerErrorHandler
+    public class ConsoleLoggerErrorHandler : IMessengerErrorReporter
     {
-        public void Disconnected(Guid messengerId)
+        public void Disconnected(Guid messengerId, Exception e)
         {
-            Console.WriteLine("Client disconnected");
-        }
-
-        public void MessageRoutingException(Exception e, Guid messengerId)
-        {
-            Console.WriteLine($"Message routing exception: {e.Message}");
-        }
-
-        public void NonProtocolMessageReceived(object message, Guid messengerId)
-        {
-            Console.WriteLine($"Non protocol message received: {message.GetType()}");
-        }
-
-        public void PayloadException(Exception e, Guid messengerId)
-        {
-            Console.WriteLine($"Payload exception: {e.Message}");
+            Console.WriteLine($"{messengerId} disconnected: {e?.Message}");
         }
     }
 }

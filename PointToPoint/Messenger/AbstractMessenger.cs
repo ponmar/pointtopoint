@@ -16,7 +16,7 @@ namespace PointToPoint.Messenger.ErrorHandler
         protected readonly IPayloadSerializer payloadSerializer;
         protected readonly string messagesNamespace;
         protected readonly IMessageRouter messageRouter;
-        protected readonly IMessengerErrorHandler messengerErrorHandler;
+        protected readonly IMessengerErrorReporter messengerErrorHandler;
 
         private readonly Thread receiveThread;
         private readonly Thread sendThread;
@@ -29,7 +29,7 @@ namespace PointToPoint.Messenger.ErrorHandler
         private readonly ByteBuffer lengthBuffer = new(0);
         private readonly ByteBuffer messageBuffer = new(0);
 
-        protected AbstractMessenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
+        protected AbstractMessenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
         {
             this.payloadSerializer = payloadSerializer;
             this.messageRouter = messageRouter;
@@ -80,7 +80,6 @@ namespace PointToPoint.Messenger.ErrorHandler
                     // Socket receive timeout
                 }
             }
-            messengerErrorHandler.Disconnected(Id);
         }
 
         private void ReceiveMessageLength()
@@ -101,26 +100,23 @@ namespace PointToPoint.Messenger.ErrorHandler
                 // Prepare for next message
                 ResetLengthBuffer();
 
-                object message;
                 try
                 {
-                    message = payloadSerializer.PayloadToMessage(messageBuffer.buffer, messageBuffer.numBytesToRead);
-                }
-                catch (Exception e)
-                {
-                    messengerErrorHandler.PayloadException(e, Id);
-                    return;
-                }
-
-                try
-                {
+                    var message = payloadSerializer.PayloadToMessage(messageBuffer.buffer, messageBuffer.numBytesToRead);
                     messageRouter.RouteMessage(message, Id);
                 }
                 catch (Exception e)
                 {
-                    messengerErrorHandler.MessageRoutingException(e, Id);
+                    DisconnectAndReportError(e);
+                    return;
                 }
             }
+        }
+
+        private void DisconnectAndReportError(Exception e = null)
+        {
+            runThreads = false;
+            messengerErrorHandler.Disconnected(Id, e);
         }
 
         public void Send(object message)
@@ -161,9 +157,9 @@ namespace PointToPoint.Messenger.ErrorHandler
             {
                 // Socket write error (disconnected)
                 // Make receive thread stop
-                runThreads = false;
             }
-            messengerErrorHandler.Disconnected(Id);
+
+            DisconnectAndReportError();
         }
 
         private void ResetLengthBuffer()

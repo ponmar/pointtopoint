@@ -14,7 +14,7 @@ namespace PointToPoint.Messenger
         private readonly Socket socket;
 
         // Client side
-        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
+        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
             : base(payloadSerializer, messageRouter, messengerErrorHandler)
         {
             var servers = Dns.GetHostEntry(serverHostname);
@@ -25,7 +25,7 @@ namespace PointToPoint.Messenger
         }
 
         // Server side (when server socket accepted new client socket)
-        internal TcpMessenger(Socket socket, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
+        internal TcpMessenger(Socket socket, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
             : base(payloadSerializer, messageRouter, messengerErrorHandler)
         {
             this.socket = socket;

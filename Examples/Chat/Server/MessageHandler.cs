@@ -22,7 +22,7 @@ public class MessageHandler
         {
             case "hi":
             case "hello":
-                Console.WriteLine($"Sending greeting to {senderId}.");
+                Console.WriteLine($"Sending greeting.");
                 messageSender.SendMessage(new Text($"And {message.Message} to you! /Server", DateTime.Now), senderId);
                 break;
         }

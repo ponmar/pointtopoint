@@ -9,14 +9,14 @@ using System.Net.Sockets;
 
 namespace PointToPoint.Server
 {
-    public class ClientHandler : IClientHandler, IMessageSender, IMessengerErrorHandler
+    public class ClientHandler : IClientHandler, IMessageSender, IMessengerErrorReporter
     {
         public List<IMessenger> Clients { get; } = new();
         private readonly object clientsLock = new();
 
         private readonly IPayloadSerializer payloadSerializer;
         private readonly IMessageRouter messageRouter;
-        private readonly IMessengerErrorHandler errorLogger;
+        private readonly IMessengerErrorReporter errorLogger;
 
         // Note: this event is fired from the server socket accept thread
         public EventHandler<Guid> ClientConnected;
@@ -24,7 +24,7 @@ namespace PointToPoint.Server
         // Note: this event is fired from one of the socket communication threads
         public EventHandler<Guid> ClientDisconnected;
 
-        public ClientHandler(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorHandler errorLogger)
+        public ClientHandler(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter errorLogger)
         {
             this.payloadSerializer = payloadSerializer;
             this.messageRouter = messageRouter;
@@ -65,27 +65,11 @@ namespace PointToPoint.Server
             }
         }
 
-        public void PayloadException(Exception e, Guid messengerId)
+        public void Disconnected(Guid messengerId, Exception errorMessage)
         {
             if (RemoveClient(messengerId))
             {
-                errorLogger.PayloadException(e, messengerId);
-            }
-        }
-
-        public void MessageRoutingException(Exception e, Guid messengerId)
-        {
-            if (RemoveClient(messengerId))
-            {
-                errorLogger.MessageRoutingException(e, messengerId);
-            }
-        }
-
-        public void Disconnected(Guid messengerId)
-        {
-            if (RemoveClient(messengerId))
-            {
-                errorLogger.Disconnected(messengerId);
+                errorLogger.Disconnected(messengerId, errorMessage);
             }
         }
 
