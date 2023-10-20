@@ -6,8 +6,22 @@ This repository contains code for client/server communication. The code originat
 
 Features:
 
-* Client and server side code for settings up connections
 * Message passing over TCP (Newtonsoft JSON or custom object serialization)
-* Keep alive message sending
+* Client side code for settings up a connection to a server and sending/receiving messages
+* Server side code for accepting client connections, keep track of connected clients and sending/receiving messages
+* Keep alive message sending for detecting communication problems
 * No authentication
 * No encryption
+
+Message format and example:
+| Serializer            | Length (4 bytes in local byte order) | Payload (X bytes)                                   |
+|:---------------------:|:------------------------------------:|:---------------------------------------------------:|
+| NewtonsoftJsonPayload |             170                      | protocol.PublishText,Protocol { Message = "Hello" } |
+
+Payload notes for the NewtonsoftJsonPayload serializer:
+* The payload string is serialized and sent as Unicode encoded data
+* protocol.PublishText is the serialized object type namespace
+* Protocol is the serialized object assembly
+* The last part is the object serialized into JSON data with Newtonsoft JSON nuget package
+
+See more details about how to send and receive messages in included example projects.

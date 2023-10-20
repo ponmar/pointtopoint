@@ -108,7 +108,6 @@ namespace PointToPoint.Messenger.ErrorHandler
                 catch (Exception e)
                 {
                     DisconnectAndReportError(e);
-                    return;
                 }
             }
         }
