@@ -5,7 +5,7 @@ using Server;
 using PointToPoint.MessageRouting;
 
 var messageRouter = new ReflectionMessageRouter();
-var clientHandler = new ClientHandler(new NewtonsoftJsonPayload(typeof(Text).Namespace!), messageRouter);
+var clientHandler = new ClientHandler(new NewtonsoftJsonPayloadSerializer(typeof(Text).Namespace!), messageRouter);
 
 clientHandler.ClientConnected += (sender, guid) => Console.WriteLine($"Client connected: {guid}");
 clientHandler.ClientDisconnected += (sender, guid) => Console.WriteLine($"Client disconnected: {guid}");

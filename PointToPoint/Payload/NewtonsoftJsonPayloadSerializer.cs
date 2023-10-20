@@ -5,7 +5,7 @@ using PointToPoint.Protocol;
 
 namespace PointToPoint.Payload
 {
-    public class NewtonsoftJsonPayload : IPayloadSerializer
+    public class NewtonsoftJsonPayloadSerializer : IPayloadSerializer
     {
         private static readonly Encoding PayloadTextEncoding = Encoding.Unicode;
         private const string IdPayloadSeparator = " ";
@@ -13,12 +13,12 @@ namespace PointToPoint.Payload
         private readonly JsonSerializerSettings serializerSettings;
         private readonly string messagesNamespace;
 
-        public NewtonsoftJsonPayload(string messagesNamespace, Formatting formatting = Formatting.None) : this(new JsonSerializerSettings() { Formatting = formatting })
+        public NewtonsoftJsonPayloadSerializer(string messagesNamespace, Formatting formatting = Formatting.None) : this(new JsonSerializerSettings() { Formatting = formatting })
         {
             this.messagesNamespace = messagesNamespace;
         }
 
-        public NewtonsoftJsonPayload(JsonSerializerSettings serializerSettings)
+        public NewtonsoftJsonPayloadSerializer(JsonSerializerSettings serializerSettings)
         {
             this.serializerSettings = serializerSettings;
         }

@@ -13,7 +13,7 @@ var messageHandler = new MessageHandler();
 
 var client = new TcpMessenger(serverHostname,
     serverPort,
-    new NewtonsoftJsonPayload(typeof(Hello).Namespace!),
+    new NewtonsoftJsonPayloadSerializer(typeof(Hello).Namespace),
     new ReflectionMessageRouter() { MessageHandler = messageHandler },
     messageHandler);
 

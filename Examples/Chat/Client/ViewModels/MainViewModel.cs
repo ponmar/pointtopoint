@@ -79,7 +79,7 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
         try
         {
             Messenger = new TcpMessenger(HostnameInput, port,
-                new NewtonsoftJsonPayload(typeof(PublishText).Namespace!),
+                new NewtonsoftJsonPayloadSerializer(typeof(PublishText).Namespace!),
                 new ReflectionMessageRouter(executor: Application.Current.Dispatcher.Invoke) { MessageHandler = this },
                 this);
 
