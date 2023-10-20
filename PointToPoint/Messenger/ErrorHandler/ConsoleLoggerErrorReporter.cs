@@ -2,7 +2,7 @@
 
 namespace PointToPoint.Messenger.ErrorHandler
 {
-    public class ConsoleLoggerErrorHandler : IMessengerErrorReporter
+    public class ConsoleLoggerErrorReporter : IMessengerErrorReporter
     {
         public void Disconnected(Guid messengerId, Exception e)
         {
