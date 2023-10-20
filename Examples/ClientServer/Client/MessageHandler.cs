@@ -1,4 +1,4 @@
-﻿using PointToPoint.Messenger.ErrorHandler;
+﻿using PointToPoint.Messenger;
 using PointToPoint.Protocol;
 using Protocol;
 

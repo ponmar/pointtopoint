@@ -12,7 +12,7 @@ namespace PointToPoint.MessageRouting
     ///     // Message handling code
     /// }
     /// 
-    /// Note that the handle method is called on the internal message receiver thread.
+    /// Note that the handle method is called from the internal message receiver thread.
     public class ReflectionMessageRouter : IMessageRouter
     {
         private readonly string handleMethodName;

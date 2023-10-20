@@ -9,6 +9,9 @@ namespace PointToPoint.MessageRouting
     /// </summary>
     public class EventMessageRouter : IMessageRouter
     {
+        /// <summary>
+        /// Note that this event is fired from the internal message receiving thread
+        /// </summary>
         public EventHandler<MessageInfo> MessageReceived;
 
         public void RouteMessage(object message, Guid senderId)

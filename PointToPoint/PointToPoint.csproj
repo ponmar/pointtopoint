@@ -50,8 +50,7 @@
   <ItemGroup>
     <Compile Include="MessageRouting\IMessageRouter.cs" />
     <Compile Include="MessageRouting\EventMessageRouter.cs" />
-    <Compile Include="Messenger\ErrorHandler\ConsoleLoggerErrorReporter.cs" />
-    <Compile Include="Messenger\ErrorHandler\IMessengerErrorReporter.cs" />
+    <Compile Include="Messenger\IMessengerErrorReporter.cs" />
     <Compile Include="Server\ClientHandler.cs" />
     <Compile Include="Server\IMessageSender.cs" />
     <Compile Include="Messenger\IMessenger.cs" />
