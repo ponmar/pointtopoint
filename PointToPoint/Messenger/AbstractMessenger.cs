@@ -26,7 +26,7 @@ namespace PointToPoint.Messenger.ErrorHandler
         private volatile bool runThreads = true;
         private bool started = false;
 
-        private readonly ByteBuffer lengthBuffer = new(4);
+        private readonly ByteBuffer lengthBuffer = new(0);
         private readonly ByteBuffer messageBuffer = new(0);
 
         protected AbstractMessenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorHandler messengerErrorHandler)
@@ -34,6 +34,8 @@ namespace PointToPoint.Messenger.ErrorHandler
             this.payloadSerializer = payloadSerializer;
             this.messageRouter = messageRouter;
             this.messengerErrorHandler = messengerErrorHandler;
+
+            ResetLengthBuffer();
 
             receiveThread = new Thread(ReceiveThread);
             sendThread = new Thread(SendThread);
@@ -87,7 +89,7 @@ namespace PointToPoint.Messenger.ErrorHandler
             if (lengthBuffer.Finished)
             {
                 var messageLength = Utils.DeserializeInt(lengthBuffer.buffer, 0);
-                messageBuffer.SetTarget(messageLength);
+                ResetMessageBuffer(messageLength);
             }
         }
 
@@ -96,16 +98,17 @@ namespace PointToPoint.Messenger.ErrorHandler
             ReceiveBytes(messageBuffer);
             if (messageBuffer.Finished)
             {
+                // Prepare for next message
+                ResetLengthBuffer();
+
                 object message;
                 try
                 {
                     message = payloadSerializer.PayloadToMessage(messageBuffer.buffer, messageBuffer.numBytesToRead);
-                    lengthBuffer.SetTarget(4);
                 }
                 catch (Exception e)
                 {
                     messengerErrorHandler.PayloadException(e, Id);
-                    lengthBuffer.SetTarget(4);
                     return;
                 }
 
@@ -116,7 +119,6 @@ namespace PointToPoint.Messenger.ErrorHandler
                 catch (Exception e)
                 {
                     messengerErrorHandler.MessageRoutingException(e, Id);
-                    return;
                 }
             }
         }
@@ -162,6 +164,16 @@ namespace PointToPoint.Messenger.ErrorHandler
                 runThreads = false;
             }
             messengerErrorHandler.Disconnected(Id);
+        }
+
+        private void ResetLengthBuffer()
+        {
+            lengthBuffer.SetTarget(4);
+        }
+
+        private void ResetMessageBuffer(int messageLength)
+        {
+            messageBuffer.SetTarget(messageLength);
         }
 
         protected abstract void ReceiveBytes(ByteBuffer buffer);
