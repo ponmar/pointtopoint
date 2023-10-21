@@ -67,7 +67,7 @@ namespace PointToPoint.Payload
             {
                 throw new Exception("Deserialize returned null");
             }
-            return null;
+            return message;
         }
 
         private static byte[] SerializeString(string data)
