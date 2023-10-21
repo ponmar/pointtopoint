@@ -9,7 +9,7 @@ This repository contains code for client/server communication. The code originat
 * Built with .NET Standard 2.0 (can be used from .NET Framework and later .NET versions)
 * Message passing over TCP (Newtonsoft JSON or custom object serialization)
 * Client side code for settings up a connection to a server and sending/receiving messages
-* Server side code for accepting client connections, keep track of connected clients and sending/receiving messages
+* Server side code for accepting client connections, keeping track of connected clients and sending/receiving messages
 * Keep alive message sending for detecting communication problems
 * No built-in authentication or encryption, but it can be inmplemented on top of the included message passing
 

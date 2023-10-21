@@ -1,31 +1,28 @@
 ﻿using System;
 using System.Text;
-using Newtonsoft.Json;
 using PointToPoint.Protocol;
+using System.Text.Json;
 
 namespace PointToPoint.Payload
 {
-    public class NewtonsoftJsonPayloadSerializer : IPayloadSerializer
+    public class MsJsonPayloadSerializer : IPayloadSerializer
     {
         private static readonly Encoding PayloadTextEncoding = Encoding.Unicode;
         private const string IdPayloadSeparator = " ";
 
-        private readonly JsonSerializerSettings serializerSettings;
         private readonly string messagesNamespace;
 
-        public NewtonsoftJsonPayloadSerializer(string messagesNamespace, Formatting formatting = Formatting.None) : this(messagesNamespace, new JsonSerializerSettings() { Formatting = formatting })
-        {
-        }
+        private readonly JsonSerializerOptions? serializerOptions;
 
-        public NewtonsoftJsonPayloadSerializer(string messagesNamespace, JsonSerializerSettings serializerSettings)
+        public MsJsonPayloadSerializer(string messagesNamespace, JsonSerializerOptions? serializerOptions = null)
         {
             this.messagesNamespace = messagesNamespace;
-            this.serializerSettings = serializerSettings;
+            this.serializerOptions = serializerOptions;
         }
 
         public byte[] MessageToPayload(object message)
         {
-            var json = JsonConvert.SerializeObject(message, serializerSettings);
+            var json = JsonSerializer.Serialize(message);
             var messageType = message.GetType();
             var assemblyName = messageType.Assembly.FullName.Split(',')[0];
             var messageString = $"{messageType},{assemblyName}{IdPayloadSeparator}{json}";
@@ -62,12 +59,12 @@ namespace PointToPoint.Payload
 
             var json = payload.Substring(separatorIndex + 1);
 
-            var message = JsonConvert.DeserializeObject(json, jsonType);
+            var message = JsonSerializer.Deserialize(json, jsonType, serializerOptions);
             if (message is null)
             {
                 throw new Exception("Deserialize returned null");
             }
-            return null;
+            return message;
         }
 
         private static byte[] SerializeString(string data)
