@@ -2,14 +2,32 @@
 
 namespace PointToPoint.Messenger
 {
-    // Sends and receives messages over TCP in format: <length (4 bytes)> <payload>
+    /// <summary>
+    /// Handles sending and receiving of objects via TCP
+    /// </summary>
     public interface IMessenger
     {
+        /// <summary>
+        /// A unique ID for this communication channel
+        /// </summary>
         Guid Id { get; }
+
+        /// <summary>
+        /// Starts the sending and receiving communication threads
+        /// </summary>
         void Start();
+
+        /// <summary>
+        /// Closes this communication channel
+        /// </summary>
+        /// This method should not be called from a disconnected-callback-thread.
+        /// The method blocks until the communication threads has been shut down.
         void Close();
 
-        // This method is thread safe
+        /// <summary>
+        /// Queue a message for sending
+        /// </summary>
+        /// <param name="message">Any object that is included in the protocol namespace</param>
         void Send(object message);
     }
 }

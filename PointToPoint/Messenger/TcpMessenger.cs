@@ -8,12 +8,18 @@ using System.Net.Sockets;
 
 namespace PointToPoint.Messenger
 {
-    // Message sending over TCP/IP
+    /// <summary>
+    /// Message sending over TCP/IP 
+    /// </summary>
     public class TcpMessenger : AbstractMessenger
     {
         private readonly Socket socket;
 
-        // Client side
+        /// <summary>
+        /// Constructor to be used on the client side of the communication
+        /// </summary>
+        /// Note that this instance can not be re-used after it has disconnected.
+        /// Exception will be thrown for errors.
         public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
             : base(payloadSerializer, messageRouter, messengerErrorHandler)
         {
@@ -24,7 +30,9 @@ namespace PointToPoint.Messenger
             socket.Connect(new IPEndPoint(new IPAddress(server.GetAddressBytes()), serverPort));
         }
 
-        // Server side (when server socket accepted new client socket)
+        /// <summary>
+        /// Constructor to be used internally on the server side (when server socket accepted new client socket)
+        /// </summary>
         internal TcpMessenger(Socket socket, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
             : base(payloadSerializer, messageRouter, messengerErrorHandler)
         {
@@ -35,6 +43,8 @@ namespace PointToPoint.Messenger
         private void SetSocketOptions()
         {
             socket.NoDelay = true;
+
+            // Note that this setting affects how fast the receive thread can be shut down.
             socket.ReceiveTimeout = 500;
         }
 
