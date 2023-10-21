@@ -16,16 +16,16 @@ namespace PointToPoint.MessageRouting
     public class ReflectionMessageRouter : IMessageRouter
     {
         private readonly string handleMethodName;
-        private readonly Action<Action> executor;
+        private readonly Action<Action>? executor;
 
-        public object MessageHandler { get; set; }
+        public object? MessageHandler { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="handleMethodName">Name of the handler method</param>
         /// <param name="executor">Can be used to route message on the UI thread in a WPF application by setting executor:Application.Current.Dispatcher.Invoke</param>
-        public ReflectionMessageRouter(string handleMethodName = "HandleMessage", Action<Action> executor = null)
+        public ReflectionMessageRouter(string handleMethodName = "HandleMessage", Action<Action>? executor = null)
         {
             this.handleMethodName = handleMethodName;
             this.executor = executor;
@@ -33,6 +33,11 @@ namespace PointToPoint.MessageRouting
 
         public void RouteMessage(object message, Guid senderId)
         {
+            if (MessageHandler is null)
+            {
+                throw new Exception($"No {nameof(MessageHandler)} set");
+            }
+
             var argTypes = new Type[] { message.GetType(), typeof(Guid) };
 
             var handleMethod = MessageHandler.GetType().GetMethod(handleMethodName, argTypes);

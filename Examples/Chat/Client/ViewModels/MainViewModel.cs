@@ -119,7 +119,7 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
     {
     }
 
-    public void Disconnected(Guid messengerId, Exception e)
+    public void Disconnected(Guid messengerId, Exception? e)
     {
         if (IsConnected)
         {

@@ -7,6 +7,6 @@ namespace PointToPoint.Messenger
     /// </summary>
     public interface IMessengerErrorReporter
     {
-        void Disconnected(Guid messengerId, Exception e);
+        void Disconnected(Guid messengerId, Exception? e);
     }
 }

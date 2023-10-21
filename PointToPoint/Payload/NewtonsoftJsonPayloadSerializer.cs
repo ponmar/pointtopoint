@@ -13,13 +13,13 @@ namespace PointToPoint.Payload
         private readonly JsonSerializerSettings serializerSettings;
         private readonly string messagesNamespace;
 
-        public NewtonsoftJsonPayloadSerializer(string messagesNamespace, Formatting formatting = Formatting.None) : this(new JsonSerializerSettings() { Formatting = formatting })
+        public NewtonsoftJsonPayloadSerializer(string messagesNamespace, Formatting formatting = Formatting.None) : this(messagesNamespace, new JsonSerializerSettings() { Formatting = formatting })
         {
-            this.messagesNamespace = messagesNamespace;
         }
 
-        public NewtonsoftJsonPayloadSerializer(JsonSerializerSettings serializerSettings)
+        public NewtonsoftJsonPayloadSerializer(string messagesNamespace, JsonSerializerSettings serializerSettings)
         {
+            this.messagesNamespace = messagesNamespace;
             this.serializerSettings = serializerSettings;
         }
 
@@ -63,7 +63,7 @@ namespace PointToPoint.Payload
             var json = payload.Substring(separatorIndex + 1);
 
             // Note: may throw JsonException
-            return JsonConvert.DeserializeObject(json, jsonType);
+            return JsonConvert.DeserializeObject(json, jsonType)!;
         }
 
         private static byte[] SerializeString(string data)

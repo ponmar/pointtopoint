@@ -14,7 +14,6 @@ namespace PointToPoint.Messenger.ErrorHandler
         public Guid Id { get; } = Guid.NewGuid();
 
         protected readonly IPayloadSerializer payloadSerializer;
-        protected readonly string messagesNamespace;
         protected readonly IMessageRouter messageRouter;
         protected readonly IMessengerErrorReporter messengerErrorHandler;
 
@@ -112,7 +111,7 @@ namespace PointToPoint.Messenger.ErrorHandler
             }
         }
 
-        private void DisconnectAndReportError(Exception e = null)
+        private void DisconnectAndReportError(Exception? e = null)
         {
             runThreads = false;
             messengerErrorHandler.Disconnected(Id, e);

@@ -17,10 +17,10 @@ namespace PointToPoint.Server
         private readonly IMessageRouter messageRouter;
 
         // Note: this event is fired from the server socket accept thread
-        public EventHandler<Guid> ClientConnected;
+        public EventHandler<Guid>? ClientConnected;
 
         // Note: this event is fired from one of the socket communication threads
-        public EventHandler<Guid> ClientDisconnected;
+        public EventHandler<Guid>? ClientDisconnected;
 
         public ClientHandler(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter)
         {
@@ -38,15 +38,12 @@ namespace PointToPoint.Server
 
         public void SendMessage(object message, Guid receiverId)
         {
-            IMessenger client = null;
+            IMessenger? client = null;
             lock (clientsLock)
             {
                 client = Clients.FirstOrDefault(x => x.Id == receiverId);
             }
-            if (client is not null)
-            {
-                client.Send(message);
-            }
+            client?.Send(message);
         }
 
         public void SendBroadcast(object message)
@@ -57,7 +54,7 @@ namespace PointToPoint.Server
             }
         }
 
-        public void Disconnected(Guid messengerId, Exception errorMessage)
+        public void Disconnected(Guid messengerId, Exception? e)
         {
             RemoveClient(messengerId);
         }
@@ -73,18 +70,22 @@ namespace PointToPoint.Server
         private bool RemoveClient(Guid clientId)
         {
             IMessenger client;
-            bool clientRemoved;
             lock (clientsLock)
             {
                 client = Clients.FirstOrDefault(x => x.Id == clientId);
-                clientRemoved = client is not null && Clients.Remove(client);
+                if (client is not null)
+                {
+                    Clients.Remove(client);
+                }
             }
 
-            if (clientRemoved)
-            {
-                ClientDisconnected?.Invoke(this, client.Id);
-            }            
-            return clientRemoved;
+            if (client is null)
+            { 
+                return false;
+            }
+
+            ClientDisconnected?.Invoke(this, client.Id);
+            return true;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace PointToPoint.MessageRouting
         /// <summary>
         /// Note that this event is fired from the internal message receiving thread
         /// </summary>
-        public EventHandler<MessageInfo> MessageReceived;
+        public EventHandler<MessageInfo>? MessageReceived;
 
         public void RouteMessage(object message, Guid senderId)
         {
