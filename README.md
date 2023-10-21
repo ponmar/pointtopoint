@@ -26,6 +26,11 @@ Payload notes for the NewtonsoftJsonPayload serializer:
 * Protocol is the serialized object assembly
 * The last part is the object serialized into JSON data with Newtonsoft JSON nuget package
 
+### Included Object Serializers ###
+
+* NewtonsoftJsonPayloadSerializer (uses Newtonsoft.Json nuget package)
+* MsJsonPayloadSerializer (uses System.Text.Json nuget package)
+
 ## Documentation ##
 
 See more details about how to send and receive messages in included example projects.
