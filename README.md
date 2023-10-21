@@ -6,7 +6,7 @@ This repository contains code for client/server communication. The code originat
 
 ## Features ##
 
-* Built with .NET Standard 2.0 (can be used from .NET Framework and later .NET versions)
+* Built with .NET Standard 2.0 (can be referenced from projects based on .NET Framework and later .NET versions)
 * Message passing over TCP (Newtonsoft JSON or custom object serialization)
 * Client side code for settings up a connection to a server and sending/receiving messages
 * Server side code for accepting client connections, keeping track of connected clients and sending/receiving messages
@@ -15,11 +15,11 @@ This repository contains code for client/server communication. The code originat
 
 ## Message format and example ##
 
-| Serializer            | Length (4 bytes in local byte order) | Payload (X bytes)                                   |
-|:---------------------:|:------------------------------------:|:---------------------------------------------------:|
-| NewtonsoftJsonPayload |             170                      | protocol.PublishText,Protocol { Message = "Hello" } |
+| Serializer                      | Length (4 bytes in local byte order) | Payload (X bytes)                                     |
+|:-------------------------------:|:------------------------------------:|:-----------------------------------------------------:|
+| NewtonsoftJsonPayloadSerializer |             170                      | `protocol.PublishText,Protocol { Message = "Hello" }` |
 
-Payload notes for the NewtonsoftJsonPayload serializer:
+Payload notes for the NewtonsoftJsonPayloadSerializer:
 
 * The payload string is serialized and sent as Unicode encoded data
 * protocol.PublishText is the serialized object type namespace
@@ -33,4 +33,4 @@ Payload notes for the NewtonsoftJsonPayload serializer:
 
 ## Documentation ##
 
-See more details about how to send and receive messages in included example projects.
+See included example projects for how to setup communication, sending and receiving messages.
