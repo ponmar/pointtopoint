@@ -1,5 +1,6 @@
 ﻿using PointToPoint.MessageRouting;
 using PointToPoint.Messenger;
+using PointToPoint.Messenger.ErrorHandler;
 using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
 using System;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace PointToPoint.Server
 {
-    public class ClientHandler : IClientHandler, IMessageSender, IMessengerErrorReporter
+    public class ClientHandler : IClientHandler, IMessageSender
     {
         public List<IMessenger> Clients { get; } = new();
         private readonly object clientsLock = new();
@@ -16,10 +17,10 @@ namespace PointToPoint.Server
         private readonly IPayloadSerializer payloadSerializer;
         private readonly IMessageRouter messageRouter;
 
-        // Note: this event is fired from the server socket accept thread
+        // Note: this event is fired from the internal server socket accept thread
         public EventHandler<Guid>? ClientConnected;
 
-        // Note: this event is fired from one of the socket communication threads
+        // Note: this event is fired from one of the internal socket communication threads
         public EventHandler<Guid>? ClientDisconnected;
 
         public ClientHandler(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter)
@@ -30,7 +31,7 @@ namespace PointToPoint.Server
 
         public void NewConnection(ISocket socket)
         {
-            var client = new TcpMessenger(socket, payloadSerializer, messageRouter, this);
+            var client = new TcpMessenger(socket, payloadSerializer, messageRouter);
             AddClient(client);
             client.Start();
             ClientConnected?.Invoke(this, client.Id);
@@ -54,9 +55,9 @@ namespace PointToPoint.Server
             }
         }
 
-        public void Disconnected(Guid messengerId, Exception? e)
+        private void Client_Disconnected(object sender, MessengerDisconnected disconnected)
         {
-            RemoveClient(messengerId);
+            RemoveClient((IMessenger)sender);
         }
 
         private void AddClient(IMessenger client)
@@ -64,28 +65,23 @@ namespace PointToPoint.Server
             lock (clientsLock)
             {
                 Clients.Add(client);
+                client.Disconnected += Client_Disconnected;
             }
         }
 
-        private bool RemoveClient(Guid clientId)
+        private void RemoveClient(IMessenger client)
         {
-            IMessenger client;
+            bool clientRemoved;
             lock (clientsLock)
             {
-                client = Clients.FirstOrDefault(x => x.Id == clientId);
-                if (client is not null)
-                {
-                    Clients.Remove(client);
-                }
+                clientRemoved = Clients.Remove(client);
             }
 
-            if (client is null)
-            { 
-                return false;
+            if (clientRemoved)
+            {
+                client.Disconnected -= Client_Disconnected;
+                ClientDisconnected?.Invoke(this, client.Id);
             }
-
-            ClientDisconnected?.Invoke(this, client.Id);
-            return true;
         }
     }
 }

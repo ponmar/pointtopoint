@@ -13,9 +13,10 @@ namespace PointToPoint.Messenger.ErrorHandler
 
         public Guid Id { get; } = Guid.NewGuid();
 
+        public event EventHandler<MessengerDisconnected>? Disconnected;
+
         protected readonly IPayloadSerializer payloadSerializer;
         protected readonly IMessageRouter messageRouter;
-        protected readonly IMessengerErrorReporter messengerErrorHandler;
 
         private readonly Thread receiveThread;
         private readonly Thread sendThread;
@@ -28,11 +29,10 @@ namespace PointToPoint.Messenger.ErrorHandler
         private readonly ByteBuffer lengthBuffer = new(0);
         private readonly ByteBuffer messageBuffer = new(0);
 
-        protected Messenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
+        protected Messenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter)
         {
             this.payloadSerializer = payloadSerializer;
             this.messageRouter = messageRouter;
-            this.messengerErrorHandler = messengerErrorHandler;
 
             ResetLengthBuffer();
 
@@ -114,7 +114,7 @@ namespace PointToPoint.Messenger.ErrorHandler
         private void DisconnectAndReportError(Exception? e = null)
         {
             runThreads = false;
-            messengerErrorHandler.Disconnected(Id, e);
+            Disconnected?.Invoke(this, new(Id, e));
         }
 
         public void Send(object message)

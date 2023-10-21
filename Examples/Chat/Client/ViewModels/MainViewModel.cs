@@ -13,7 +13,7 @@ using System.Windows.Threading;
 
 namespace Client.ViewModels;
 
-public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
+public partial class MainViewModel : ObservableObject
 {
     public bool CanConnect => IsDisconnected &&
         !string.IsNullOrEmpty(HostnameInput) &&
@@ -93,11 +93,12 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
             Messenger = new TcpMessenger(HostnameInput, port,
                 new NewtonsoftJsonPayloadSerializer(typeof(PublishText).Namespace!),
                 new ReflectionMessageRouter(executor: Application.Current.Dispatcher.Invoke) { MessageHandler = this },
-                this, 
                 new SocketFactory());
 
-            ShowText($"Connected to {HostnameInput}:{PortInput}");
+            Messenger.Disconnected += Messenger_Disconnected;
             Messenger.Start();
+
+            ShowText($"Connected to {HostnameInput}:{PortInput}");
         }
         catch (Exception e)
         {
@@ -108,8 +109,13 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
     [RelayCommand]
     private void Disconnect()
     {
-        Messenger?.Close();
-        Messenger = null;
+        if (Messenger is not null)
+        {
+            Messenger.Disconnected -= Messenger_Disconnected;
+            Messenger.Close();
+            Messenger = null;
+            ShowText("Disconnected from server");
+        }
     }
 
     [RelayCommand]
@@ -131,13 +137,17 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
     {
     }
 
-    public void Disconnected(Guid messengerId, Exception? e)
+    private void Messenger_Disconnected(object? sender, MessengerDisconnected disconnected)
     {
-        if (IsConnected)
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            ShowText("Disconnected from server" + (e is not null ? $" ({e.Message})" : ""));
-            Messenger = null;
-        }
+            if (IsConnected)
+            {
+                ShowText("Disconnected from server" + (disconnected.Exception is not null ? $" ({disconnected.Exception.Message})" : ""));
+                Messenger!.Disconnected -= Messenger_Disconnected;
+                Messenger = null;
+            }
+        });
     }
 
     private void ShowText(string text)
@@ -160,6 +170,8 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
 
     public void Close()
     {
+        Messenger!.Disconnected -= Messenger_Disconnected;
         Messenger?.Close();
+        Messenger = null;
     }
 }

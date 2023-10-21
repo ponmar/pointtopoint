@@ -2,6 +2,8 @@
 
 namespace PointToPoint.Messenger
 {
+    public record MessengerDisconnected(Guid MessengerId, Exception? Exception);
+
     /// <summary>
     /// Handles sending and receiving of objects via TCP
     /// </summary>
@@ -29,5 +31,11 @@ namespace PointToPoint.Messenger
         /// </summary>
         /// <param name="message">Any object that is included in the protocol namespace</param>
         void Send(object message);
+
+        /// <summary>
+        /// Fired when disconnected
+        /// </summary>
+        /// The event is fired from an internal communication thread.
+        event EventHandler<MessengerDisconnected> Disconnected;
     }
 }
