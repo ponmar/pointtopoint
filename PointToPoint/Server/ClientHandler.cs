@@ -1,11 +1,10 @@
 ﻿using PointToPoint.MessageRouting;
 using PointToPoint.Messenger;
-using PointToPoint.Messenger.ErrorHandler;
+using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 
 namespace PointToPoint.Server
 {
@@ -29,7 +28,7 @@ namespace PointToPoint.Server
             this.messageRouter = messageRouter;
         }
 
-        public void NewConnection(Socket socket)
+        public void NewConnection(ISocket socket)
         {
             var client = new TcpMessenger(socket, payloadSerializer, messageRouter, this);
             AddClient(client);

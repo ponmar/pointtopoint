@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using PointToPoint.MessageRouting;
 using PointToPoint.Messenger;
-using PointToPoint.Messenger.ErrorHandler;
+using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
 using PointToPoint.Protocol;
 using Protocol;
@@ -81,7 +81,8 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
             Messenger = new TcpMessenger(HostnameInput, port,
                 new NewtonsoftJsonPayloadSerializer(typeof(PublishText).Namespace!),
                 new ReflectionMessageRouter(executor: Application.Current.Dispatcher.Invoke) { MessageHandler = this },
-                this);
+                this, 
+                new SocketFactory());
 
             ShowText($"Connected to {HostnameInput}:{PortInput}");
             Messenger.Start();

@@ -6,26 +6,26 @@ using System.Net;
 //using System.Buffers.Binary;
 using System.Net.Sockets;
 
-namespace PointToPoint.Messenger
+namespace PointToPoint.Messenger.Tcp
 {
     /// <summary>
     /// Message sending over TCP/IP 
     /// </summary>
     public class TcpMessenger : AbstractMessenger
     {
-        private readonly Socket socket;
+        private readonly ISocket socket;
 
         /// <summary>
         /// Constructor to be used on the client side of the communication
         /// </summary>
         /// Note that this instance can not be re-used after it has disconnected.
         /// Exception will be thrown for errors.
-        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
+        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler, ISocketFactory tcpSocketFactory)
             : base(payloadSerializer, messageRouter, messengerErrorHandler)
         {
             var servers = Dns.GetHostEntry(serverHostname);
             var server = servers.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
-            socket = new(server.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            socket = tcpSocketFactory.Create(server.AddressFamily);
             SetSocketOptions();
             socket.Connect(new IPEndPoint(new IPAddress(server.GetAddressBytes()), serverPort));
         }
@@ -33,7 +33,7 @@ namespace PointToPoint.Messenger
         /// <summary>
         /// Constructor to be used internally on the server side (when server socket accepted new client socket)
         /// </summary>
-        internal TcpMessenger(Socket socket, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
+        internal TcpMessenger(ISocket socket, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
             : base(payloadSerializer, messageRouter, messengerErrorHandler)
         {
             this.socket = socket;

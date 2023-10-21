@@ -1,9 +1,9 @@
-﻿using System.Net.Sockets;
+﻿using PointToPoint.Messenger.Tcp;
 
 namespace PointToPoint.Server
 {
     public interface IClientHandler
     {
-        void NewConnection(Socket socket);
+        void NewConnection(ISocket socket);
     }
 }

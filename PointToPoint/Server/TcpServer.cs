@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PointToPoint.Messenger;
+using PointToPoint.Messenger.Tcp;
+using System;
 using System.Net;
 using System.Net.Sockets;
 
@@ -31,6 +33,7 @@ namespace PointToPoint.Server
                 throw new Exception("Invalid network interface");
             }
 
+            // TODO: use an interface for TcpListener and a factory to be able to mock it during test
             var listener = new TcpListener(ipAddress, port);
 
             // May throw SocketException
@@ -40,7 +43,7 @@ namespace PointToPoint.Server
             while (run)
             {
                 // TODO: how to timeout to stop earlier? listener.Server.Blocking = false?
-                var socket = listener.AcceptSocket();
+                var socket = new SocketWrapper(listener.AcceptSocket());
                 clientHandler.NewConnection(socket);
             }
         }

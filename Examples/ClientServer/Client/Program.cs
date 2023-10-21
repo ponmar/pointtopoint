@@ -1,6 +1,6 @@
 ﻿using Client;
 using PointToPoint.MessageRouting;
-using PointToPoint.Messenger;
+using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
 using Protocol;
 
@@ -15,7 +15,8 @@ var client = new TcpMessenger(serverHostname,
     serverPort,
     new NewtonsoftJsonPayloadSerializer(typeof(Hello).Namespace),
     new ReflectionMessageRouter() { MessageHandler = messageHandler },
-    messageHandler);
+    messageHandler,
+    new SocketFactory());
 
 client.Start();
 client.Send(new Hello(1));
