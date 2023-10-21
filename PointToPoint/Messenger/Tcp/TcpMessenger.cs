@@ -10,7 +10,7 @@ namespace PointToPoint.Messenger.Tcp
     /// <summary>
     /// Message sending over TCP/IP 
     /// </summary>
-    public class TcpMessenger : AbstractMessenger
+    public class TcpMessenger : ErrorHandler.Messenger
     {
         private readonly ISocket socket;
 

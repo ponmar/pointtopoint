@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace PointToPoint.Messenger.ErrorHandler
 {
-    public abstract class AbstractMessenger : IMessenger
+    public abstract class Messenger : IMessenger
     {
         private readonly TimeSpan KeepAliveSendInterval = TimeSpan.FromSeconds(1);
 
@@ -28,7 +28,7 @@ namespace PointToPoint.Messenger.ErrorHandler
         private readonly ByteBuffer lengthBuffer = new(0);
         private readonly ByteBuffer messageBuffer = new(0);
 
-        protected AbstractMessenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
+        protected Messenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, IMessengerErrorReporter messengerErrorHandler)
         {
             this.payloadSerializer = payloadSerializer;
             this.messageRouter = messageRouter;
