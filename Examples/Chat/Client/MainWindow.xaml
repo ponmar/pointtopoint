@@ -34,16 +34,16 @@
             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Server:" Margin="3" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding HostnameInput}" Width="100" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding HostnameInput, UpdateSourceTrigger=PropertyChanged}" Width="100" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Port:" Margin="3" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding PortInput}" Width="50" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding PortInput, UpdateSourceTrigger=PropertyChanged}" Width="50" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="5">
-                    <Button Style="{StaticResource NormalButton}" Content="Connect" Command="{Binding ConnectCommand}" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
+                    <Button Style="{StaticResource NormalButton}" Content="Connect" Command="{Binding ConnectCommand}" IsEnabled="{Binding CanConnect}" Margin="3" VerticalAlignment="Center"/>
                     <Button Style="{StaticResource NormalButton}" Content="Disconnect" Command="{Binding DisconnectCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
                 </StackPanel>
 
@@ -60,8 +60,8 @@
         <Border Grid.Row="2" Grid.Column="0" Margin="3" Style="{StaticResource NormalBorder}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                 <TextBlock Text="Message:" Margin="3" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding TextInput}" Width="300" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
-                <Button Style="{StaticResource NormalButton}" Content="Send" Command="{Binding SendTextCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding TextInput, UpdateSourceTrigger=PropertyChanged}" Width="300" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
+                <Button Style="{StaticResource NormalButton}" Content="Send" Command="{Binding SendTextCommand}" IsEnabled="{Binding CanSendText}" Margin="3" VerticalAlignment="Center"/>
             </StackPanel>
         </Border>
     </Grid>

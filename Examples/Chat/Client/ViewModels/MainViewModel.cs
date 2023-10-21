@@ -7,6 +7,7 @@ using PointToPoint.Payload;
 using PointToPoint.Protocol;
 using Protocol;
 using System;
+using System.Net;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -14,13 +15,21 @@ namespace Client.ViewModels;
 
 public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
 {
+    public bool CanConnect => IsDisconnected &&
+        !string.IsNullOrEmpty(HostnameInput) &&
+        int.TryParse(PortInput, out var port) && port <= IPEndPoint.MaxPort && port >= IPEndPoint.MinPort;
+
     public bool IsConnected => Messenger is not null;
     public bool IsDisconnected => !IsConnected;
 
+    public bool CanSendText => IsConnected && !string.IsNullOrEmpty(TextInput);
+
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanConnect))]
     private string hostnameInput = "127.0.0.1";
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanConnect))]
     private string portInput = Constants.Port.ToString();
 
     [ObservableProperty]
@@ -32,14 +41,17 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
     }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanSendText))]
     private string textInput = string.Empty;
 
     [ObservableProperty]
     private string texts = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanConnect))]
     [NotifyPropertyChangedFor(nameof(IsConnected))]
     [NotifyPropertyChangedFor(nameof(IsDisconnected))]
+    [NotifyPropertyChangedFor(nameof(CanSendText))]
     private IMessenger? messenger = null;
 
     partial void OnMessengerChanged(IMessenger? value)
@@ -72,7 +84,7 @@ public partial class MainViewModel : ObservableObject, IMessengerErrorReporter
 
         if (!int.TryParse(PortInput, out var port))
         {
-            ShowText($"Invalid port");
+            ShowText($"$Invalid port: {PortInput}");
             return;
         }
 
