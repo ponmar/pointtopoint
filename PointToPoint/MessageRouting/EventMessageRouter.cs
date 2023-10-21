@@ -2,7 +2,7 @@
 
 namespace PointToPoint.MessageRouting
 {
-    public record MessageInfo(object Message, Guid ConnectionId);
+    public record MessageInfo(object Message, Guid SenderId);
 
     /// <summary>
     /// Handles forwarding of messages to handler class via an event.
