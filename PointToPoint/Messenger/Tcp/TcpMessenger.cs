@@ -3,7 +3,6 @@ using PointToPoint.Messenger.ErrorHandler;
 using PointToPoint.Payload;
 using System.Linq;
 using System.Net;
-//using System.Buffers.Binary;
 using System.Net.Sockets;
 
 namespace PointToPoint.Messenger.Tcp
@@ -69,8 +68,6 @@ namespace PointToPoint.Messenger.Tcp
             int numSentBytes = 0;
             while (numSentBytes < bytes.Length)
             {
-                //var span = new Span<byte>(bytes, numSentBytes, bytes.Length - numSentBytes);
-                //numSentBytes += socket.Send(span);
                 numSentBytes += socket.Send(bytes, numSentBytes, bytes.Length - numSentBytes, SocketFlags.None);
             }
         }
