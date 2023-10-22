@@ -5,7 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace PointToPoint.Messenger.ErrorHandler
+namespace PointToPoint.Messenger
 {
     public abstract class Messenger : IMessenger
     {
