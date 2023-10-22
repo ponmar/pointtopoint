@@ -5,13 +5,19 @@ using PointToPoint.Messenger;
 
 namespace Server;
 
-public class ChatMessageForwarder
+public class ChatClientHandler : IDisposable
 {
     private readonly IMessageSender messageSender;
 
-    public ChatMessageForwarder(IMessageSender messageSender)
+    public ChatClientHandler(IMessageSender messageSender)
     {
         this.messageSender = messageSender;
+        Console.WriteLine("Client connected");
+    }
+
+    void IDisposable.Dispose()
+    {
+        Console.WriteLine("Client disconnected");
     }
 
     public void HandleMessage(PublishText message, IMessenger messenger)

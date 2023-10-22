@@ -12,11 +12,7 @@ namespace PointToPointTests.MessageRouting
         {
             // Arrange
             var messageHandler = new MessageHandler();
-            var messageRouter = new ReflectionMessageRouter
-            {
-                MessageHandler = messageHandler,
-            };
-
+            var messageRouter = new ReflectionMessageRouter(messageHandler);
             var message = new MyMessage();
             var messenger = A.Fake<IMessenger>();
 
@@ -34,10 +30,7 @@ namespace PointToPointTests.MessageRouting
         {
             // Arrange
             var messageHandler = new MessageHandler();
-            var messageRouter = new ReflectionMessageRouter
-            {
-                MessageHandler = messageHandler,
-            };
+            var messageRouter = new ReflectionMessageRouter(messageHandler);
 
             var message = new UnknownMessage();
             var messenger = A.Fake<IMessenger>();

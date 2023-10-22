@@ -2,7 +2,7 @@
 
 namespace PointToPoint.Server
 {
-    public interface IClientHandler
+    public interface IConnectionHandler
     {
         void NewConnection(ISocket socket);
     }

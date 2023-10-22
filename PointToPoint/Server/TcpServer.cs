@@ -22,7 +22,7 @@ namespace PointToPoint.Server
             this.port = port;
         }
 
-        public void Run(IClientHandler clientHandler)
+        public void Run(IConnectionHandler clientHandler)
         {
             var ipAddress = IPAddress.Any;
 

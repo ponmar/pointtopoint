@@ -2,16 +2,8 @@
 using PointToPoint.Payload;
 using Protocol;
 using Server;
-using PointToPoint.MessageRouting;
 
-var messageRouter = new ReflectionMessageRouter();
-var clientHandler = new ClientHandler(new NewtonsoftJsonPayloadSerializer(typeof(Text).Namespace!), messageRouter, Constants.KeepAliveSendInterval);
-
-clientHandler.ClientConnected += (sender, guid) => Console.WriteLine($"Client connected: {guid}");
-clientHandler.ClientDisconnected += (sender, guid) => Console.WriteLine($"Client disconnected: {guid}");
-
-var messageHandler = new ChatMessageForwarder(clientHandler);
-messageRouter.MessageHandler = messageHandler;
+var clientHandler = new ClientsHandler(new NewtonsoftJsonPayloadSerializer(typeof(Text).Namespace!), Constants.KeepAliveSendInterval, typeof(ChatClientHandler));
 
 var tcpServer = new TcpServer(Constants.DefaultPort);
 var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));

@@ -17,29 +17,26 @@ namespace PointToPoint.MessageRouting
     public class ReflectionMessageRouter : IMessageRouter
     {
         private const string handleMethodName = "HandleMessage";
-        private readonly Action<Action>? executor;
 
-        public object? MessageHandler { get; set; }
+        private readonly object messageHandler;
+        private readonly Action<Action>? executor;
 
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="messageHandler">Instance that implements the messeage handling methods</param>
         /// <param name="executor">Can be used to route message on the UI thread in a WPF application by setting executor:Application.Current.Dispatcher.Invoke</param>
-        public ReflectionMessageRouter(Action<Action>? executor = null)
+        public ReflectionMessageRouter(object messageHandler, Action<Action>? executor = null)
         {
+            this.messageHandler = messageHandler;
             this.executor = executor;
         }
 
         public void RouteMessage(object message, IMessenger messenger)
         {
-            if (MessageHandler is null)
-            {
-                throw new Exception($"No {nameof(MessageHandler)} set");
-            }
-
             var argTypes = new Type[] { message.GetType(), typeof(IMessenger) };
 
-            var handleMethod = MessageHandler.GetType().GetMethod(handleMethodName, argTypes);
+            var handleMethod = messageHandler.GetType().GetMethod(handleMethodName, argTypes);
             if (handleMethod == null)
             {
                 throw new NotImplementedException($"Message handling method ({handleMethodName}) not implemented for message type {message.GetType()}");
@@ -48,11 +45,11 @@ namespace PointToPoint.MessageRouting
             var args = new object[] { message, messenger };
             if (executor is not null)
             {
-                executor.Invoke(() => handleMethod.Invoke(MessageHandler, args));
+                executor.Invoke(() => handleMethod.Invoke(messageHandler, args));
             }
             else
             {
-                handleMethod.Invoke(MessageHandler, args);
+                handleMethod.Invoke(messageHandler, args);
             }
         }
     }
