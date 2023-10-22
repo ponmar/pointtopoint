@@ -66,7 +66,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                 <TextBlock Text="Message:" Margin="3" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding TextInput, UpdateSourceTrigger=PropertyChanged}" Width="300" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
-                <Button Style="{StaticResource NormalButton}" Content="Send" Command="{Binding SendTextCommand}" IsEnabled="{Binding CanSendText}" Margin="3" VerticalAlignment="Center"/>
+                <Button Style="{StaticResource NormalButton}" Content="Send" IsEnabled="{Binding CanSendText}" Click="Button_Click" IsDefault="True" Margin="3" VerticalAlignment="Center"/>
             </StackPanel>
         </Border>
     </Grid>

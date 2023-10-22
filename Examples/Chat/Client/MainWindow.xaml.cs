@@ -18,4 +18,11 @@ public partial class MainWindow : Window
     {
         (DataContext as MainViewModel)?.Close();
     }
+
+    // Note: click event is used instead of command for IsDefault="True" to work when pressing enter in text input
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        var vm = (MainViewModel)DataContext;
+        vm.SendTextCommand.Execute(null);
+    }
 }
