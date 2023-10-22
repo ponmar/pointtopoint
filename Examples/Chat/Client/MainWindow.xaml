@@ -43,12 +43,17 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="5">
+                    <CheckBox VerticalAlignment="Center" Margin="3" IsChecked="{Binding AutoConnect}">Auto-connect</CheckBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
                     <Button Style="{StaticResource NormalButton}" Content="Connect" Command="{Binding ConnectCommand}" IsEnabled="{Binding CanConnect}" Margin="3" VerticalAlignment="Center"/>
                     <Button Style="{StaticResource NormalButton}" Content="Disconnect" Command="{Binding DisconnectCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="5">
-                    <CheckBox VerticalAlignment="Center" Margin="3" IsChecked="{Binding AutoConnect}">Auto-connect</CheckBox>
+                    <TextBlock Text="Keep alive supervision:" Margin="3" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding KeepAliveSupervisionStatus}" Margin="3" VerticalAlignment="Center"/>
                 </StackPanel>
             </WrapPanel>
         </Border>

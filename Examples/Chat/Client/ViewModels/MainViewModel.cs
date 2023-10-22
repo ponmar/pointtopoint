@@ -60,10 +60,18 @@ public partial class MainViewModel : ObservableObject
     }
 
     private readonly DispatcherTimer autoConnectTimer = new() { Interval = TimeSpan.FromSeconds(3) };
+    private readonly DispatcherTimer keepAliveSupervisionTimer = new() { Interval = TimeSpan.FromMilliseconds(250) };
+
+    private DateTime keepAliveReceivedAt = DateTime.MinValue;
+
+    [ObservableProperty]
+    private string keepAliveSupervisionStatus = string.Empty;
 
     public MainViewModel()
     {
         autoConnectTimer.Tick += AutoConnectTimer_Tick;
+        keepAliveSupervisionTimer.Tick += KeepAliveSupervisionTimer_Tick;
+        keepAliveSupervisionTimer.Start();
     }
 
     private void AutoConnectTimer_Tick(object? sender, EventArgs e)
@@ -72,6 +80,11 @@ public partial class MainViewModel : ObservableObject
         {
             Connect();
         }
+    }
+
+    private void KeepAliveSupervisionTimer_Tick(object? sender, EventArgs e)
+    {
+        KeepAliveSupervisionStatus = DateTime.Now - keepAliveReceivedAt < TimeSpan.FromSeconds(2) ? "Good" : "Bad";
     }
 
     [RelayCommand]
@@ -138,6 +151,10 @@ public partial class MainViewModel : ObservableObject
 
     public void HandleMessage(KeepAlive message, IMessenger messenger)
     {
+        if (messenger == Messenger)
+        {
+            keepAliveReceivedAt = DateTime.Now;
+        }
     }
 
     private void Messenger_Disconnected(object? sender, MessengerDisconnected disconnected)
