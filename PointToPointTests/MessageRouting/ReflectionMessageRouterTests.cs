@@ -1,4 +1,6 @@
+using FakeItEasy;
 using PointToPoint.MessageRouting;
+using PointToPoint.Messenger;
 
 namespace PointToPointTests.MessageRouting
 {
@@ -16,10 +18,10 @@ namespace PointToPointTests.MessageRouting
             };
 
             var message = new MyMessage();
-            var senderId = Guid.NewGuid();
+            var messenger = A.Fake<IMessenger>();
 
             // Act
-            messageRouter.RouteMessage(message, senderId);
+            messageRouter.RouteMessage(message, messenger);
 
             // Assert
             Assert.AreEqual(1, messageHandler.Messages.Count);
@@ -38,10 +40,10 @@ namespace PointToPointTests.MessageRouting
             };
 
             var message = new UnknownMessage();
-            var senderId = Guid.NewGuid();
+            var messenger = A.Fake<IMessenger>();
 
             // Act
-            messageRouter.RouteMessage(message, senderId);
+            messageRouter.RouteMessage(message, messenger);
         }
     }
 
@@ -51,7 +53,7 @@ namespace PointToPointTests.MessageRouting
     {
         public List<object> Messages { get; } = new();
 
-        public void HandleMessage(MyMessage message, Guid _)
+        public void HandleMessage(MyMessage message, IMessenger _)
         {
             Messages.Add(message);
         }

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using PointToPoint.Messenger;
+using System;
 
 namespace PointToPoint.MessageRouting
 {
-    public record MessageInfo(object Message, Guid SenderId);
+    public record MessageInfo(object Message, IMessenger Messenger);
 
     /// <summary>
     /// Handles forwarding of messages to handler class via an event.
@@ -14,9 +15,9 @@ namespace PointToPoint.MessageRouting
         /// </summary>
         public EventHandler<MessageInfo>? MessageReceived;
 
-        public void RouteMessage(object message, Guid senderId)
+        public void RouteMessage(object message, IMessenger messenger)
         {
-            MessageReceived?.Invoke(this, new(message, senderId));
+            MessageReceived?.Invoke(this, new(message, messenger));
         }
     }
 }

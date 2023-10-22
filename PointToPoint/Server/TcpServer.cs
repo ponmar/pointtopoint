@@ -1,5 +1,4 @@
-﻿using PointToPoint.Messenger;
-using PointToPoint.Messenger.Tcp;
+﻿using PointToPoint.Messenger.Tcp;
 using System;
 using System.Net;
 using System.Net.Sockets;

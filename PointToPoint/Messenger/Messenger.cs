@@ -86,7 +86,7 @@ namespace PointToPoint.Messenger.ErrorHandler
             ReceiveBytes(lengthBuffer);
             if (lengthBuffer.Finished)
             {
-                var messageLength = Utils.DeserializeInt(lengthBuffer.buffer, 0);
+                var messageLength = Utils.DeserializeInt(lengthBuffer.buffer);
                 ResetMessageBuffer(messageLength);
             }
         }
@@ -102,7 +102,7 @@ namespace PointToPoint.Messenger.ErrorHandler
                 try
                 {
                     var message = payloadSerializer.PayloadToMessage(messageBuffer.buffer, messageBuffer.numBytesToRead);
-                    messageRouter.RouteMessage(message, Id);
+                    messageRouter.RouteMessage(message, this);
                 }
                 catch (Exception e)
                 {

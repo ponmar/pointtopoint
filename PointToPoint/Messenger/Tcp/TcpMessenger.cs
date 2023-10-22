@@ -1,5 +1,4 @@
 ﻿using PointToPoint.MessageRouting;
-using PointToPoint.Messenger.ErrorHandler;
 using PointToPoint.Payload;
 using System.Linq;
 using System.Net;

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using PointToPoint.Messenger;
 
 namespace PointToPoint.MessageRouting
 {
@@ -10,6 +10,6 @@ namespace PointToPoint.MessageRouting
         /// <summary>
         /// Note that this method is called from the internal message receiving thread.
         /// </summary>
-        public void RouteMessage(object message, Guid senderId);
+        public void RouteMessage(object message, IMessenger messenger);
     }
 }

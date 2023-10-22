@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PointToPoint.Messenger;
+using System;
 
 namespace PointToPoint.MessageRouting
 {
@@ -31,14 +32,14 @@ namespace PointToPoint.MessageRouting
             this.executor = executor;
         }
 
-        public void RouteMessage(object message, Guid senderId)
+        public void RouteMessage(object message, IMessenger messenger)
         {
             if (MessageHandler is null)
             {
                 throw new Exception($"No {nameof(MessageHandler)} set");
             }
 
-            var argTypes = new Type[] { message.GetType(), typeof(Guid) };
+            var argTypes = new Type[] { message.GetType(), typeof(IMessenger) };
 
             var handleMethod = MessageHandler.GetType().GetMethod(handleMethodName, argTypes);
             if (handleMethod == null)
@@ -46,7 +47,7 @@ namespace PointToPoint.MessageRouting
                 throw new NotImplementedException($"Message handling method ({handleMethodName}) not implemented for message type {message.GetType()}");
             }
 
-            var args = new object[] { message, senderId };
+            var args = new object[] { message, messenger };
             if (executor is not null)
             {
                 executor.Invoke(() => handleMethod.Invoke(MessageHandler, args));

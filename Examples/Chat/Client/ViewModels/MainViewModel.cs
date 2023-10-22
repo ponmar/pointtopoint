@@ -128,12 +128,15 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    public void HandleMessage(Text message, Guid senderId)
+    public void HandleMessage(Text message, IMessenger messenger)
     {
-        ShowText($"{message.Time:HH:mm:ss}: {message.Message}");
+        if (messenger == Messenger)
+        {
+            ShowText($"{message.Time:HH:mm:ss}: {message.Message}");
+        }        
     }
 
-    public void HandleMessage(KeepAlive message, Guid senderId)
+    public void HandleMessage(KeepAlive message, IMessenger messenger)
     {
     }
 
@@ -170,8 +173,11 @@ public partial class MainViewModel : ObservableObject
 
     public void Close()
     {
-        Messenger!.Disconnected -= Messenger_Disconnected;
-        Messenger?.Close();
-        Messenger = null;
+        if (Messenger is not null)
+        {
+            Messenger.Disconnected -= Messenger_Disconnected;
+            Messenger.Close();
+            Messenger = null;
+        }
     }
 }
