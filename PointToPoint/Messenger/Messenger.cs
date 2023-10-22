@@ -55,8 +55,8 @@ namespace PointToPoint.Messenger.ErrorHandler
         public virtual void Close()
         {
             runThreads = false;
-            sendThread.Join();
-            receiveThread.Join();
+            //sendThread.Join();
+            //receiveThread.Join();
         }
 
         private void ReceiveThread(object _)

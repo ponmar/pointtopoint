@@ -16,7 +16,7 @@ namespace PointToPoint.MessageRouting
     /// Note that the handle method is called from the internal message receiver thread.
     public class ReflectionMessageRouter : IMessageRouter
     {
-        private readonly string handleMethodName;
+        private const string handleMethodName = "HandleMessage";
         private readonly Action<Action>? executor;
 
         public object? MessageHandler { get; set; }
@@ -24,11 +24,9 @@ namespace PointToPoint.MessageRouting
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="handleMethodName">Name of the handler method</param>
         /// <param name="executor">Can be used to route message on the UI thread in a WPF application by setting executor:Application.Current.Dispatcher.Invoke</param>
-        public ReflectionMessageRouter(string handleMethodName = "HandleMessage", Action<Action>? executor = null)
+        public ReflectionMessageRouter(Action<Action>? executor = null)
         {
-            this.handleMethodName = handleMethodName;
             this.executor = executor;
         }
 

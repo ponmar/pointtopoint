@@ -105,7 +105,7 @@ public partial class MainViewModel : ObservableObject
         {
             Messenger = new TcpMessenger(HostnameInput, port,
                 new NewtonsoftJsonPayloadSerializer(typeof(PublishText).Namespace!),
-                new ReflectionMessageRouter(executor: Application.Current.Dispatcher.Invoke) { MessageHandler = this },
+                new ReflectionMessageRouter(Application.Current.Dispatcher.Invoke) { MessageHandler = this },
                 new SocketFactory());
 
             Messenger.Disconnected += Messenger_Disconnected;
