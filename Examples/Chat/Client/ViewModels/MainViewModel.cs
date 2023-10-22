@@ -84,7 +84,7 @@ public partial class MainViewModel : ObservableObject
 
     private void KeepAliveSupervisionTimer_Tick(object? sender, EventArgs e)
     {
-        KeepAliveSupervisionStatus = DateTime.Now - keepAliveReceivedAt < TimeSpan.FromSeconds(2) ? "Good" : "Bad";
+        KeepAliveSupervisionStatus = DateTime.Now - keepAliveReceivedAt < 2 * Constants.KeepAliveSendInterval ? "Good" : "Bad";
     }
 
     [RelayCommand]
@@ -106,7 +106,8 @@ public partial class MainViewModel : ObservableObject
             Messenger = new TcpMessenger(HostnameInput, port,
                 new NewtonsoftJsonPayloadSerializer(typeof(PublishText).Namespace!),
                 new ReflectionMessageRouter(Application.Current.Dispatcher.Invoke) { MessageHandler = this },
-                new SocketFactory());
+                new SocketFactory(),
+                Constants.KeepAliveSendInterval);
 
             Messenger.Disconnected += Messenger_Disconnected;
             Messenger.Start();

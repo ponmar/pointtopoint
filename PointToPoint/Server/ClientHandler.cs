@@ -15,6 +15,7 @@ namespace PointToPoint.Server
 
         private readonly IPayloadSerializer payloadSerializer;
         private readonly IMessageRouter messageRouter;
+        private readonly TimeSpan keepAliveSendInterval;
 
         // Note: this event is fired from the internal server socket accept thread
         public EventHandler<Guid>? ClientConnected;
@@ -22,15 +23,16 @@ namespace PointToPoint.Server
         // Note: this event is fired from one of the internal socket communication threads
         public EventHandler<Guid>? ClientDisconnected;
 
-        public ClientHandler(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter)
+        public ClientHandler(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, TimeSpan keepAliveSendInterval)
         {
             this.payloadSerializer = payloadSerializer;
             this.messageRouter = messageRouter;
+            this.keepAliveSendInterval = keepAliveSendInterval;
         }
 
         public void NewConnection(ISocket socket)
         {
-            var client = new TcpMessenger(socket, payloadSerializer, messageRouter);
+            var client = new TcpMessenger(socket, payloadSerializer, messageRouter, keepAliveSendInterval);
             AddClient(client);
             client.Start();
             ClientConnected?.Invoke(this, client.Id);

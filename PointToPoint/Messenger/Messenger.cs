@@ -9,7 +9,7 @@ namespace PointToPoint.Messenger.ErrorHandler
 {
     public abstract class Messenger : IMessenger
     {
-        private readonly TimeSpan KeepAliveSendInterval = TimeSpan.FromSeconds(1);
+        private readonly TimeSpan keepAliveSendInterval;
 
         public Guid Id { get; } = Guid.NewGuid();
 
@@ -29,10 +29,11 @@ namespace PointToPoint.Messenger.ErrorHandler
         private readonly ByteBuffer lengthBuffer = new(0);
         private readonly ByteBuffer messageBuffer = new(0);
 
-        protected Messenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter)
+        protected Messenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, TimeSpan keepAliveSendInterval)
         {
             this.payloadSerializer = payloadSerializer;
             this.messageRouter = messageRouter;
+            this.keepAliveSendInterval = keepAliveSendInterval;
 
             ResetLengthBuffer();
 
@@ -55,8 +56,6 @@ namespace PointToPoint.Messenger.ErrorHandler
         public virtual void Close()
         {
             runThreads = false;
-            //sendThread.Join();
-            //receiveThread.Join();
         }
 
         private void ReceiveThread(object _)
@@ -143,9 +142,8 @@ namespace PointToPoint.Messenger.ErrorHandler
                     }
 
                     var now = DateTime.Now;
-                    if (now - keepAliveSentAt > KeepAliveSendInterval)
+                    if (now - keepAliveSentAt > keepAliveSendInterval)
                     {
-                        Console.WriteLine($"Sending {nameof(KeepAlive)}");
                         keepAliveSentAt = now;
                         Send(new KeepAlive());
                     }
