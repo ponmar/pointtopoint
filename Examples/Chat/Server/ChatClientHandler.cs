@@ -5,16 +5,20 @@ using PointToPoint.Messenger;
 
 namespace Server;
 
-public class ChatClientHandler : IDisposable
+public class ChatClientHandler : IAppClientMessageHandler, IDisposable
 {
-    private readonly IMessageSender messageSender;
+    private const string ServerName = "Server";
+
+    private IMessageSender? messageSender;
     private readonly string name = NameCreator.CreateName();
 
-    public ChatClientHandler(IMessageSender messageSender)
+    public void Init(IMessageSender messageSender)
     {
         this.messageSender = messageSender;
         Console.WriteLine($"{name} connected");
+        messageSender.SendBroadcast(new Text(ServerName, $"'{name}' joined", DateTime.Now));
     }
+
 
     void IDisposable.Dispose()
     {
@@ -24,7 +28,7 @@ public class ChatClientHandler : IDisposable
     public void HandleMessage(PublishText message, IMessenger messenger)
     {
         Console.WriteLine($"Forwarding message '{message.Message}' to all.");
-        messageSender.SendBroadcast(new Text(name, message.Message, DateTime.Now));
+        messageSender!.SendBroadcast(new Text(name, message.Message, DateTime.Now));
 
         switch (message.Message.ToLower())
         {

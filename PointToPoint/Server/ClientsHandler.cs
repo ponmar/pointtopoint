@@ -11,8 +11,9 @@ namespace PointToPoint.Server
     record Client(IMessenger Messenger, object MessageHandler);
 
     /// <summary>
-    /// Keeps track of all connected clients and creates one application specific message handling instance per client connection
+    /// Keeps track of all connected clients and creates one application specific message handling instance per client connection.
     /// </summary>
+    /// This class sets up an ReflectionMessageRouter instance to forward messages to the application specific code.
     public class ClientsHandler : IConnectionHandler, IMessageSender
     {
         private List<Client> Clients { get; } = new();
@@ -23,6 +24,12 @@ namespace PointToPoint.Server
 
         private readonly Type clientMessageHandlerType;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="payloadSerializer"></param>
+        /// <param name="keepAliveSendInterval"></param>
+        /// <param name="clientMessageHandlerType">Type of the class that will be created for handling application specific code per client</param>
         public ClientsHandler(IPayloadSerializer payloadSerializer, TimeSpan keepAliveSendInterval, Type clientMessageHandlerType)
         {
             this.payloadSerializer = payloadSerializer;
@@ -32,11 +39,12 @@ namespace PointToPoint.Server
 
         public void NewConnection(ISocket socket)
         {
-            object clientMessageHandler = Activator.CreateInstance(clientMessageHandlerType, new object[] { this });
+            var clientMessageHandler = (IAppClientMessageHandler)Activator.CreateInstance(clientMessageHandlerType);
             var messageRouter = new ReflectionMessageRouter(clientMessageHandler);
             var messenger = new TcpMessenger(socket, payloadSerializer, messageRouter, keepAliveSendInterval);
             var client = new Client(messenger, clientMessageHandler);
             AddClient(client);
+            clientMessageHandler.Init(this);
             messenger.Start();
         }
 
