@@ -8,29 +8,30 @@ namespace Server;
 public class ChatClientHandler : IDisposable
 {
     private readonly IMessageSender messageSender;
+    private readonly string name = NameCreator.CreateName();
 
     public ChatClientHandler(IMessageSender messageSender)
     {
         this.messageSender = messageSender;
-        Console.WriteLine("Client connected");
+        Console.WriteLine($"{name} connected");
     }
 
     void IDisposable.Dispose()
     {
-        Console.WriteLine("Client disconnected");
+        Console.WriteLine($"{name} disconnected");
     }
 
     public void HandleMessage(PublishText message, IMessenger messenger)
     {
         Console.WriteLine($"Forwarding message '{message.Message}' to all.");
-        messageSender.SendBroadcast(new Text(message.Message, DateTime.Now));
+        messageSender.SendBroadcast(new Text(name, message.Message, DateTime.Now));
 
         switch (message.Message.ToLower())
         {
             case "hi":
             case "hello":
                 Console.WriteLine($"Sending greeting.");
-                messageSender.SendMessage(new Text($"And {message.Message} to you! /Server", DateTime.Now), messenger.Id);
+                messageSender.SendMessage(new Text(name, $"And {message.Message} to you! /Server", DateTime.Now), messenger.Id);
                 break;
         }
     }

@@ -146,7 +146,7 @@ public partial class MainViewModel : ObservableObject
     {
         if (messenger == Messenger)
         {
-            ShowText($"[{message.Time:HH:mm:ss}] {message.Message}");
+            ShowText($"[{message.Time:HH:mm:ss} {message.Sender}] {message.Message}");
         }        
     }
 
