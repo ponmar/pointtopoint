@@ -13,11 +13,11 @@ clientHandler.ClientDisconnected += (sender, guid) => Console.WriteLine($"Client
 var messageHandler = new ChatMessageForwarder(clientHandler);
 messageRouter.MessageHandler = messageHandler;
 
-var tcpServer = new TcpServer(Constants.Port);
+var tcpServer = new TcpServer(Constants.DefaultPort);
 var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));
 tcpServerThread.Start();
 
-Console.WriteLine($"Listening for connections on port {Constants.Port}");
+Console.WriteLine($"Listening for connections on port {Constants.DefaultPort}");
 
 while (true)
 {

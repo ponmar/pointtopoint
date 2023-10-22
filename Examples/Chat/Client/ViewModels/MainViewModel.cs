@@ -30,7 +30,7 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanConnect))]
-    private string portInput = Constants.Port.ToString();
+    private string portInput = Constants.DefaultPort.ToString();
 
     [ObservableProperty]
     private bool autoConnect;
