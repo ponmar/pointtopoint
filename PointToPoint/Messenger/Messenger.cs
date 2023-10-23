@@ -11,9 +11,7 @@ namespace PointToPoint.Messenger
     {
         private readonly TimeSpan keepAliveSendInterval;
 
-        public Guid Id { get; } = Guid.NewGuid();
-
-        public event EventHandler<MessengerDisconnected>? Disconnected;
+        public event EventHandler<Exception?>? Disconnected;
 
         protected readonly IPayloadSerializer payloadSerializer;
         protected readonly IMessageRouter messageRouter;
@@ -113,7 +111,7 @@ namespace PointToPoint.Messenger
         private void DisconnectAndReportError(Exception? e = null)
         {
             runThreads = false;
-            Disconnected?.Invoke(this, new(Id, e));
+            Disconnected?.Invoke(this, e);
         }
 
         public void Send(object message)

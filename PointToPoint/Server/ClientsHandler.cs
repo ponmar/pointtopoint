@@ -66,7 +66,7 @@ namespace PointToPoint.Server
             }
         }
 
-        private void Client_Disconnected(object sender, MessengerDisconnected disconnected)
+        private void Client_Disconnected(object sender, Exception? _)
         {
             RemoveClient((IMessenger)sender);
         }

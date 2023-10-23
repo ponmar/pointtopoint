@@ -166,13 +166,13 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    private void Messenger_Disconnected(object? sender, MessengerDisconnected disconnected)
+    private void Messenger_Disconnected(object? sender, Exception? e)
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
             if (IsConnected)
             {
-                ShowText("Disconnected from server" + (disconnected.Exception is not null ? $" ({disconnected.Exception.Message})" : ""));
+                ShowText("Disconnected from server" + (e is not null ? $" ({e.Message})" : ""));
                 Messenger!.Disconnected -= Messenger_Disconnected;
                 Messenger = null;
             }
