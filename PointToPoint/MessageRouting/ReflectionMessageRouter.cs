@@ -8,12 +8,12 @@ namespace PointToPoint.MessageRouting
     /// </summary>
     /// The handler class needs to implement one method per handled message according to:
     ///
-    /// void HandleMessage(MyMessage message, Guid senderId)
+    /// void HandleMessage(MyMessage message, IMessenger messenger)
     /// {
     ///     // Message handling code
     /// }
     /// 
-    /// Note that the handle method is called from the internal message receiver thread.
+    /// Note that the handle method is called from the internal message receiver thread when no executor is specified.
     public class ReflectionMessageRouter : IMessageRouter
     {
         private const string handleMethodName = "HandleMessage";
