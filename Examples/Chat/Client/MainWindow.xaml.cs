@@ -16,7 +16,7 @@ public partial class MainWindow : Window
 
     private void Window_Closed(object sender, System.EventArgs e)
     {
-        (DataContext as MainViewModel)?.Close();
+        (DataContext as MainViewModel)?.ExitApplication();
     }
 
     // Note: click event is used instead of command for IsDefault="True" to work when pressing enter in text input

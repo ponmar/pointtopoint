@@ -23,7 +23,6 @@ namespace PointToPoint.Messenger
         /// Closes this communication channel
         /// </summary>
         /// This method should not be called from a disconnected-callback-thread.
-        /// The method blocks until the communication threads has been shut down.
         void Close();
 
         /// <summary>

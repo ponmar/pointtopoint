@@ -23,6 +23,7 @@ public partial class MainViewModel : ObservableObject
     public bool IsDisconnected => !IsConnected;
 
     public bool CanSendText => IsConnected && !string.IsNullOrEmpty(TextInput);
+    public bool CanSetName => IsConnected && !string.IsNullOrEmpty(Name);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanConnect))]
@@ -39,6 +40,10 @@ public partial class MainViewModel : ObservableObject
     {
         EvaluateAutoConnectTimer();
     }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanSetName))]
+    private string name = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanSendText))]
@@ -116,29 +121,32 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            ShowText(e.Message);
+            ShowText($"Connect error: {e.Message}");
         }
     }
 
     [RelayCommand]
     private void Disconnect()
     {
+        CloseMessenger();
+        ShowText("Disconnected from server");
+    }
+
+    private void CloseMessenger()
+    {
         if (Messenger is not null)
         {
             Messenger.Disconnected -= Messenger_Disconnected;
             Messenger.Close();
             Messenger = null;
-            ShowText("Disconnected from server");
         }
     }
 
-    [RelayCommand]
-    private void SendText()
+    public void HandleMessage(AssignName message, IMessenger messenger)
     {
-        if (Messenger is not null && !string.IsNullOrEmpty(TextInput))
+        if (messenger == Messenger)
         {
-            Messenger.Send(new PublishText(TextInput));
-            TextInput = string.Empty;
+            Name = message.Name;
         }
     }
 
@@ -171,6 +179,19 @@ public partial class MainViewModel : ObservableObject
         });
     }
 
+    [RelayCommand]
+    private void SetName()
+    {
+        Messenger!.Send(new ChangeName(Name));
+    }
+
+    [RelayCommand]
+    private void SendText()
+    {
+        Messenger!.Send(new PublishText(TextInput));
+        TextInput = string.Empty;
+    }
+
     private void ShowText(string text)
     {
         Texts += $"\n{text}";
@@ -189,13 +210,8 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    public void Close()
+    public void ExitApplication()
     {
-        if (Messenger is not null)
-        {
-            Messenger.Disconnected -= Messenger_Disconnected;
-            Messenger.Close();
-            Messenger = null;
-        }
+        CloseMessenger();
     }
 }

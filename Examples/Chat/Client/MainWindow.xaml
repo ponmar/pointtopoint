@@ -63,11 +63,19 @@
         </ScrollViewer>
 
         <Border Grid.Row="2" Grid.Column="0" Margin="3" Style="{StaticResource NormalBorder}">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-                <TextBlock Text="Message:" Margin="3" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding TextInput, UpdateSourceTrigger=PropertyChanged}" Width="300" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
-                <Button Style="{StaticResource NormalButton}" Content="Send" IsEnabled="{Binding CanSendText}" Click="Button_Click" IsDefault="True" Margin="3" VerticalAlignment="Center"/>
-            </StackPanel>
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Message:" Margin="3" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding TextInput, UpdateSourceTrigger=PropertyChanged}" Width="250" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
+                    <Button Style="{StaticResource NormalButton}" Content="Send" IsEnabled="{Binding CanSendText}" Click="Button_Click" IsDefault="True" Margin="3" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Name:" Margin="3" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="80" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
+                    <Button Style="{StaticResource NormalButton}" Width="40" Content="Set" IsEnabled="{Binding CanSetName}" Command="{Binding SetNameCommand}" Margin="3" VerticalAlignment="Center"/>
+                </StackPanel>
+            </WrapPanel>
         </Border>
     </Grid>
 </Window>

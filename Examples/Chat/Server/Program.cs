@@ -3,7 +3,10 @@ using PointToPoint.Payload;
 using Protocol;
 using Server;
 
-var clientHandler = new ClientsHandler(new NewtonsoftJsonPayloadSerializer(typeof(Text).Namespace!), Constants.KeepAliveSendInterval, typeof(ChatClientHandler));
+var clientHandler = new ClientsHandler(
+    new NewtonsoftJsonPayloadSerializer(typeof(Text).Namespace!),
+    Constants.KeepAliveSendInterval,
+    typeof(ChatClientHandler));
 
 var tcpServer = new TcpServer(Constants.DefaultPort);
 var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));

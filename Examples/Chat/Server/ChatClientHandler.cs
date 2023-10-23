@@ -10,15 +10,16 @@ public class ChatClientHandler : IAppClientMessageHandler, IDisposable
     private const string ServerName = "Server";
 
     private IMessageSender? messageSender;
-    private readonly string name = NameCreator.CreateName();
+    private string name = NameCreator.CreateName();
 
     public void Init(IMessageSender messageSender)
     {
         this.messageSender = messageSender;
-        Console.WriteLine($"{name} connected");
-        messageSender.SendBroadcast(new Text(ServerName, $"'{name}' joined", DateTime.Now));
+        messageSender.SendMessage(new AssignName(name), this);
+        var text = $"'{name}' joined";
+        messageSender.SendBroadcast(new Text(ServerName, text, DateTime.Now));
+        Console.WriteLine(text);
     }
-
 
     void IDisposable.Dispose()
     {
@@ -32,11 +33,26 @@ public class ChatClientHandler : IAppClientMessageHandler, IDisposable
 
         switch (message.Message.ToLower())
         {
-            case "hi":
-            case "hello":
+            case "hi server":
+            case "hello server":
                 Console.WriteLine($"Sending greeting.");
-                messageSender.SendMessage(new Text(name, $"And {message.Message} to you! /Server", DateTime.Now), messenger.Id);
+                messageSender.SendMessage(new Text(ServerName, $"And {message.Message} to you!", DateTime.Now), this);
                 break;
+        }
+    }
+
+    public void HandleMessage(ChangeName message, IMessenger messenger)
+    {
+        if (!string.IsNullOrEmpty(message.NewName) && message.NewName.Length < 50)
+        {
+            var text = $"{name} -> {message.NewName}";
+            Console.WriteLine(text);
+            messageSender!.SendBroadcast(new Text(ServerName, text, DateTime.Now));
+            name = message.NewName;
+        }
+        else
+        {
+            messageSender!.SendMessage(new Text(ServerName, "Invalid name", DateTime.Now), this);
         }
     }
 
