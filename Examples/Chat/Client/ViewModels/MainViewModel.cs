@@ -15,6 +15,10 @@ namespace Client.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
+    private const string ApplicationName = "Chat";
+
+    public string Title => IsConnected ? $"{ApplicationName} - Connected to {HostnameInput}:{PortInput}" : ApplicationName;
+
     public bool CanConnect => IsDisconnected &&
         !string.IsNullOrEmpty(HostnameInput) &&
         int.TryParse(PortInput, out var port) && port <= IPEndPoint.MaxPort && port >= IPEndPoint.MinPort;
@@ -57,6 +61,7 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsConnected))]
     [NotifyPropertyChangedFor(nameof(IsDisconnected))]
     [NotifyPropertyChangedFor(nameof(CanSendText))]
+    [NotifyPropertyChangedFor(nameof(Title))]
     private IMessenger? messenger = null;
 
     partial void OnMessengerChanged(IMessenger? value)

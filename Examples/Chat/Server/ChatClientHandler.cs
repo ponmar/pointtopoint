@@ -30,6 +30,7 @@ public class ChatClientHandler : IAppClientMessageHandler, IDisposable
 
     public void HandleMessage(PublishText message, IMessenger messenger)
     {
+        Console.WriteLine($"'{name}': {message.Message}");
         messageSender!.SendBroadcast(new Text(name, message.Message, DateTime.Now));
 
         switch (message.Message.ToLower())
@@ -43,7 +44,7 @@ public class ChatClientHandler : IAppClientMessageHandler, IDisposable
 
     public void HandleMessage(ChangeName message, IMessenger messenger)
     {
-        if (!string.IsNullOrEmpty(message.NewName) && message.NewName.Length < 50)
+        if (message.NewName != name && !string.IsNullOrEmpty(message.NewName) && message.NewName.Length < 50)
         {
             var text = $"{name} -> {message.NewName}";
             Console.WriteLine(text);
