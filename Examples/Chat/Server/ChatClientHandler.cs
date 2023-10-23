@@ -16,27 +16,27 @@ public class ChatClientHandler : IAppClientMessageHandler, IDisposable
     {
         this.messageSender = messageSender;
         messageSender.SendMessage(new AssignName(name), this);
-        var text = $"'{name}' joined";
+        var text = $"'{name}' joined the chat";
         messageSender.SendBroadcast(new Text(ServerName, text, DateTime.Now));
         Console.WriteLine(text);
     }
 
     void IDisposable.Dispose()
     {
-        Console.WriteLine($"{name} disconnected");
+        var text = $"'{name}' left the chat";
+        Console.WriteLine(text);
+        messageSender!.SendBroadcast(new Text(ServerName, text, DateTime.Now));
     }
 
     public void HandleMessage(PublishText message, IMessenger messenger)
     {
-        Console.WriteLine($"Forwarding message '{message.Message}' to all.");
         messageSender!.SendBroadcast(new Text(name, message.Message, DateTime.Now));
 
         switch (message.Message.ToLower())
         {
             case "hi server":
             case "hello server":
-                Console.WriteLine($"Sending greeting.");
-                messageSender.SendMessage(new Text(ServerName, $"And {message.Message} to you!", DateTime.Now), this);
+                messageSender.SendBroadcast(new Text(ServerName, $"And hi to you!", DateTime.Now));
                 break;
         }
     }
