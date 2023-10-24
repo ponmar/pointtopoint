@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Server\" />
-    <Folder Include="Payload\" />
   </ItemGroup>
 
   <ItemGroup>
