@@ -13,12 +13,18 @@ namespace PointToPointTests.MessageRouting
             // Arrange
             var messageRouter = new EventMessageRouter();
             MessageInfo? messageInfo = null;
-            messageRouter.MessageReceived += (sender, e) => { messageInfo = e; };
             var message = new MyMessage();
             var senderId = Guid.NewGuid();
             var messenger = A.Fake<IMessenger>();
 
-            // Act
+            // Act - without listener
+            messageRouter.RouteMessage(message, messenger);
+
+            // Assert
+            Assert.IsNull(messageInfo);
+
+            // Act - with listener
+            messageRouter.MessageReceived += (sender, e) => { messageInfo = e; };
             messageRouter.RouteMessage(message, messenger);
 
             // Assert

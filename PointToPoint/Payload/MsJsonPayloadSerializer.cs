@@ -56,7 +56,6 @@ namespace PointToPoint.Payload
                 throw new Exception($"Non protocol message type received: {jsonTypeString}");
             }
 
-
             var json = payload.Substring(separatorIndex + 1);
 
             var message = JsonSerializer.Deserialize(json, jsonType, serializerOptions);
