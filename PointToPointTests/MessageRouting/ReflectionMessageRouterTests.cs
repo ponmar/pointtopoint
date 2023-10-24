@@ -25,6 +25,23 @@ namespace PointToPointTests.MessageRouting
         }
 
         [TestMethod]
+        public void RouteMessage_HandleMethodImplementedAndExecutorSpecified()
+        {
+            // Arrange
+            var messageHandler = new MessageHandler();
+            var messageRouter = new ReflectionMessageRouter(messageHandler, (x) => x());
+            var message = new MyMessage();
+            var messenger = A.Fake<IMessenger>();
+
+            // Act
+            messageRouter.RouteMessage(message, messenger);
+
+            // Assert
+            Assert.AreEqual(1, messageHandler.Messages.Count);
+            Assert.AreSame(message, messageHandler.Messages.First());
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(NotImplementedException))]
         public void RouteMessage_HandleMethodNotImplemented_ExceptionThrown()
         {
