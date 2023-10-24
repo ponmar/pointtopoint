@@ -2,7 +2,7 @@
 
 ## About ##
 
-This repository contains code for client/server communication. The code originates from the multiplayer game [Race2k2](https://drive.google.com/drive/folders/1xs8oNkufM9pY0HBzyRL5-QLYBrGgvlLj). It has been adapted for a more general use and is indended to be a possible replacement for simple WCF communcication. By converting to this communication it will be easier to upgrade projects from .NET Framework to later .NET versions.
+This repository contains code for client/server communication. The code originates from the multiplayer game [Race2k2](https://drive.google.com/drive/folders/1xs8oNkufM9pY0HBzyRL5-QLYBrGgvlLj). It has later been adapted for a more general purpose use.
 
 ## Features ##
 
