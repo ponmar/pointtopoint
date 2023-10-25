@@ -25,8 +25,12 @@ namespace PointToPoint.Payload
 
         public byte[] MessageToPayload(object message)
         {
-            var json = JsonConvert.SerializeObject(message, serializerSettings);
             var messageType = message.GetType();
+            if (TypeIsProtocolMessage(messageType))
+            {
+                throw new ArgumentException($"Non protocol message can not be sent: {messageType}");
+            }
+            var json = JsonConvert.SerializeObject(message, serializerSettings);
             var assemblyName = messageType.Assembly.FullName.Split(',')[0];
             var messageString = $"{messageType},{assemblyName}{IdPayloadSeparator}{json}";
             return SerializeString(messageString);
@@ -53,8 +57,7 @@ namespace PointToPoint.Payload
                 throw new Exception($"Unknown message type: {jsonTypeString}");
             }
 
-            if (jsonType != typeof(KeepAlive) &&
-                jsonType.Namespace != messagesNamespace)
+            if (TypeIsProtocolMessage(jsonType))
             {
                 throw new Exception($"Non protocol message type received: {jsonTypeString}");
             }
@@ -67,6 +70,11 @@ namespace PointToPoint.Payload
                 throw new Exception("Deserialize returned null");
             }
             return message;
+        }
+
+        private bool TypeIsProtocolMessage(Type type)
+        {
+            return type != typeof(KeepAlive) && type.Namespace != messagesNamespace;
         }
 
         private static byte[] SerializeString(string data)

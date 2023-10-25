@@ -46,7 +46,7 @@ public class ChatClientHandler : IAppClientMessageHandler, IDisposable
     {
         if (message.NewName != name && !string.IsNullOrEmpty(message.NewName) && message.NewName.Length < 50)
         {
-            var text = $"{name} -> {message.NewName}";
+            var text = $"'{name}' -> '{message.NewName}'";
             Console.WriteLine(text);
             messageSender!.SendBroadcast(new Text(ServerName, text, DateTime.Now));
             name = message.NewName;
