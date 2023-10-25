@@ -58,7 +58,7 @@
             </WrapPanel>
         </Border>
 
-        <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="5" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="5" HorizontalScrollBarVisibility="Auto" Name="TextScrollViewer">
             <TextBlock Text="{Binding Texts}" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
         </ScrollViewer>
 

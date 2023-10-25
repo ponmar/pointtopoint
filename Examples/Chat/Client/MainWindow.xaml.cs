@@ -11,7 +11,19 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = new MainViewModel();
+        var vm = new MainViewModel();
+        DataContext = vm;
+
+        vm.PropertyChanged += Vm_PropertyChanged;
+    }
+
+    private void Vm_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        var vm = (MainViewModel)DataContext;
+        if (e.PropertyName == nameof(vm.Texts))
+        {
+            TextScrollViewer.ScrollToBottom();
+        }
     }
 
     private void Window_Closed(object sender, System.EventArgs e)
