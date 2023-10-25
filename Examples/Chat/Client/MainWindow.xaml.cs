@@ -19,8 +19,7 @@ public partial class MainWindow : Window
 
     private void Vm_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        var vm = (MainViewModel)DataContext;
-        if (e.PropertyName == nameof(vm.Texts))
+        if (e.PropertyName == nameof(MainViewModel.Texts))
         {
             TextScrollViewer.ScrollToBottom();
         }

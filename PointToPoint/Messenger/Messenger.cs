@@ -128,7 +128,7 @@ namespace PointToPoint.Messenger
 
         private void SendThread(object _)
         {
-            var keepAliveSentAt = DateTime.Now;
+            var keepAliveSentAt = DateTime.MinValue;
 
             try
             {

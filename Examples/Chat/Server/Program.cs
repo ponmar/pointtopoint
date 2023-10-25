@@ -7,8 +7,8 @@ var port = Constants.DefaultPort;
 
 var clientHandler = new ClientsHandler(
     new NewtonsoftJsonPayloadSerializer(typeof(Text).Namespace!),
-    Constants.KeepAliveSendInterval,
-    typeof(ChatClientHandler));
+    typeof(ChatClientHandler),
+    Constants.KeepAliveSendInterval);
 
 var tcpServer = new TcpServer(port);
 var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));

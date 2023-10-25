@@ -28,13 +28,18 @@ namespace PointToPoint.Server
         /// Constructor
         /// </summary>
         /// <param name="payloadSerializer"></param>
-        /// <param name="keepAliveSendInterval"></param>
         /// <param name="clientMessageHandlerType">Type of the class that will be created for handling application specific code per client</param>
-        public ClientsHandler(IPayloadSerializer payloadSerializer, TimeSpan keepAliveSendInterval, Type clientMessageHandlerType)
+        /// <param name="keepAliveSendInterval"></param>
+        public ClientsHandler(IPayloadSerializer payloadSerializer, Type clientMessageHandlerType, TimeSpan keepAliveSendInterval)
         {
             this.payloadSerializer = payloadSerializer;
             this.keepAliveSendInterval = keepAliveSendInterval;
             this.clientMessageHandlerType = clientMessageHandlerType;
+
+            if (!clientMessageHandlerType.GetInterfaces().Contains(typeof(IAppClientMessageHandler)))
+            {
+                throw new ArgumentException($"{clientMessageHandlerType} does not implement {nameof(IAppClientMessageHandler)}");
+            }
         }
 
         public void NewConnection(ISocket socket)
