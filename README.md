@@ -16,8 +16,8 @@ No authentication or encryption is included, but it can be implemented on top of
 
 ## Message Format ##
 
-1. Message length (integer serialized as 4 bytes)
-2. Payload (X number of bytes according to message length)
+1. Length (integer serialized as 4 bytes)
+2. Payload (X number of bytes according to the specified length)
 
 ## Payload Format ##
 
