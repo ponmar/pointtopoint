@@ -89,6 +89,7 @@ namespace PointToPoint.Server
 
         private void Client_Disconnected(object sender, Exception? _)
         {
+            // TODO: forward exception to removed client to make it possible to log errors (for example NotImplementedException)?
             RemoveClient((IMessenger)sender);
         }
 
@@ -103,21 +104,20 @@ namespace PointToPoint.Server
 
         private void RemoveClient(IMessenger clientMessenger)
         {
-            bool clientRemoved;
             Client? client = null;
             lock (clientsLock)
             {
                 client = Clients.FirstOrDefault(x => x.Messenger == clientMessenger);
-                clientRemoved = client is not null && Clients.Remove(client);
+                if (client is not null)
+                {
+                    Clients.Remove(client);
+                }
             }
 
-            if (clientRemoved)
+            if (client is not null)
             {
-                client!.Messenger.Disconnected -= Client_Disconnected;
-                if (client.MessageHandler is IDisposable disposableClient)
-                {
-                    disposableClient.Dispose();
-                }
+                client.Messenger.Disconnected -= Client_Disconnected;
+                client.MessageHandler.Dispose();
             }
         }
     }
