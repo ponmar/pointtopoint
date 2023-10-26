@@ -2,8 +2,8 @@
 
 public static class NameCreator
 {
-    private static readonly List<string> adjectives = new() { "Angry", "Funny", "Big", "Tiny", "Spectacular", "Green", "Spotted", "Magnificent", "Long" };
-    public static readonly List<string> animals = new() { "Hippo", "Anaconda", "Horse", "Gorilla", "Blobfish", "Snail", "Hedgehog" };
+    private static readonly List<string> adjectives = new() { "Angry", "Funny", "Big", "Tiny", "Spectacular", "Green", "Spotted", "Magnificent", "Long", "Sarcastic", "Nasty", "Proud", "Friendly" };
+    public static readonly List<string> animals = new() { "Hippo", "Anaconda", "Horse", "Gorilla", "Blobfish", "Snail", "Hedgehog", "Squirrel", "Velociraptor" };
 
     public static string CreateName()
     {

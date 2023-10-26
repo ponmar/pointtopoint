@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace PointToPoint.Server
 {
-    record Client(IMessenger Messenger, IClientHandler MessageHandler);
+    record Client(IMessenger Messenger, IClientHandler ClientHandler);
 
     /// <summary>
     /// Keeps track of all connected clients and creates one application specific message handling instance per client connection.
@@ -74,7 +74,7 @@ namespace PointToPoint.Server
             Client? client = null;
             lock (clientsLock)
             {
-                client = Clients.FirstOrDefault(x => x.MessageHandler == sender);
+                client = Clients.FirstOrDefault(x => x.ClientHandler == sender);
             }
             client?.Messenger.Send(message);
         }
@@ -117,7 +117,7 @@ namespace PointToPoint.Server
             if (client is not null)
             {
                 client.Messenger.Disconnected -= Client_Disconnected;
-                client.MessageHandler.Dispose();
+                client.ClientHandler.Dispose();
             }
         }
     }

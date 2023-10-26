@@ -7,24 +7,21 @@ This repository contains code for client/server communication. The code originat
 ## Features ##
 
 * Built with .NET Standard 2.0 (can be referenced from projects based on .NET Framework and later .NET versions)
-* Message passing over TCP (Newtonsoft JSON or custom object serialization)
+* Message passing over TCP (Newtonsoft JSON, MS JSON or custom object serialization)
 * Client side code for settings up a connection to a server and sending/receiving messages
-* Server side code for accepting client connections, keeping track of connected clients and sending/receiving messages
+* Server side code for accepting client connections, keeping track of connected clients, storing application specific data per client and sending/receiving messages
 * Keep alive message sending for detecting communication problems
-* No built-in authentication or encryption, but it can be inmplemented on top of the included message passing
 
-## Message format and example ##
+No authentication or encryption is included, but it can be inmplemented on top of the included message passing.
 
-| Serializer                      | Length (4 bytes in local byte order) | Payload (X bytes)                                     |
-|:-------------------------------:|:------------------------------------:|:-----------------------------------------------------:|
-| NewtonsoftJsonPayloadSerializer |             170                      | `protocol.PublishText,Protocol { Message = "Hello" }` |
+## Message Format ##
 
-Payload notes for the NewtonsoftJsonPayloadSerializer:
+1. Message length (integer serializd as 4 bytes)
+2. Payload (X number of bytes according to message length)
 
-* The payload string is serialized and sent as Unicode encoded data
-* protocol.PublishText is the serialized object type namespace
-* Protocol is the serialized object assembly
-* The last part is the JSON data for the serialized object
+## Payload Format ##
+
+The payload format depends on the selected object serializer. Typically it includes the object type and its serialized data.
 
 ### Included Object Serializers ###
 
