@@ -31,3 +31,7 @@ The payload format depends on the selected object serializer. Typically it inclu
 ## Documentation ##
 
 See included example projects for how to setup communication, sending and receiving messages.
+
+## License ##
+
+This project uses the [MIT license](LICENSE.txt).
