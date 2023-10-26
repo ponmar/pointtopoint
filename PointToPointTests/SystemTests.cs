@@ -46,7 +46,8 @@ public class SystemTests
         clientHandler.Stop();
         clientMessenger.Stop();
 
-        // TODO: wait for clientHandler and clientMessenger to stop
+        TestUtils.WaitFor(clientHandler.IsStopped);
+        TestUtils.WaitFor(clientMessenger.IsStopped);
 
         // Assert
         Assert.AreEqual(1, clientReceivedMessages.OfType<ServerToClientMessage>().Count());
