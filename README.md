@@ -12,11 +12,11 @@ This repository contains code for client/server communication. The code originat
 * Server side code for accepting client connections, keeping track of connected clients, storing application specific data per client and sending/receiving messages
 * Keep alive message sending for detecting communication problems
 
-No authentication or encryption is included, but it can be inmplemented on top of the included message passing.
+No authentication or encryption is included, but it can be implemented on top of the included message passing.
 
 ## Message Format ##
 
-1. Message length (integer serializd as 4 bytes)
+1. Message length (integer serialized as 4 bytes)
 2. Payload (X number of bytes according to message length)
 
 ## Payload Format ##
