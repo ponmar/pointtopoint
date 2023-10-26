@@ -142,7 +142,7 @@ public partial class MainViewModel : ObservableObject
         if (Messenger is not null)
         {
             Messenger.Disconnected -= Messenger_Disconnected;
-            Messenger.Close();
+            Messenger.Stop();
             Messenger = null;
         }
     }

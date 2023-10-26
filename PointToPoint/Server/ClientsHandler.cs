@@ -42,6 +42,22 @@ namespace PointToPoint.Server
             }
         }
 
+        public void Stop()
+        {
+            lock (clientsLock)
+            {
+                Clients.ForEach(x => x.Messenger.Stop());
+            }
+        }
+
+        public bool IsStopped()
+        {
+            lock (clientsLock)
+            {
+                return Clients.All(x => x.Messenger.IsStopped());
+            }
+        }
+
         public void NewConnection(ISocket socket)
         {
             var clientMessageHandler = (IAppClientMessageHandler)Activator.CreateInstance(clientMessageHandlerType);

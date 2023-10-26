@@ -41,7 +41,7 @@ public class TcpMessengerTests
         // Assert
         A.CallTo(() => fakeSocket.Send(A<byte[]>._, 0, 4 + serializedPayloadLength, SocketFlags.None)).MustHaveHappenedOnceExactly();
 
-        messenger.Close();
+        messenger.Stop();
     }
 }
 

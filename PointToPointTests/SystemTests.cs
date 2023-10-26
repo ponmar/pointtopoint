@@ -24,7 +24,7 @@ public class SystemTests
             typeof(TestClientHandler),
             keepAliveInterval);
 
-        var tcpServer = new TcpServer(port);
+        var tcpServer = new TcpServer("127.0.0.1", port);
         var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));
         tcpServerThread.Start();
 
@@ -42,10 +42,13 @@ public class SystemTests
         Thread.Sleep(3000);
 
         // Shutdown
-        // TODO: stop clientHandler
         tcpServer.Stop();
-        clientMessenger.Close();
+        clientHandler.Stop();
+        clientMessenger.Stop();
 
+        // TODO: wait for clientHandler and clientMessenger to stop
+
+        // Assert
         Assert.AreEqual(1, clientReceivedMessages.OfType<ServerToClientMessage>().Count());
         Assert.AreEqual(1, clientReceivedMessages.OfType<ServerToClientBroadcastMessage>().Count());
         Assert.IsTrue(clientReceivedMessages.OfType<KeepAlive>().Count() > 1);

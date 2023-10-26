@@ -51,10 +51,12 @@ namespace PointToPoint.Messenger
             started = true;
         }
 
-        public virtual void Close()
+        public virtual void Stop()
         {
             runThreads = false;
         }
+
+        public bool IsStopped() => !runThreads && !receiveThread.IsAlive && !sendThread.IsAlive;
 
         private void ReceiveThread(object _)
         {

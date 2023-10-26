@@ -47,9 +47,9 @@ namespace PointToPoint.Messenger.Tcp
             socket.ReceiveTimeout = 500;
         }
 
-        public override void Close()
+        public override void Stop()
         {
-            base.Close();
+            base.Stop();
             if (socket.Connected)
             {
                 socket.Close();

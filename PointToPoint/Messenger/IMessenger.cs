@@ -13,10 +13,16 @@ namespace PointToPoint.Messenger
         void Start();
 
         /// <summary>
-        /// Closes this communication channel
+        /// Indicate that the internal communication threads shall stop
         /// </summary>
         /// This method should not be called from a disconnected-callback-thread.
-        void Close();
+        void Stop();
+
+        /// <summary>
+        /// Check if the internal communication threads have stopped
+        /// </summary>
+        /// <returns></returns>
+        bool IsStopped();
 
         /// <summary>
         /// Queue a message for sending
