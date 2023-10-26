@@ -2,8 +2,13 @@
 
 internal class TestUtils
 {
-    public static TimeSpan WaitFor(Func<bool> condition, TimeSpan timeout = default(TimeSpan))
+    public static TimeSpan WaitFor(Func<bool> condition, TimeSpan timeout = default)
     {
+        if (timeout == default)
+        {
+            timeout = TimeSpan.FromSeconds(1);
+        }
+
         var enteredAt = DateTime.Now;
 
         while (true)
