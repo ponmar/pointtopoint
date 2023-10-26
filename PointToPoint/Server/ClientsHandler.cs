@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace PointToPoint.Server
 {
-    record Client(IMessenger Messenger, IAppClientMessageHandler MessageHandler);
+    record Client(IMessenger Messenger, IClientHandler MessageHandler);
 
     /// <summary>
     /// Keeps track of all connected clients and creates one application specific message handling instance per client connection.
@@ -36,9 +36,9 @@ namespace PointToPoint.Server
             this.keepAliveSendInterval = keepAliveSendInterval;
             this.clientMessageHandlerType = clientMessageHandlerType;
 
-            if (!clientMessageHandlerType.GetInterfaces().Contains(typeof(IAppClientMessageHandler)))
+            if (!clientMessageHandlerType.GetInterfaces().Contains(typeof(IClientHandler)))
             {
-                throw new ArgumentException($"{clientMessageHandlerType} does not implement {nameof(IAppClientMessageHandler)}");
+                throw new ArgumentException($"{clientMessageHandlerType} does not implement {nameof(IClientHandler)}");
             }
         }
 
@@ -60,7 +60,7 @@ namespace PointToPoint.Server
 
         public void NewConnection(ISocket socket)
         {
-            var clientMessageHandler = (IAppClientMessageHandler)Activator.CreateInstance(clientMessageHandlerType);
+            var clientMessageHandler = (IClientHandler)Activator.CreateInstance(clientMessageHandlerType);
             var messageRouter = new ReflectionMessageRouter(clientMessageHandler);
             var messenger = new TcpMessenger(socket, payloadSerializer, messageRouter, keepAliveSendInterval);
             var client = new Client(messenger, clientMessageHandler);
@@ -69,7 +69,7 @@ namespace PointToPoint.Server
             messenger.Start();
         }
 
-        public void SendMessage(object message, IAppClientMessageHandler sender)
+        public void SendMessage(object message, IClientHandler sender)
         {
             Client? client = null;
             lock (clientsLock)

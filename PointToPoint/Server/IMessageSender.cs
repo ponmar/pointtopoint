@@ -2,7 +2,7 @@
 {
     public interface IMessageSender
     {
-        void SendMessage(object message, IAppClientMessageHandler sender);
+        void SendMessage(object message, IClientHandler sender);
         void SendBroadcast(object message);
     }
 }

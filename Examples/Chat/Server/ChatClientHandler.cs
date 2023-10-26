@@ -5,7 +5,7 @@ using PointToPoint.Messenger;
 
 namespace Server;
 
-public class ChatClientHandler : IAppClientMessageHandler, IDisposable
+public class ChatClientHandler : IClientHandler
 {
     private const string ServerName = "Server";
 

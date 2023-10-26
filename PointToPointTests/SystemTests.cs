@@ -75,7 +75,7 @@ public record ClientToServerMessage();
 public record ServerToClientMessage();
 public record ServerToClientBroadcastMessage();
 
-public class TestClientHandler : IAppClientMessageHandler, IDisposable
+public class TestClientHandler : IClientHandler, IDisposable
 {
     public readonly List<object> receivedMessages = new();
 
