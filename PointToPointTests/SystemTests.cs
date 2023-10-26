@@ -24,7 +24,7 @@ public class SystemTests
             typeof(TestClientHandler),
             keepAliveInterval);
 
-        var tcpServer = new TcpServer("127.0.0.1", port);
+        var tcpServer = new TcpServer(port);
         var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));
         tcpServerThread.Start();
 

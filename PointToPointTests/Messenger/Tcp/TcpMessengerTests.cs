@@ -10,6 +10,27 @@ namespace PointToPointTests.Messenger.Tcp;
 public class TcpMessengerTests
 {
     [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void Start_CalledTwice_Throws()
+    {
+        // Arrange
+        var fakePayloadSerializer = A.Fake<IPayloadSerializer>();
+        var fakeMessageRouter = A.Fake<IMessageRouter>();
+        var fakeSocketFactory = A.Fake<ISocketFactory>();
+
+        var messenger = new TcpMessenger("localhost", 12345,
+            fakePayloadSerializer,
+            fakeMessageRouter,
+            fakeSocketFactory,
+            TimeSpan.FromSeconds(10));
+
+        messenger.Start();
+
+        // Act
+        messenger.Start();
+    }
+
+    [TestMethod]
     public void Send_AllBytesWrittenToSocket()
     {
         // Arrange

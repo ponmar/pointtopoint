@@ -43,7 +43,7 @@ namespace PointToPoint.Messenger
         {
             if (started)
             {
-                throw new InvalidOperationException("This messenger has already been started");
+                throw new InvalidOperationException($"This {GetType()} instance has already been started");
             }
 
             receiveThread.Start();
