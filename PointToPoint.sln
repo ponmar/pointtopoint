@@ -5,6 +5,7 @@ VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{AA380BC9-BBD1-4331-BBF3-0C7B508D1740}"
 	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -20,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Protocol", "Examples\Chat\P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PointToPoint", "PointToPoint\PointToPoint.csproj", "{5B403F0F-15C8-48AB-9F3F-52908595F6B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointToPointTests", "PointToPointTests\PointToPointTests.csproj", "{39DF8053-1F13-4D8D-8B10-3D99509058D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PointToPointTests", "PointToPointTests\PointToPointTests.csproj", "{39DF8053-1F13-4D8D-8B10-3D99509058D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
