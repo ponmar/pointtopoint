@@ -44,7 +44,7 @@ public class NewtonsoftJsonPayloadSerializerTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
+    [ExpectedException(typeof(PayloadDeserializeException))]
     public void PayloadToMessage_SeparatorNotFound_Throws()
     {
         // Arrange
@@ -56,7 +56,7 @@ public class NewtonsoftJsonPayloadSerializerTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
+    [ExpectedException(typeof(PayloadDeserializeException))]
     public void PayloadToMessage_UnknownType_Throws()
     {
         // Arrange
@@ -70,7 +70,7 @@ public class NewtonsoftJsonPayloadSerializerTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
+    [ExpectedException(typeof(PayloadDeserializeException))]
     public void PayloadToMessage_NonProtocolType_Throws()
     {
         // Arrange
@@ -83,7 +83,7 @@ public class NewtonsoftJsonPayloadSerializerTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
+    [ExpectedException(typeof(PayloadDeserializeException))]
     public void PayloadToMessage_NoJsonIncluded()
     {
         // Arrange

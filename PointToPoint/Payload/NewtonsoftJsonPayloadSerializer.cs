@@ -43,19 +43,19 @@ namespace PointToPoint.Payload
             var separatorIndex = payload.IndexOf(IdPayloadSeparator);
             if (separatorIndex < 1)
             {
-                throw new Exception("Message type/json separator not found");
+                throw new PayloadDeserializeException("Message type/json separator not found");
             }
 
             var jsonTypeString = payload.Substring(0, separatorIndex);
             var jsonType = Type.GetType(jsonTypeString);
             if (jsonType == null)
             {
-                throw new Exception($"Unknown message type: {jsonTypeString}");
+                throw new PayloadDeserializeException($"Unknown message type: {jsonTypeString}");
             }
 
             if (!TypeIsProtocolMessage(jsonType))
             {
-                throw new Exception($"Non protocol message type received: {jsonTypeString}");
+                throw new PayloadDeserializeException($"Non protocol message type received: {jsonTypeString}");
             }
 
             var json = payload.Substring(separatorIndex + 1);
@@ -63,7 +63,7 @@ namespace PointToPoint.Payload
             var message = JsonConvert.DeserializeObject(json, jsonType);
             if (message is null)
             {
-                throw new Exception("Deserialize returned null");
+                throw new PayloadDeserializeException($"JsonConvert.DeserializeObject() returned null for type {jsonTypeString}");
             }
             return message;
         }

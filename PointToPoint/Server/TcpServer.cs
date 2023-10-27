@@ -29,7 +29,7 @@ namespace PointToPoint.Server
             if (networkInterface != string.Empty &&
                 !IPAddress.TryParse(networkInterface, out ipAddress))
             {
-                throw new Exception("Invalid network interface");
+                throw new ArgumentException("Invalid network interface");
             }
 
             // TODO: use an interface for TcpListener and a factory to be able to mock it during test
