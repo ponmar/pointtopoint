@@ -17,6 +17,8 @@ namespace PointToPoint.Messenger.Tcp
 
         public bool Connected => socket.Connected;
 
+        public void Shutdown(SocketShutdown how) => socket.Shutdown(how);
+
         public void Close() => socket.Close();
 
         public void Connect(EndPoint remoteEP) => socket.Connect(remoteEP);

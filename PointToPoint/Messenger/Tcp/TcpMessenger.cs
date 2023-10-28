@@ -52,6 +52,7 @@ namespace PointToPoint.Messenger.Tcp
             base.Stop();
             if (socket.Connected)
             {
+                socket.Shutdown(SocketShutdown.Both);
                 socket.Close();
             }
             socket.Dispose();

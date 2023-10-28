@@ -16,6 +16,8 @@ namespace PointToPoint.Messenger.Tcp
 
         bool Connected { get; }
 
+        void Shutdown(SocketShutdown how);
+
         void Close();
 
         void Dispose();
