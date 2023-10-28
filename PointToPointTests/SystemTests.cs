@@ -75,7 +75,7 @@ public record ClientToServerMessage();
 public record ServerToClientMessage();
 public record ServerToClientBroadcastMessage();
 
-public class TestClientHandler : IClientHandler, IDisposable
+public class TestClientHandler : IClientHandler
 {
     public readonly List<object> receivedMessages = new();
 
@@ -85,7 +85,7 @@ public class TestClientHandler : IClientHandler, IDisposable
         messageSender.SendBroadcast(new ServerToClientBroadcastMessage());
     }
 
-    void IDisposable.Dispose()
+    public void Exit(Exception? _)
     {
         Assert.AreEqual(1, receivedMessages.OfType<ClientToServerMessage>().Count());
         Assert.IsTrue(receivedMessages.OfType<KeepAlive>().Count() > 1);

@@ -21,9 +21,13 @@ public class ChatClientHandler : IClientHandler
         Console.WriteLine(text);
     }
 
-    void IDisposable.Dispose()
+    public void Exit(Exception? e)
     {
         var text = $"'{name}' left the chat";
+        if (e is not null)
+        {
+            text += $" ({e.Message})";
+        }
         Console.WriteLine(text);
         messageSender!.SendBroadcast(new Text(ServerName, text, DateTime.Now));
     }
