@@ -117,6 +117,7 @@ namespace PointToPoint.Server
             if (client is not null)
             {
                 client.Messenger.Disconnected -= Client_Disconnected;
+                client.Messenger.Stop();
                 client.ClientHandler.Dispose();
             }
         }
