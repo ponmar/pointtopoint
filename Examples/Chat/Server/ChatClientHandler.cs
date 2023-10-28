@@ -37,7 +37,7 @@ public class ChatClientHandler : IClientHandler
         {
             case "hi server":
             case "hello server":
-                messageSender.SendBroadcast(new Text(ServerName, $"And hi to you!", DateTime.Now));
+                messageSender.SendBroadcast(new Text(ServerName, "And hi to you!", DateTime.Now));
                 break;
         }
     }

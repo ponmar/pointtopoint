@@ -61,6 +61,7 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsConnected))]
     [NotifyPropertyChangedFor(nameof(IsDisconnected))]
     [NotifyPropertyChangedFor(nameof(CanSendText))]
+    [NotifyPropertyChangedFor(nameof(CanSetName))]
     [NotifyPropertyChangedFor(nameof(Title))]
     private IMessenger? messenger = null;
 
@@ -178,8 +179,7 @@ public partial class MainViewModel : ObservableObject
             if (IsConnected)
             {
                 ShowText("Disconnected from server" + (e is not null ? $" ({e.Message})" : ""));
-                Messenger!.Disconnected -= Messenger_Disconnected;
-                Messenger = null;
+                CloseMessenger();
             }
         });
     }
