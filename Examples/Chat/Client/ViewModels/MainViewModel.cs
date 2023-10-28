@@ -133,8 +133,8 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void Disconnect()
     {
-        CloseMessenger();
         ShowText("Disconnected from server");
+        CloseMessenger();
     }
 
     private void CloseMessenger()
