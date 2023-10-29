@@ -7,6 +7,8 @@
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<PackageProjectUrl>https://bitbucket.org/pontusmarkstrom/pointtopoint/</PackageProjectUrl>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<RepositoryUrl>https://pontusmarkstrom@bitbucket.org/pontusmarkstrom/pointtopoint.git</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
