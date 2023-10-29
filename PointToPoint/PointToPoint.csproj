@@ -9,6 +9,8 @@
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<RepositoryUrl>https://pontusmarkstrom@bitbucket.org/pontusmarkstrom/pointtopoint.git</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
+	<Authors>Pontus Markström</Authors>
+	<Description>A library for easy-to-use message passing over TCP.</Description>
   </PropertyGroup>
 
   <ItemGroup>
