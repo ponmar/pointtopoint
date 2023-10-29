@@ -4,7 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
 	<LangVersion>9.0</LangVersion>
 	<Nullable>enable</Nullable>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<PackageProjectUrl>https://bitbucket.org/pontusmarkstrom/pointtopoint/</PackageProjectUrl>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
