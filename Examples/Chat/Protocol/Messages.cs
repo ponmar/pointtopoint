@@ -1,6 +1,9 @@
 ﻿namespace Protocol;
 
-public record AssignName(string Name);
+// Client -> Server
 public record ChangeName(string NewName);
 public record PublishText(string Message);
+
+// Server -> Client
+public record AssignName(string Name);
 public record Text(string Sender, string Message, DateTime Time);
