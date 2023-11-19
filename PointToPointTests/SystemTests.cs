@@ -10,7 +10,7 @@ namespace PointToPointTests;
 [TestClass]
 public class SystemTests
 {
-    private readonly List<object> clientReceivedMessages = new();
+    private readonly List<object> clientReceivedMessages = [];
 
     [TestMethod]
     public void MessagesBetweenClientAndServer()
@@ -77,7 +77,7 @@ public record ServerToClientBroadcastMessage();
 
 public class TestClientHandler : IClientHandler
 {
-    public readonly List<object> receivedMessages = new();
+    public readonly List<object> receivedMessages = [];
 
     public void Init(IMessageSender messageSender)
     {

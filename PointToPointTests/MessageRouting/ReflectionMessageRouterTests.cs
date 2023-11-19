@@ -61,7 +61,7 @@ namespace PointToPointTests.MessageRouting
 
     public class MessageHandler
     {
-        public List<object> Messages { get; } = new();
+        public List<object> Messages { get; } = [];
 
         public void HandleMessage(MyMessage message, IMessenger _)
         {
