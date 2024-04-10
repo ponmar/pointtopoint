@@ -5,13 +5,13 @@ using Server;
 
 var port = Constants.DefaultPort;
 
-var clientHandler = new ClientsHandler(
+var clientsHandler = new ClientsHandler(
     new NewtonsoftJsonPayloadSerializer(typeof(Text).Namespace!),
     typeof(ChatClientHandler),
     Constants.KeepAliveSendInterval);
 
 var tcpServer = new TcpServer(port);
-var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));
+var tcpServerThread = new Thread(() => tcpServer.Run(clientsHandler));
 tcpServerThread.Start();
 
 Console.WriteLine($"Listening for connections on port {port}...");
