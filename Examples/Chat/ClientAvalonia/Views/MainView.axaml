@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:ClientAvalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ClientAvalonia.Views.MainView"
+             x:DataType="vm:MainViewModel">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+
+		<Border Grid.Row="0" Grid.Column="0" Margin="3" Classes="Normal">
+			<WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<TextBlock Text="Server:" Margin="3" VerticalAlignment="Center"/>
+					<TextBox Text="{Binding HostnameInput}" Width="100" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<TextBlock Text="Port:" Margin="3" VerticalAlignment="Center"/>
+					<TextBox Text="{Binding PortInput}" Width="50" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<CheckBox VerticalAlignment="Center" Margin="3" IsChecked="{Binding AutoConnect}">Auto-connect</CheckBox>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<Button Content="Connect" Command="{Binding ConnectCommand}" IsEnabled="{Binding CanConnect}" Margin="3" VerticalAlignment="Center"/>
+					<Button Content="Disconnect" Command="{Binding DisconnectCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<TextBlock Text="Keep alive supervision:" Margin="3" VerticalAlignment="Center"/>
+					<TextBlock Text="{Binding KeepAliveSupervisionStatus}" Margin="3" VerticalAlignment="Center"/>
+				</StackPanel>
+			</WrapPanel>
+		</Border>
+
+		<ScrollViewer Grid.Row="1" Grid.Column="0" Margin="5" HorizontalScrollBarVisibility="Auto" Name="TextScrollViewer">
+			<TextBlock Text="{Binding Texts}" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+		</ScrollViewer>
+
+		<Border Grid.Row="2" Grid.Column="0" Margin="3" Classes="Normal">
+			<WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<TextBlock Text="Message:" Margin="3" VerticalAlignment="Center"/>
+					<TextBox Text="{Binding TextInput}" Width="250" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
+					<Button Content="Send" IsEnabled="{Binding CanSendText}" Command="{Binding SendTextCommand}" IsDefault="True" Margin="3" VerticalAlignment="Center"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<TextBlock Text="Name:" Margin="3" VerticalAlignment="Center"/>
+					<TextBox Text="{Binding Name}" Width="80" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
+					<Button Width="40" Content="Set" IsEnabled="{Binding CanSetName}" Command="{Binding SetNameCommand}" Margin="3" VerticalAlignment="Center"/>
+				</StackPanel>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</UserControl>

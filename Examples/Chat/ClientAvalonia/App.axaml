@@ -1,0 +1,16 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ClientAvalonia.App"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.Styles>
+        <FluentTheme />
+
+		<Style Selector="Border.Normal">
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="CornerRadius" Value="5"/>
+			<Setter Property="BorderBrush" Value="White"/>
+		</Style>
+    </Application.Styles>
+</Application>
