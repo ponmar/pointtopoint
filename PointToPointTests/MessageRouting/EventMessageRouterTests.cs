@@ -4,10 +4,9 @@ using PointToPoint.Messenger;
 
 namespace PointToPointTests.MessageRouting
 {
-    [TestClass]
     public class EventMessageRouterTests
     {
-        [TestMethod]
+        [Fact]
         public void RouteMessage()
         {
             // Arrange
@@ -21,16 +20,16 @@ namespace PointToPointTests.MessageRouting
             messageRouter.RouteMessage(message, messenger);
 
             // Assert
-            Assert.IsNull(messageInfo);
+            Assert.Null(messageInfo);
 
             // Act - with listener
             messageRouter.MessageReceived += (sender, e) => { messageInfo = e; };
             messageRouter.RouteMessage(message, messenger);
 
             // Assert
-            Assert.IsNotNull(messageInfo);
-            Assert.AreSame(message, messageInfo.Message);
-            Assert.AreEqual(messenger, messageInfo.Messenger);
+            Assert.NotNull(messageInfo);
+            Assert.Same(message, messageInfo.Message);
+            Assert.Equal(messenger, messageInfo.Messenger);
         }
     }
 

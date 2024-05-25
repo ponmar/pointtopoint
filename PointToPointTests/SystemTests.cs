@@ -7,12 +7,11 @@ using PointToPoint.Server;
 
 namespace PointToPointTests;
 
-[TestClass]
 public class SystemTests
 {
     private readonly List<object> clientReceivedMessages = [];
 
-    [TestMethod]
+    [Fact]
     public void MessagesBetweenClientAndServer()
     {
         // Arrange - start the server
@@ -50,9 +49,9 @@ public class SystemTests
         TestUtils.WaitFor(clientMessenger.IsStopped);
 
         // Assert
-        Assert.AreEqual(1, clientReceivedMessages.OfType<ServerToClientMessage>().Count());
-        Assert.AreEqual(1, clientReceivedMessages.OfType<ServerToClientBroadcastMessage>().Count());
-        Assert.IsTrue(clientReceivedMessages.OfType<KeepAlive>().Count() > 1);
+        Assert.Single(clientReceivedMessages.OfType<ServerToClientMessage>());
+        Assert.Single(clientReceivedMessages.OfType<ServerToClientBroadcastMessage>());
+        Assert.True(clientReceivedMessages.OfType<KeepAlive>().Count() > 1);
     }
 
     public void HandleMessage(ServerToClientMessage message, IMessenger messenger)
@@ -87,8 +86,8 @@ public class TestClientHandler : IClientHandler
 
     public void Exit(Exception? _)
     {
-        Assert.AreEqual(1, receivedMessages.OfType<ClientToServerMessage>().Count());
-        Assert.IsTrue(receivedMessages.OfType<KeepAlive>().Count() > 1);
+        Assert.Single(receivedMessages.OfType<ClientToServerMessage>());
+        Assert.True(receivedMessages.OfType<KeepAlive>().Count() > 1);
     }
 
     public void HandleMessage(ClientToServerMessage message, IMessenger messenger)

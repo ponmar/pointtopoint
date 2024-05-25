@@ -6,11 +6,9 @@ using System.Net.Sockets;
 
 namespace PointToPointTests.Messenger.Tcp;
 
-[TestClass]
 public class TcpMessengerTests
 {
-    [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [Fact]
     public void Start_CalledTwice_Throws()
     {
         // Arrange
@@ -27,10 +25,10 @@ public class TcpMessengerTests
         messenger.Start();
 
         // Act
-        messenger.Start();
+        Assert.Throws<InvalidOperationException>(messenger.Start);
     }
 
-    [TestMethod]
+    [Fact]
     public void Send_AllBytesWrittenToSocket()
     {
         // Arrange

@@ -4,10 +4,9 @@ using System.Text;
 
 namespace PointToPointTests.Payload;
 
-[TestClass]
 public class NewtonsoftJsonPayloadSerializerTests
 {
-    [TestMethod]
+    [Fact]
     public void SerializeDeserialize_CustomMessage()
     {
         var message = new MyMessage(10, "text");
@@ -16,10 +15,10 @@ public class NewtonsoftJsonPayloadSerializerTests
         var payload = serializer.MessageToPayload(message);
         var deserializedMessage = serializer.PayloadToMessage(payload, payload.Length);
 
-        Assert.AreEqual(message, deserializedMessage);
+        Assert.Equal(message, deserializedMessage);
     }
 
-    [TestMethod]
+    [Fact]
     public void SerializeDeserialize_KeepAlive()
     {
         var message = new KeepAlive();
@@ -28,11 +27,10 @@ public class NewtonsoftJsonPayloadSerializerTests
         var payload = serializer.MessageToPayload(message);
         var deserializedMessage = serializer.PayloadToMessage(payload, payload.Length);
 
-        Assert.AreEqual(message, deserializedMessage);
+        Assert.Equal(message, deserializedMessage);
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
+    [Fact]
     public void MessageToPayload_NonProtocolMessage_Throws()
     {
         // Arrange
@@ -40,11 +38,10 @@ public class NewtonsoftJsonPayloadSerializerTests
         var serializer = new NewtonsoftJsonPayloadSerializer("Some.Namespace");
 
         // Act
-        serializer.MessageToPayload(message);
+        Assert.Throws<ArgumentException>(() => serializer.MessageToPayload(message));
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(PayloadDeserializeException))]
+    [Fact]
     public void PayloadToMessage_SeparatorNotFound_Throws()
     {
         // Arrange
@@ -52,11 +49,10 @@ public class NewtonsoftJsonPayloadSerializerTests
         var serializer = new NewtonsoftJsonPayloadSerializer(typeof(MyMessage).Namespace!);
 
         // Act
-        serializer.PayloadToMessage(bytes, bytes.Length);
+        Assert.Throws<PayloadDeserializeException>(() => serializer.PayloadToMessage(bytes, bytes.Length));
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(PayloadDeserializeException))]
+    [Fact]
     public void PayloadToMessage_UnknownType_Throws()
     {
         // Arrange
@@ -66,11 +62,10 @@ public class NewtonsoftJsonPayloadSerializerTests
         var serializer = new NewtonsoftJsonPayloadSerializer(protocolNamespace);
 
         // Act
-        serializer.PayloadToMessage(bytes, bytes.Length);
+        Assert.Throws<PayloadDeserializeException>(() => serializer.PayloadToMessage(bytes, bytes.Length));
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(PayloadDeserializeException))]
+    [Fact]
     public void PayloadToMessage_NonProtocolType_Throws()
     {
         // Arrange
@@ -79,11 +74,10 @@ public class NewtonsoftJsonPayloadSerializerTests
         var serializer = new NewtonsoftJsonPayloadSerializer(protocolNamespace);
 
         // Act
-        serializer.PayloadToMessage(bytes, bytes.Length);
+        Assert.Throws<PayloadDeserializeException>(() => serializer.PayloadToMessage(bytes, bytes.Length));
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(PayloadDeserializeException))]
+    [Fact]
     public void PayloadToMessage_NoJsonIncluded()
     {
         // Arrange
@@ -93,7 +87,7 @@ public class NewtonsoftJsonPayloadSerializerTests
         var serializer = new NewtonsoftJsonPayloadSerializer(protocolNamespace);
 
         // Act
-        serializer.PayloadToMessage(bytes, bytes.Length);
+        Assert.Throws<PayloadDeserializeException>(() => serializer.PayloadToMessage(bytes, bytes.Length));
     }
 }
 

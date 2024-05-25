@@ -4,10 +4,9 @@ using PointToPoint.Messenger;
 
 namespace PointToPointTests.MessageRouting
 {
-    [TestClass]
     public class ReflectionMessageRouterTests
     {
-        [TestMethod]
+        [Fact]
         public void RouteMessage_HandleMethodImplemented()
         {
             // Arrange
@@ -20,11 +19,11 @@ namespace PointToPointTests.MessageRouting
             messageRouter.RouteMessage(message, messenger);
 
             // Assert
-            Assert.AreEqual(1, messageHandler.Messages.Count);
-            Assert.AreSame(message, messageHandler.Messages.First());
+            Assert.Single(messageHandler.Messages);
+            Assert.Same(message, messageHandler.Messages.First());
         }
 
-        [TestMethod]
+        [Fact]
         public void RouteMessage_HandleMethodImplementedAndExecutorSpecified()
         {
             // Arrange
@@ -37,12 +36,11 @@ namespace PointToPointTests.MessageRouting
             messageRouter.RouteMessage(message, messenger);
 
             // Assert
-            Assert.AreEqual(1, messageHandler.Messages.Count);
-            Assert.AreSame(message, messageHandler.Messages.First());
+            Assert.Single(messageHandler.Messages);
+            Assert.Same(message, messageHandler.Messages.First());
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(NotImplementedException))]
+        [Fact]
         public void RouteMessage_HandleMethodNotImplemented_ExceptionThrown()
         {
             // Arrange
@@ -53,7 +51,7 @@ namespace PointToPointTests.MessageRouting
             var messenger = A.Fake<IMessenger>();
 
             // Act
-            messageRouter.RouteMessage(message, messenger);
+            Assert.Throws<NotImplementedException>(() => messageRouter.RouteMessage(message, messenger));
         }
     }
 
