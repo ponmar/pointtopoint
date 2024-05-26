@@ -9,7 +9,7 @@ namespace PointToPointTests;
 
 public class SystemTests
 {
-    private readonly List<object> clientReceivedMessages = [];
+    private readonly MessageReceiver clientMessageReceiver = new();
 
     [Fact]
     public void MessagesBetweenClientAndServer()
@@ -30,7 +30,7 @@ public class SystemTests
         // Arrange - start the client
         var clientMessenger = new TcpMessenger("127.0.0.1", port,
             new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Namespace!),
-            new ReflectionMessageRouter(this),
+            new ReflectionMessageRouter(clientMessageReceiver),
             new SocketFactory(),
             keepAliveInterval);
         clientMessenger.Start();
@@ -49,25 +49,21 @@ public class SystemTests
         TestUtils.WaitFor(clientMessenger.IsStopped);
 
         // Assert
-        Assert.Single(clientReceivedMessages.OfType<ServerToClientMessage>());
-        Assert.Single(clientReceivedMessages.OfType<ServerToClientBroadcastMessage>());
-        Assert.True(clientReceivedMessages.OfType<KeepAlive>().Count() > 1);
+        Assert.Single(clientMessageReceiver.Messages.OfType<ServerToClientMessage>());
+        Assert.Single(clientMessageReceiver.Messages.OfType<ServerToClientBroadcastMessage>());
+        Assert.True(clientMessageReceiver.Messages.OfType<KeepAlive>().Count() > 1);
     }
+}
 
-    public void HandleMessage(ServerToClientMessage message, IMessenger messenger)
-    {
-        clientReceivedMessages.Add(message);
-    }
+public class MessageReceiver
+{
+    public List<object> Messages { get; } = [];
 
-    public void HandleMessage(ServerToClientBroadcastMessage message, IMessenger messenger)
-    {
-        clientReceivedMessages.Add(message);
-    }
+    public void HandleMessage(ServerToClientMessage message, IMessenger messenger) => Messages.Add(message);
 
-    public void HandleMessage(KeepAlive message, IMessenger messenger)
-    {
-        clientReceivedMessages.Add(message);
-    }
+    public void HandleMessage(ServerToClientBroadcastMessage message, IMessenger messenger) => Messages.Add(message);
+
+    public void HandleMessage(KeepAlive message, IMessenger messenger) => Messages.Add(message);
 }
 
 public record ClientToServerMessage();
