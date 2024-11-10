@@ -2,6 +2,7 @@
 using PointToPoint.Messenger;
 using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
+using PointToPoint.Server.ClientHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,18 +24,21 @@ namespace PointToPoint.Server
         private readonly TimeSpan keepAliveSendInterval;
 
         private readonly Type clientMessageHandlerType;
+        private readonly IClientHandlerFactory clientHandlerFactory;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="payloadSerializer"></param>
         /// <param name="clientMessageHandlerType">Type of the class that will be created for handling application specific code per client</param>
+        /// <param name="clientHandlerFactory">TODO</param>
         /// <param name="keepAliveSendInterval"></param>
-        public ClientsHandler(IPayloadSerializer payloadSerializer, Type clientMessageHandlerType, TimeSpan keepAliveSendInterval)
+        public ClientsHandler(IPayloadSerializer payloadSerializer, Type clientMessageHandlerType, IClientHandlerFactory clientHandlerFactory, TimeSpan keepAliveSendInterval)
         {
             this.payloadSerializer = payloadSerializer;
             this.keepAliveSendInterval = keepAliveSendInterval;
             this.clientMessageHandlerType = clientMessageHandlerType;
+            this.clientHandlerFactory = clientHandlerFactory;
 
             if (!clientMessageHandlerType.GetInterfaces().Contains(typeof(IClientHandler)))
             {
@@ -60,12 +64,12 @@ namespace PointToPoint.Server
 
         public void NewConnection(ISocket socket)
         {
-            var clientMessageHandler = (IClientHandler)Activator.CreateInstance(clientMessageHandlerType);
-            var messageRouter = new ReflectionMessageRouter(clientMessageHandler);
+            var clientHandler = clientHandlerFactory.Create(clientMessageHandlerType);
+            var messageRouter = new ReflectionMessageRouter(clientHandler);
             var messenger = new TcpMessenger(socket, payloadSerializer, messageRouter, keepAliveSendInterval);
-            var client = new Client(messenger, clientMessageHandler);
+            var client = new Client(messenger, clientHandler);
             AddClient(client);
-            clientMessageHandler.Init(this);
+            clientHandler.Init(this);
             messenger.Start();
         }
 

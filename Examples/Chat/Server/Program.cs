@@ -2,12 +2,14 @@
 using PointToPoint.Payload;
 using Protocol;
 using Server;
+using PointToPoint.Server.ClientHandler;
 
 var port = Constants.DefaultPort;
 
 var clientsHandler = new ClientsHandler(
     new NewtonsoftJsonPayloadSerializer(typeof(Text).Namespace!),
     typeof(ChatClientHandler),
+    new ActivatorClientHandlerFactory(),
     Constants.KeepAliveSendInterval);
 
 var tcpServer = new TcpServer(port);

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PointToPoint.Server
+namespace PointToPoint.Server.ClientHandler
 {
     /// <summary>
     /// The interface for server side specific data per client connection

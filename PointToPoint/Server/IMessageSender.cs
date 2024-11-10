@@ -1,4 +1,6 @@
-﻿namespace PointToPoint.Server
+﻿using PointToPoint.Server.ClientHandler;
+
+namespace PointToPoint.Server
 {
     public interface IMessageSender
     {

@@ -4,6 +4,7 @@ using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
 using PointToPoint.Protocol;
 using PointToPoint.Server;
+using PointToPoint.Server.ClientHandler;
 
 namespace PointToPointTests;
 
@@ -21,6 +22,7 @@ public class SystemTests
         var clientHandler = new ClientsHandler(
             new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Namespace!),
             typeof(TestClientHandler),
+            new ActivatorClientHandlerFactory(),
             keepAliveInterval);
 
         var tcpServer = new TcpServer(port);
