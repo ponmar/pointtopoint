@@ -19,8 +19,8 @@ namespace PointToPoint.Messenger.Tcp
         /// </summary>
         /// Note that this instance can not be re-used after it has disconnected.
         /// Exception will be thrown for errors.
-        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, ISocketFactory tcpSocketFactory, TimeSpan keepAliveSendInterval)
-            : base(payloadSerializer, messageRouter, keepAliveSendInterval)
+        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, ISocketFactory tcpSocketFactory)
+            : base(payloadSerializer, messageRouter)
         {
             var servers = Dns.GetHostEntry(serverHostname);
             var server = servers.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
@@ -32,8 +32,8 @@ namespace PointToPoint.Messenger.Tcp
         /// <summary>
         /// Constructor to be used internally on the server side (when server socket accepted new client socket)
         /// </summary>
-        internal TcpMessenger(ISocket socket, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, TimeSpan keepAliveSendInterval)
-            : base(payloadSerializer, messageRouter, keepAliveSendInterval)
+        internal TcpMessenger(ISocket socket, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter)
+            : base(payloadSerializer, messageRouter)
         {
             this.socket = socket;
             SetSocketOptions();

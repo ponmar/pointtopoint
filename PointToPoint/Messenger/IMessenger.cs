@@ -35,5 +35,7 @@ namespace PointToPoint.Messenger
         /// </summary>
         /// The event is fired from an internal communication thread.
         event EventHandler<Exception?> Disconnected;
+
+        public TimeSpan KeepAliveSendInterval { get; set; }
     }
 }

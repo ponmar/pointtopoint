@@ -17,13 +17,10 @@ public class SystemTests
     {
         // Arrange - start the server
         var port = 12345;
-        var keepAliveInterval = TimeSpan.FromSeconds(1);
 
-        var clientHandler = new ClientsHandler(
+        var clientHandler = new ClientsHandler<TestClientHandler>(
             new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Namespace!),
-            typeof(TestClientHandler),
-            new ActivatorClientHandlerFactory(),
-            keepAliveInterval);
+            new ActivatorClientHandlerFactory());
 
         var tcpServer = new TcpServer(port);
         var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));
@@ -33,8 +30,7 @@ public class SystemTests
         var clientMessenger = new TcpMessenger("127.0.0.1", port,
             new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Namespace!),
             new ReflectionMessageRouter(clientMessageReceiver),
-            new SocketFactory(),
-            keepAliveInterval);
+            new SocketFactory());
         clientMessenger.Start();
 
         // Act - send message from client to server
