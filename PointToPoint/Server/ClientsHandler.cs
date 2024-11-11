@@ -1,8 +1,10 @@
 ﻿using PointToPoint.MessageRouting;
+using PointToPoint.MessageRouting.Factories;
 using PointToPoint.Messenger;
 using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
 using PointToPoint.Server.ClientHandler;
+using PointToPoint.Server.ClientHandler.Factories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,7 @@ namespace PointToPoint.Server
 
         private readonly IPayloadSerializer payloadSerializer;
         private readonly IClientHandlerFactory clientHandlerFactory;
+        private readonly IMessageRouterFactory messageRouterFactory;
 
         public TimeSpan KeepAliveSendInterval { get; set; } = TimeSpan.FromSeconds(1);
 
@@ -32,10 +35,11 @@ namespace PointToPoint.Server
         /// <param name="clientMessageHandlerType">Type of the class that will be created for handling application specific code per client</param>
         /// <param name="clientHandlerFactory">The factory for creating the client handler instance per connected client</param>
         /// <param name="keepAliveSendInterval"></param>
-        public ClientsHandler(IPayloadSerializer payloadSerializer, IClientHandlerFactory clientHandlerFactory)
+        public ClientsHandler(IPayloadSerializer payloadSerializer, IClientHandlerFactory clientHandlerFactory, IMessageRouterFactory messageRouterFactory)
         {
             this.payloadSerializer = payloadSerializer;
             this.clientHandlerFactory = clientHandlerFactory;
+            this.messageRouterFactory = messageRouterFactory;
         }
 
         public void Stop()
@@ -57,7 +61,7 @@ namespace PointToPoint.Server
         public void NewConnection(ISocket socket)
         {
             var clientHandler = clientHandlerFactory.Create(typeof(TClientHandler));
-            var messageRouter = new ReflectionMessageRouter(clientHandler);
+            var messageRouter = messageRouterFactory.Create(clientHandler);
             var messenger = new TcpMessenger(socket, payloadSerializer, messageRouter)
             {
                 KeepAliveSendInterval = KeepAliveSendInterval
