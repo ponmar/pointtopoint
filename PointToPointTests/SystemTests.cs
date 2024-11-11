@@ -1,10 +1,12 @@
 ﻿using PointToPoint.MessageRouting;
+using PointToPoint.MessageRouting.Factories;
 using PointToPoint.Messenger;
 using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
 using PointToPoint.Protocol;
 using PointToPoint.Server;
 using PointToPoint.Server.ClientHandler;
+using PointToPoint.Server.ClientHandler.Factories;
 
 namespace PointToPointTests;
 
@@ -20,7 +22,8 @@ public class SystemTests
 
         var clientHandler = new ClientsHandler<TestClientHandler>(
             new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Namespace!),
-            new ActivatorClientHandlerFactory());
+            new ActivatorClientHandlerFactory(),
+            new ReflectionMessageRouterFactory());
 
         var tcpServer = new TcpServer(port);
         var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));

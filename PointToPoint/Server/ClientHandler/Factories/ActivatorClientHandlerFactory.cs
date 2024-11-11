@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PointToPoint.Server.ClientHandler
+namespace PointToPoint.Server.ClientHandler.Factories
 {
     /// <summary>
     /// The default client handler factory that uses the Activator class to create client handler instances.
