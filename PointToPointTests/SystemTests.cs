@@ -75,7 +75,7 @@ public class TestClientHandler : IClientHandler
 {
     public readonly List<object> receivedMessages = [];
 
-    public void Init(IMessageSender messageSender)
+    public void Init(IMessageSender messageSender, IMessageRouter messageRouter)
     {
         messageSender.SendMessage(new ServerToClientMessage(), this);
         messageSender.SendBroadcast(new ServerToClientBroadcastMessage());
@@ -86,6 +86,8 @@ public class TestClientHandler : IClientHandler
         Assert.Single(receivedMessages.OfType<ClientToServerMessage>());
         Assert.True(receivedMessages.OfType<KeepAlive>().Count() > 1);
     }
+
+    public void Update() { }
 
     public void HandleMessage(ClientToServerMessage message, IMessenger messenger)
     {

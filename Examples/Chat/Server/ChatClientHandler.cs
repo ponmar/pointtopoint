@@ -3,6 +3,7 @@ using PointToPoint.Protocol;
 using Protocol;
 using PointToPoint.Messenger;
 using PointToPoint.Server.ClientHandler;
+using PointToPoint.MessageRouting;
 
 namespace Server;
 
@@ -11,11 +12,13 @@ public class ChatClientHandler : IClientHandler
     private const string ServerName = "Server";
 
     private IMessageSender? messageSender;
+    private QueuingReflectionMessageRouter? messageRouter;
     private string name = NameCreator.CreateName();
 
-    public void Init(IMessageSender messageSender)
+    public void Init(IMessageSender messageSender, IMessageRouter messageRouter)
     {
         this.messageSender = messageSender;
+        this.messageRouter = (QueuingReflectionMessageRouter)messageRouter;
         messageSender.SendMessage(new AssignName(name), this);
         var text = $"'{name}' joined the chat";
         messageSender.SendBroadcast(new Text(ServerName, text, DateTime.Now));
@@ -31,6 +34,16 @@ public class ChatClientHandler : IClientHandler
         }
         Console.WriteLine(text);
         messageSender!.SendBroadcast(new Text(ServerName, text, DateTime.Now));
+    }
+
+    public void Update()
+    {
+        if (messageRouter is not null)
+        {
+            while (messageRouter.HandleMessage())
+            {
+            }
+        }
     }
 
     public void HandleMessage(PublishText message, IMessenger messenger)

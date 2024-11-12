@@ -10,7 +10,7 @@ var port = Constants.DefaultPort;
 var clientsHandler = new ClientsHandler<ChatClientHandler>(
     new NewtonsoftJsonPayloadSerializer(typeof(Text).Namespace!),
     new ActivatorClientHandlerFactory(),
-    new ReflectionMessageRouterFactory());
+    new QueuingReflectionMessageRouterFactory());
 
 var tcpServer = new TcpServer(port);
 var tcpServerThread = new Thread(() => tcpServer.Run(clientsHandler));
@@ -20,5 +20,6 @@ Console.WriteLine($"Listening for connections on port {port}...");
 
 while (true)
 {
-    Thread.Sleep(1000);
+    clientsHandler.UpdateAll();
+    Thread.Sleep(100);
 }

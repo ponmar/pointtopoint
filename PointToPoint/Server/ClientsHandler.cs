@@ -68,7 +68,7 @@ namespace PointToPoint.Server
             };
             var client = new Client(messenger, clientHandler);
             AddClient(client);
-            clientHandler.Init(this);
+            clientHandler.Init(this, messageRouter);
             messenger.Start();
         }
 
@@ -121,6 +121,14 @@ namespace PointToPoint.Server
                 client.Messenger.Disconnected -= Client_Disconnected;
                 client.Messenger.Stop();
                 client.ClientHandler.Exit(e);
+            }
+        }
+
+        public void UpdateAll()
+        {
+            lock (clientsLock)
+            {
+                Clients.ForEach(x => x.ClientHandler.Update());
             }
         }
     }
