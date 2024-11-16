@@ -38,11 +38,19 @@
 						<Button Content="Disconnect" Command="{Binding DisconnectCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
 					</StackPanel>
 				</WrapPanel>
+				
+				<WrapPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center" IsVisible="{Binding IsConnected}">
+					<StackPanel Orientation="Horizontal" Margin="5">
+						<TextBlock Text="Name:" Margin="3" VerticalAlignment="Center"/>
+						<TextBox Text="{Binding Name}" Width="160" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
+						<Button Width="40" Content="Set" IsEnabled="{Binding CanSetName}" Command="{Binding SetNameCommand}" Margin="3" VerticalAlignment="Center"/>
+					</StackPanel>
 
-				<StackPanel Orientation="Horizontal" Margin="5" IsVisible="{Binding IsConnected}" HorizontalAlignment="Center">
-					<TextBlock Text="Keep alive supervision:" Margin="3" VerticalAlignment="Center"/>
-					<TextBlock Text="{Binding KeepAliveSupervisionStatus}" Margin="3" VerticalAlignment="Center"/>
-				</StackPanel>
+					<StackPanel Orientation="Horizontal" Margin="5">
+						<TextBlock Text="Keep alive supervision:" Margin="3" VerticalAlignment="Center"/>
+						<TextBlock Text="{Binding KeepAliveSupervisionStatus}" Margin="3" VerticalAlignment="Center"/>
+					</StackPanel>
+				</WrapPanel>
 			</StackPanel>
 		</Border>
 
@@ -56,12 +64,6 @@
 					<TextBlock Text="Message:" Margin="3" VerticalAlignment="Center"/>
 					<TextBox Text="{Binding TextInput}" Width="250" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
 					<Button Content="Send" IsEnabled="{Binding CanSendText}" Command="{Binding SendTextCommand}" IsDefault="True" Margin="3" VerticalAlignment="Center"/>
-				</StackPanel>
-
-				<StackPanel Orientation="Horizontal" Margin="5">
-					<TextBlock Text="Name:" Margin="3" VerticalAlignment="Center"/>
-					<TextBox Text="{Binding Name}" Width="80" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
-					<Button Width="40" Content="Set" IsEnabled="{Binding CanSetName}" Command="{Binding SetNameCommand}" Margin="3" VerticalAlignment="Center"/>
 				</StackPanel>
 			</WrapPanel>
 		</Border>
