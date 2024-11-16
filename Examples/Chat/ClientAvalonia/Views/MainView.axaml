@@ -54,9 +54,7 @@
 			</StackPanel>
 		</Border>
 
-		<ScrollViewer Grid.Row="1" Grid.Column="0" Margin="5" HorizontalScrollBarVisibility="Auto" Name="TextScrollViewer">
-			<TextBlock Text="{Binding Texts}" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-		</ScrollViewer>
+		<ListBox Grid.Row="1" Grid.Column="0" Margin="5" ItemsSource="{Binding Messages}"/>
 
 		<Border Grid.Row="2" Grid.Column="0" Margin="3" Classes="Normal">
 			<WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">

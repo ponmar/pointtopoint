@@ -9,6 +9,7 @@ using PointToPoint.Payload;
 using PointToPoint.Protocol;
 using Protocol;
 using System;
+using System.Collections.ObjectModel;
 using System.Net;
 
 namespace ClientAvalonia.ViewModels;
@@ -54,7 +55,7 @@ public partial class MainViewModel : ObservableObject
     private string textInput = string.Empty;
 
     [ObservableProperty]
-    private string texts = string.Empty;
+    private ObservableCollection<string> messages = [];
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanConnect))]
@@ -201,7 +202,7 @@ public partial class MainViewModel : ObservableObject
 
     private void ShowText(string text)
     {
-        Texts += $"\n{text}";
+        Messages.Add(text);
     }
 
     private void EvaluateAutoConnectTimer()
