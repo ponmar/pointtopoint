@@ -55,7 +55,7 @@ public partial class MainViewModel : ObservableObject
     private string textInput = string.Empty;
 
     [ObservableProperty]
-    private ObservableCollection<Text> messages = [];
+    private ObservableCollection<ChatMessageViewModel> messages = [];
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanConnect))]
@@ -163,7 +163,7 @@ public partial class MainViewModel : ObservableObject
     {
         if (messenger == Messenger)
         {
-            Messages.Add(message);
+            Messages.Add(new(message));
         }        
     }
 
@@ -202,7 +202,7 @@ public partial class MainViewModel : ObservableObject
 
     private void ShowText(string text)
     {
-        Messages.Add(new Text("", text, DateTime.Now));
+        Messages.Add(new(text));
     }
 
     private void EvaluateAutoConnectTimer()
