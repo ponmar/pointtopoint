@@ -116,6 +116,8 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
+        Messages.Clear();
+
         try
         {
             Messenger = new TcpMessenger(HostnameInput, port,
