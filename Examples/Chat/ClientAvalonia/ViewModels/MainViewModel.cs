@@ -10,6 +10,7 @@ using PointToPoint.Protocol;
 using Protocol;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net;
 
 namespace ClientAvalonia.ViewModels;
@@ -56,6 +57,9 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private ObservableCollection<ChatMessageViewModel> messages = [];
+
+    [ObservableProperty]
+    private ChatMessageViewModel? selectedMessage;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanConnect))]
@@ -166,6 +170,7 @@ public partial class MainViewModel : ObservableObject
         if (messenger == Messenger)
         {
             Messages.Add(new(message));
+            SelectedMessage = Messages.Last();
         }        
     }
 

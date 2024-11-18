@@ -54,8 +54,8 @@
 			</StackPanel>
 		</Border>
 
-		<ItemsControl Grid.Row="1" Grid.Column="0" Margin="5" ItemsSource="{Binding Messages}" IsVisible="{Binding IsConnected}">
-			<ItemsControl.ItemTemplate>
+		<ListBox Grid.Row="1" Grid.Column="0" Margin="5" ItemsSource="{Binding Messages}" IsVisible="{Binding IsConnected}" SelectedItem="{Binding SelectedMessage}">
+			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<Grid>
 						<Grid.ColumnDefinitions>
@@ -69,8 +69,8 @@
 						<SelectableTextBlock Grid.Column="2" Text="{Binding Message}" TextWrapping="Wrap"/>
 					</Grid>
 				</DataTemplate>
-			</ItemsControl.ItemTemplate>
-		</ItemsControl>
+			</ListBox.ItemTemplate>
+		</ListBox>
 
 		<Border Grid.Row="2" Grid.Column="0" Margin="3" Classes="Normal" IsVisible="{Binding IsConnected}">
 			<WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
