@@ -18,7 +18,7 @@ public partial class MainViewModel : ObservableObject
 {
     private const string ApplicationName = "Chat";
 
-    public string Title => IsConnected ? $"{ApplicationName} - Connected to {HostnameInput}:{PortInput}" : ApplicationName;
+    public string Title => IsConnected ? $"{ApplicationName} - {HostnameInput}:{PortInput}" : ApplicationName;
 
     public bool CanConnect => IsDisconnected &&
         !string.IsNullOrEmpty(HostnameInput) &&
