@@ -60,7 +60,7 @@ namespace PointToPoint.Server
 
         public void NewConnection(ISocket socket)
         {
-            var clientHandler = clientHandlerFactory.Create(typeof(TClientHandler));
+            var clientHandler = clientHandlerFactory.Create<TClientHandler>();
             var messageRouter = messageRouterFactory.Create(clientHandler);
             var messenger = new TcpMessenger(socket, payloadSerializer, messageRouter)
             {

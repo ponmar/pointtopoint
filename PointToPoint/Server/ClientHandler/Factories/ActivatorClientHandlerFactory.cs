@@ -12,9 +12,9 @@ namespace PointToPoint.Server.ClientHandler.Factories
         /// </summary>
         /// <param name="clientHandlerType">The type that shall be instantiated per client connection. It must implement IClientHandler and have a parameterless constructor.</param>
         /// <returns>Client handler instance</returns>
-        public IClientHandler Create(Type clientHandlerType)
+        public IClientHandler Create<T>() where T : IClientHandler
         {
-            return (IClientHandler)Activator.CreateInstance(clientHandlerType);
+            return Activator.CreateInstance<T>();
         }
     }
 }

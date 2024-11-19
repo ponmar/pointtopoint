@@ -8,6 +8,6 @@ namespace PointToPoint.Server.ClientHandler.Factories
     /// A custom factory can be implemented to, for example, create the IClientHandler via a service locator.
     public interface IClientHandlerFactory
     {
-        IClientHandler Create(Type clientHandlerType);
+        IClientHandler Create<T>() where T : IClientHandler;
     }
 }
