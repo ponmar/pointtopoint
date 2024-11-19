@@ -54,23 +54,33 @@
 			</StackPanel>
 		</Border>
 
-		<ListBox Grid.Row="1" Grid.Column="0" Margin="5" ItemsSource="{Binding Messages}" IsVisible="{Binding IsConnected}" SelectedItem="{Binding SelectedMessage}">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="auto" SharedSizeGroup="TimeColumn" />
-							<ColumnDefinition Width="auto" />
-							<ColumnDefinition Width="*" />
-						</Grid.ColumnDefinitions>
-						
-						<TextBlock IsVisible="{Binding !IsLocalMessage}" Grid.Column="0" Text="{Binding Time, StringFormat='{}[{0}]'}" FontWeight="Bold" Margin="0 0 5 0"/>
-						<TextBlock IsVisible="{Binding !IsLocalMessage}" Grid.Column="1" Text="{Binding Sender, StringFormat='{}{0}:'}" FontWeight="Bold" Margin="0 0 5 0"/>
-						<SelectableTextBlock Grid.Column="2" Text="{Binding Message}" TextWrapping="Wrap"/>
-					</Grid>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+		<Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="200,*" IsVisible="{Binding IsConnected}">
+			<ListBox Margin="5" ItemsSource="{Binding Users}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding}"/>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+			
+			<ListBox Grid.Column="1" Margin="5" ItemsSource="{Binding Messages}" SelectedItem="{Binding SelectedMessage}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto" SharedSizeGroup="TimeColumn" />
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+
+							<TextBlock IsVisible="{Binding !IsLocalMessage}" Grid.Column="0" Text="{Binding Time, StringFormat='{}{0:HH\:mm}'}" FontWeight="Bold" Margin="0 0 5 0"/>
+							<TextBlock IsVisible="{Binding !IsLocalMessage}" Grid.Column="1" Text="{Binding Sender, StringFormat='{}{0}:'}" FontWeight="Bold" Margin="0 0 5 0"/>
+							<SelectableTextBlock Grid.Column="2" Text="{Binding Message}" TextWrapping="Wrap"/>
+						</Grid>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</Grid>
 
 		<Border Grid.Row="2" Grid.Column="0" Margin="3" Classes="Normal" IsVisible="{Binding IsConnected}">
 			<WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">

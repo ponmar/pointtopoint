@@ -62,6 +62,9 @@ public partial class MainViewModel : ObservableObject
     private ChatMessageViewModel? selectedMessage;
 
     [ObservableProperty]
+    private ObservableCollection<string> users = [];
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanConnect))]
     [NotifyPropertyChangedFor(nameof(IsConnected))]
     [NotifyPropertyChangedFor(nameof(IsDisconnected))]
@@ -121,6 +124,7 @@ public partial class MainViewModel : ObservableObject
         }
 
         Messages.Clear();
+        Users.Clear();
 
         try
         {
@@ -172,6 +176,18 @@ public partial class MainViewModel : ObservableObject
             Messages.Add(new(message));
             SelectedMessage = Messages.Last();
         }        
+    }
+
+    public void HandleMessage(Users users, IMessenger messenger)
+    {
+        if (messenger == Messenger)
+        {
+            Users.Clear();
+            foreach (var user in users.Names.Order())
+            {
+                Users.Add(user);
+            }
+        }
     }
 
     public void HandleMessage(KeepAlive message, IMessenger messenger)

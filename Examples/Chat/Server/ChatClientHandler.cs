@@ -11,29 +11,46 @@ public class ChatClientHandler : IClientHandler
 {
     private const string ServerName = "Server";
 
+    private readonly ClientRepo clientRepo = ClientRepo.Instance;
+
     private IMessageSender? messageSender;
     private QueuingReflectionMessageRouter? messageRouter;
-    private string name = NameCreator.CreateName();
+    public string Name { get; private set; } = NameCreator.CreateName();
 
     public void Init(IMessageSender messageSender, IMessageRouter messageRouter)
     {
         this.messageSender = messageSender;
         this.messageRouter = (QueuingReflectionMessageRouter)messageRouter;
-        messageSender.SendMessage(new AssignName(name), this);
-        var text = $"'{name}' joined the chat";
+
+        clientRepo.AddClient(this);
+
+        messageSender.SendMessage(new AssignName(Name), this);
+
+        var text = $"'{Name}' joined the chat";
         messageSender.SendBroadcast(new Text(ServerName, text, DateTime.Now));
         Console.WriteLine(text);
+
+        BroadcastUsers();
+    }
+
+    private void BroadcastUsers()
+    {
+        messageSender!.SendBroadcast(new Users(clientRepo.GetUsernames()));
     }
 
     public void Exit(Exception? e)
     {
-        var text = $"'{name}' left the chat";
+        ClientRepo.Instance.RemoveClient(this);
+
+        var text = $"'{Name}' left the chat";
         if (e is not null)
         {
             text += $" ({e.Message})";
         }
         Console.WriteLine(text);
         messageSender!.SendBroadcast(new Text(ServerName, text, DateTime.Now));
+
+        BroadcastUsers();
     }
 
     public void Update()
@@ -48,8 +65,8 @@ public class ChatClientHandler : IClientHandler
 
     public void HandleMessage(PublishText message, IMessenger messenger)
     {
-        Console.WriteLine($"'{name}': {message.Message}");
-        messageSender!.SendBroadcast(new Text(name, message.Message, DateTime.Now));
+        Console.WriteLine($"'{Name}': {message.Message}");
+        messageSender!.SendBroadcast(new Text(Name, message.Message, DateTime.Now));
 
         switch (message.Message.ToLower())
         {
@@ -62,12 +79,12 @@ public class ChatClientHandler : IClientHandler
 
     public void HandleMessage(ChangeName message, IMessenger messenger)
     {
-        if (message.NewName != name && !string.IsNullOrEmpty(message.NewName) && message.NewName.Length < 50)
+        if (message.NewName != Name && !string.IsNullOrEmpty(message.NewName) && message.NewName.Length < 50)
         {
-            var text = $"'{name}' -> '{message.NewName}'";
+            var text = $"'{Name}' -> '{message.NewName}'";
             Console.WriteLine(text);
             messageSender!.SendBroadcast(new Text(ServerName, text, DateTime.Now));
-            name = message.NewName;
+            Name = message.NewName;
         }
         else
         {
