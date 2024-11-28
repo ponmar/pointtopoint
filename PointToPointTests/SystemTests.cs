@@ -21,7 +21,7 @@ public class SystemTests
         var port = 12345;
 
         var clientHandler = new ClientsHandler<TestClientHandler>(
-            new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Namespace!),
+            new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Assembly),
             new ActivatorClientHandlerFactory(),
             new ReflectionMessageRouterFactory());
 
@@ -31,7 +31,7 @@ public class SystemTests
 
         // Arrange - start the client
         var clientMessenger = new TcpMessenger("127.0.0.1", port,
-            new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Namespace!),
+            new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Assembly),
             new ReflectionMessageRouter(clientMessageReceiver),
             new SocketFactory());
         clientMessenger.Start();

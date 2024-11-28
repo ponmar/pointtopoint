@@ -2,6 +2,8 @@
 using System.Text;
 using PointToPoint.Protocol;
 using System.Text.Json;
+using System.Reflection;
+using System.Linq;
 
 namespace PointToPoint.Payload
 {
@@ -10,13 +12,13 @@ namespace PointToPoint.Payload
         private static readonly Encoding PayloadTextEncoding = Encoding.Unicode;
         private const string IdPayloadSeparator = " ";
 
-        private readonly string messagesNamespace;
+        private readonly Assembly[] messagesAssemblies;
 
         private readonly JsonSerializerOptions? serializerOptions;
 
-        public MsJsonPayloadSerializer(string messagesNamespace, JsonSerializerOptions? serializerOptions = null)
+        public MsJsonPayloadSerializer(Assembly messagesAssembly, JsonSerializerOptions? serializerOptions = null)
         {
-            this.messagesNamespace = messagesNamespace;
+            this.messagesAssemblies = new[] { messagesAssembly, typeof(KeepAlive).Assembly };
             this.serializerOptions = serializerOptions;
         }
 
@@ -28,8 +30,7 @@ namespace PointToPoint.Payload
                 throw new ArgumentException($"Non protocol message can not be sent: {messageType}");
             }
             var json = JsonSerializer.Serialize(message);
-            var assemblyName = messageType.Assembly.FullName.Split(',')[0];
-            var messageString = $"{messageType},{assemblyName}{IdPayloadSeparator}{json}";
+            var messageString = $"{messageType.FullName}{IdPayloadSeparator}{json}";
             return SerializeString(messageString);
         }
 
@@ -44,15 +45,10 @@ namespace PointToPoint.Payload
             }
 
             var jsonTypeString = payload.Substring(0, separatorIndex);
-            var jsonType = Type.GetType(jsonTypeString);
+            var jsonType = GetMessageType(jsonTypeString);
             if (jsonType == null)
             {
                 throw new PayloadDeserializeException($"Unknown message type: {jsonTypeString}");
-            }
-
-            if (!TypeIsProtocolMessage(jsonType))
-            {
-                throw new PayloadDeserializeException($"Non protocol message type received: {jsonTypeString}");
             }
 
             var json = payload.Substring(separatorIndex + 1);
@@ -60,9 +56,22 @@ namespace PointToPoint.Payload
             return JsonSerializer.Deserialize(json, jsonType, serializerOptions)!;
         }
 
+        private Type? GetMessageType(string typeString)
+        {
+            foreach (var assembly in messagesAssemblies)
+            {
+                var type = assembly.GetType(typeString);
+                if (type is not null)
+                {
+                    return type;
+                }
+            }
+            return null;
+        }
+
         private bool TypeIsProtocolMessage(Type type)
         {
-            return type == typeof(KeepAlive) || type.Namespace == messagesNamespace;
+            return messagesAssemblies.Contains(type.Assembly);
         }
 
         private static byte[] SerializeString(string data)

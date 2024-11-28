@@ -8,7 +8,7 @@ using PointToPoint.MessageRouting.Factories;
 var port = Constants.DefaultPort;
 
 var clientsHandler = new ClientsHandler<ChatClientHandler>(
-    new NewtonsoftJsonPayloadSerializer(typeof(Text).Namespace!),
+    new NewtonsoftJsonPayloadSerializer(typeof(Text).Assembly),
     new ActivatorClientHandlerFactory(),
     new QueuingReflectionMessageRouterFactory());
 
