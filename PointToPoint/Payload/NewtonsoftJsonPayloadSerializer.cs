@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
-using PointToPoint.Protocol;
+using PointToPointProtocol;
 
 namespace PointToPoint.Payload
 {

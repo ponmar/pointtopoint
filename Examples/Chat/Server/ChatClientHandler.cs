@@ -1,5 +1,5 @@
 ﻿using PointToPoint.Server;
-using PointToPoint.Protocol;
+using PointToPointProtocol;
 using Protocol;
 using PointToPoint.Messenger;
 using PointToPoint.Server.ClientHandler;

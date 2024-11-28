@@ -5,7 +5,7 @@ using PointToPoint.MessageRouting;
 using PointToPoint.Messenger;
 using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
-using PointToPoint.Protocol;
+using PointToPointProtocol;
 using Protocol;
 using System;
 using System.Collections.ObjectModel;
