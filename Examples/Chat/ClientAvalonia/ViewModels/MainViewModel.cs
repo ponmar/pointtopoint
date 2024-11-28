@@ -223,13 +223,13 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void SetName()
     {
-        Messenger!.Send(new ChangeName(Name));
+        Messenger!.Send(new ChangeName() { NewName = Name });
     }
 
     [RelayCommand]
     private void SendText()
     {
-        Messenger!.Send(new PublishText(TextInput));
+        Messenger!.Send(new PublishText() { Message = TextInput });
         TextInput = string.Empty;
     }
 
