@@ -85,6 +85,7 @@ public class ChatClientHandler : IClientHandler
             Console.WriteLine(text);
             messageSender!.SendBroadcast(new Text(ServerName, text, DateTime.Now));
             Name = message.NewName;
+            BroadcastUsers();
         }
         else
         {

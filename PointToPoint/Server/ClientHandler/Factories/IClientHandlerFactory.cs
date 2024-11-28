@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PointToPoint.Server.ClientHandler.Factories
+﻿namespace PointToPoint.Server.ClientHandler.Factories
 {
     /// <summary>
     /// The factory interface for creation of server side client handler

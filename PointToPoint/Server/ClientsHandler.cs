@@ -1,5 +1,4 @@
-﻿using PointToPoint.MessageRouting;
-using PointToPoint.MessageRouting.Factories;
+﻿using PointToPoint.MessageRouting.Factories;
 using PointToPoint.Messenger;
 using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
