@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace PointToPoint.Payload
 {
+    // This class requires that payload classes have parameterless constructors
     public class YamlPayloadSerializer : IPayloadSerializer
     {
         private static readonly Encoding PayloadTextEncoding = Encoding.Unicode;
