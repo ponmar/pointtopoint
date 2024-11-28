@@ -55,7 +55,7 @@
 			</StackPanel>
 		</Border>
 
-		<ListBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="3" ItemsSource="{Binding Users}" MaxWidth="250">
+		<ListBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="3" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" MaxWidth="250">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<TextBlock Text="{Binding}"/>

@@ -65,6 +65,17 @@ public partial class MainViewModel : ObservableObject
     private ObservableCollection<string> users = [];
 
     [ObservableProperty]
+    private string? selectedUser;
+
+    partial void OnSelectedUserChanged(string? value)
+    {
+        if (value is not null)
+        {
+            TextInput += value;
+        }
+    }
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanConnect))]
     [NotifyPropertyChangedFor(nameof(IsConnected))]
     [NotifyPropertyChangedFor(nameof(IsDisconnected))]
