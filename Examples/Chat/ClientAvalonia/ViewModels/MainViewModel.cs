@@ -139,7 +139,7 @@ public partial class MainViewModel : ObservableObject
         try
         {
             Messenger = new TcpMessenger(HostnameInput, port,
-                new YamlPayloadSerializer(typeof(PublishText).Assembly),
+                new XmlPayloadSerializer(typeof(PublishText).Assembly),
                 new ReflectionMessageRouter(this, Dispatcher.UIThread.Invoke),
                 new SocketFactory());
 

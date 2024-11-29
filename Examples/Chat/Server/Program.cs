@@ -8,7 +8,7 @@ using PointToPoint.MessageRouting.Factories;
 var port = Constants.DefaultPort;
 
 var clientsHandler = new ClientsHandler<ChatClientHandler>(
-    new YamlPayloadSerializer(typeof(Text).Assembly),
+    new XmlPayloadSerializer(typeof(Text).Assembly),
     new ActivatorClientHandlerFactory(),
     new QueuingReflectionMessageRouterFactory());
 
