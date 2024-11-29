@@ -37,7 +37,7 @@ namespace PointToPoint.MessageRouting
             var argTypes = new Type[] { message.GetType(), typeof(IMessenger) };
 
             var handleMethod = messageHandler.GetType().GetMethod(handleMethodName, argTypes);
-            if (handleMethod == null)
+            if (handleMethod is null)
             {
                 throw new NotImplementedException($"Message handling method ({handleMethodName}) not implemented for message type {message.GetType()}");
             }
