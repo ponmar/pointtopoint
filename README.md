@@ -6,17 +6,17 @@ This library contains code for client-server communication. The code originates 
 
 ## Features
 
-* Built with .NET Standard 2.0 (can be referenced from projects based on .NET Framework and later .NET versions)
-* Message passing over TCP (Newtonsoft JSON, MS JSON or custom object serialization)
+* Message passing over TCP (JSON, YAML or custom object serialization/deserialization)
 * Client side code for settings up a connection to a server and sending/receiving messages
 * Server side code for accepting client connections, keeping track of connected clients, storing application specific data per client and sending/receiving messages
 * Keep alive message sending for detecting communication problems (supervision is however optionally implemented in the client/server application)
+* Built with .NET Standard 2.0 (can be referenced from projects based on .NET Framework and later .NET versions)
 
 No authentication or encryption is included, but it can be implemented on top of the included message passing.
 
 ## Message Format
 
-1. Length (integer serialized as 4 bytes)
+1. Payload length (integer serialized as 4 bytes)
 2. Payload (X number of bytes according to the specified length)
 
 ## Payload Format
@@ -25,8 +25,9 @@ The payload format depends on the selected object serializer. Typically it inclu
 
 ### Included Object Serializers
 
-* NewtonsoftJsonPayloadSerializer (uses Newtonsoft.Json nuget package)
-* MsJsonPayloadSerializer (uses System.Text.Json nuget package)
+* JSON via Newtonsoft.Json nuget package (see NewtonsoftJsonPayloadSerializer)
+* JSON via System.Text.Json nuget package (see MsJsonPayloadSerializer)
+* YAML via YamlDotNet nuget package (see YamlPayloadSerializer)
 
 ## Documentation
 
