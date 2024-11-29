@@ -6,7 +6,7 @@ This library contains code for client-server communication. The code originates 
 
 ## Features
 
-* Message passing over TCP (JSON, YAML or custom object serialization/deserialization)
+* Message passing over TCP (JSON, XML, YAML or custom object serialization/deserialization)
 * Client side code for settings up a connection to a server and sending/receiving messages
 * Server side code for accepting client connections, keeping track of connected clients, storing application specific data per client and sending/receiving messages
 * Keep alive message sending for detecting communication problems (supervision is however optionally implemented in the client/server application)
@@ -27,6 +27,7 @@ The payload format depends on the selected object serializer. Typically it inclu
 
 * JSON via Newtonsoft.Json nuget package (see NewtonsoftJsonPayloadSerializer)
 * JSON via System.Text.Json nuget package (see MsJsonPayloadSerializer)
+* XML (see XmlPayloadSerializer)
 * YAML via YamlDotNet nuget package (see YamlPayloadSerializer)
 
 ## Documentation
