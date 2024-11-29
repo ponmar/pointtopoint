@@ -139,7 +139,7 @@ public partial class MainViewModel : ObservableObject
         try
         {
             Messenger = new TcpMessenger(HostnameInput, port,
-                new NewtonsoftJsonPayloadSerializer(typeof(PublishText).Assembly),
+                new YamlPayloadSerializer(typeof(PublishText).Assembly),
                 new ReflectionMessageRouter(this, Dispatcher.UIThread.Invoke),
                 new SocketFactory());
 
@@ -223,13 +223,13 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void SetName()
     {
-        Messenger!.Send(new ChangeName(Name));
+        Messenger!.Send(new ChangeName() { NewName = Name });
     }
 
     [RelayCommand]
     private void SendText()
     {
-        Messenger!.Send(new PublishText(TextInput));
+        Messenger!.Send(new PublishText() { Message = TextInput });
         TextInput = string.Empty;
     }
 

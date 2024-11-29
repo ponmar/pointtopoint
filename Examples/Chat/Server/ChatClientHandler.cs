@@ -24,10 +24,10 @@ public class ChatClientHandler : IClientHandler
 
         clientRepo.AddClient(this);
 
-        messageSender.SendMessage(new AssignName(Name), this);
+        messageSender.SendMessage(new AssignName() { Name = Name }, this);
 
         var text = $"'{Name}' joined the chat";
-        messageSender.SendBroadcast(new Text(ServerName, text, DateTime.Now));
+        PublishText(ServerName, text);
         Console.WriteLine(text);
 
         BroadcastUsers();
@@ -35,7 +35,7 @@ public class ChatClientHandler : IClientHandler
 
     private void BroadcastUsers()
     {
-        messageSender!.SendBroadcast(new Users(clientRepo.GetUsernames()));
+        messageSender!.SendBroadcast(new Users() { Names = clientRepo.GetUsernames() });
     }
 
     public void Exit(Exception? e)
@@ -48,8 +48,7 @@ public class ChatClientHandler : IClientHandler
             text += $" ({e.Message})";
         }
         Console.WriteLine(text);
-        messageSender!.SendBroadcast(new Text(ServerName, text, DateTime.Now));
-
+        PublishText(ServerName, text);
         BroadcastUsers();
     }
 
@@ -66,13 +65,13 @@ public class ChatClientHandler : IClientHandler
     public void HandleMessage(PublishText message, IMessenger messenger)
     {
         Console.WriteLine($"'{Name}': {message.Message}");
-        messageSender!.SendBroadcast(new Text(Name, message.Message, DateTime.Now));
+        PublishText(Name, message.Message);
 
         switch (message.Message.ToLower())
         {
             case "hi server":
             case "hello server":
-                messageSender.SendBroadcast(new Text(ServerName, "And hi to you!", DateTime.Now));
+                PublishText(ServerName, "And hi to you!");
                 break;
         }
     }
@@ -83,17 +82,22 @@ public class ChatClientHandler : IClientHandler
         {
             var text = $"'{Name}' -> '{message.NewName}'";
             Console.WriteLine(text);
-            messageSender!.SendBroadcast(new Text(ServerName, text, DateTime.Now));
+            PublishText(ServerName, text);
             Name = message.NewName;
             BroadcastUsers();
         }
         else
         {
-            messageSender!.SendMessage(new Text(ServerName, "Invalid name", DateTime.Now), this);
+            PublishText(ServerName, "Invalid name");
         }
     }
 
     public void HandleMessage(KeepAlive message, IMessenger messenger)
     {
+    }
+
+    private void PublishText(string sender, string text)
+    {
+        messageSender!.SendBroadcast(new Text() { Sender = sender, Message = text, Time = DateTime.Now });
     }
 }
