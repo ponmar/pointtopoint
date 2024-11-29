@@ -31,6 +31,32 @@ namespace PointToPointTests.MessageRouting
             Assert.Same(message, messageInfo.Message);
             Assert.Equal(messenger, messageInfo.Messenger);
         }
+
+        [Fact]
+        public void RouteMessage_WithExecutor()
+        {
+            // Arrange
+            var messageRouter = new EventMessageRouter((a) => a());
+            MessageInfo? messageInfo = null;
+            var message = new MyMessage();
+            var senderId = Guid.NewGuid();
+            var messenger = A.Fake<IMessenger>();
+
+            // Act - without listener
+            messageRouter.RouteMessage(message, messenger);
+
+            // Assert
+            Assert.Null(messageInfo);
+
+            // Act - with listener
+            messageRouter.MessageReceived += (sender, e) => { messageInfo = e; };
+            messageRouter.RouteMessage(message, messenger);
+
+            // Assert
+            Assert.NotNull(messageInfo);
+            Assert.Same(message, messageInfo.Message);
+            Assert.Equal(messenger, messageInfo.Messenger);
+        }
     }
 
     public record MyMessage();
