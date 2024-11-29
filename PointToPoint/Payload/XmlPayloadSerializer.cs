@@ -27,7 +27,14 @@ namespace PointToPoint.Payload
         {
             var serializer = GetSerializer(type);
             using var textReader = new StringReader(text);
-            return serializer.Deserialize(textReader);
+            try
+            {
+                return serializer.Deserialize(textReader);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private XmlSerializer GetSerializer(Type messageType)
