@@ -184,8 +184,7 @@ public partial class MainViewModel : ObservableObject
     {
         if (messenger == Messenger)
         {
-            Messages.Add(new(message));
-            SelectedMessage = Messages.Last();
+            ShowText(new ChatMessageViewModel(message.Sender, message.Time, message.Message, false));
         }        
     }
 
@@ -234,9 +233,19 @@ public partial class MainViewModel : ObservableObject
         TextInput = string.Empty;
     }
 
+    private void ShowText(ChatMessageViewModel text)
+    {
+        var autoScroll = !Messages.Any() || SelectedMessage is null || SelectedMessage == Messages.Last();
+        Messages.Add(text);
+        if (autoScroll)
+        {
+            SelectedMessage = Messages.Last();
+        }
+    }
+
     private void ShowText(string text)
     {
-        Messages.Add(new(text));
+        ShowText(new ChatMessageViewModel(string.Empty, DateTime.Now, text, true));
     }
 
     private void EvaluateAutoConnectTimer()
