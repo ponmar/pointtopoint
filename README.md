@@ -16,7 +16,9 @@ No authentication or encryption is included, but it can be implemented on top of
 
 ## Example Code
 
-Client setup (from included chat client application):
+Here are some code snippets from the included chat client-server demo application .
+
+Client setup:
 
 ```csharp
 Messenger = new TcpMessenger(HostnameInput, port,
@@ -29,7 +31,7 @@ Messenger.Disconnected += Messenger_Disconnected;
 Messenger.Start();
 ```
 
-Server setup (from included chat server application):
+Server setup:
 
 ```csharp
 var clientsHandler = new ClientsHandler<ChatClientHandler>(
@@ -40,6 +42,19 @@ var clientsHandler = new ClientsHandler<ChatClientHandler>(
 var tcpServer = new TcpServer(port);
 var tcpServerThread = new Thread(() => tcpServer.Run(clientsHandler));
 tcpServerThread.Start();
+```
+
+Message sending:
+```csharp
+Messenger!.Send(new PublishText() { Message = TextInput });
+```
+
+Message receiving (with the reflection based message router):
+```csharp
+    public void HandleMessage(Text message, IMessenger messenger)
+    {
+        // Handle Text payload here
+    }
 ```
 
 ## Message Serialization
