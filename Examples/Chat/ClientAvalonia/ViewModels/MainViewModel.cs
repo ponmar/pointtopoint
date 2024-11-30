@@ -141,7 +141,8 @@ public partial class MainViewModel : ObservableObject
             Messenger = new TcpMessenger(HostnameInput, port,
                 new XmlPayloadSerializer(typeof(PublishText).Assembly),
                 new ReflectionMessageRouter(this, Dispatcher.UIThread.Invoke),
-                new SocketFactory());
+                new SocketFactory(),
+                TcpMessenger.DefaultSocketOptions);
 
             Messenger.Disconnected += Messenger_Disconnected;
             Messenger.Start();

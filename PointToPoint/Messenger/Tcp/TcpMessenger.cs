@@ -1,11 +1,15 @@
 ﻿using PointToPoint.MessageRouting;
 using PointToPoint.Payload;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 
 namespace PointToPoint.Messenger.Tcp
 {
+    // Note that ReceiveTimeout affects how fast the receive thread can be shut down.
+    public record SocketOptions(bool NoDelay, TimeSpan ReceiveTimeout);
+
     /// <summary>
     /// Message sending over TCP/IP 
     /// </summary>
@@ -13,37 +17,37 @@ namespace PointToPoint.Messenger.Tcp
     {
         private readonly ISocket socket;
 
+        public static readonly SocketOptions DefaultSocketOptions = new(false, TimeSpan.FromMilliseconds(500));
+
         /// <summary>
         /// Constructor to be used on the client side of the communication
         /// </summary>
         /// Note that this instance can not be re-used after it has disconnected.
         /// Exception will be thrown for errors.
-        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, ISocketFactory tcpSocketFactory)
+        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, ISocketFactory tcpSocketFactory, SocketOptions socketOptions)
             : base(payloadSerializer, messageRouter)
         {
             var servers = Dns.GetHostEntry(serverHostname);
             var server = servers.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
             socket = tcpSocketFactory.Create(server.AddressFamily);
-            SetSocketOptions();
+            SetSocketOptions(socketOptions);
             socket.Connect(new IPEndPoint(new IPAddress(server.GetAddressBytes()), serverPort));
         }
 
         /// <summary>
         /// Constructor to be used internally on the server side (when server socket accepted new client socket)
         /// </summary>
-        internal TcpMessenger(ISocket socket, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter)
+        internal TcpMessenger(ISocket socket, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, SocketOptions socketOptions)
             : base(payloadSerializer, messageRouter)
         {
             this.socket = socket;
-            SetSocketOptions();
+            SetSocketOptions(socketOptions);
         }
 
-        private void SetSocketOptions()
+        private void SetSocketOptions(SocketOptions socketOptions)
         {
-            socket.NoDelay = true;
-
-            // Note that this setting affects how fast the receive thread can be shut down.
-            socket.ReceiveTimeout = 500;
+            socket.NoDelay = socketOptions.NoDelay;
+            socket.ReceiveTimeout = (int)socketOptions.ReceiveTimeout.TotalMilliseconds;
         }
 
         public override void Stop()

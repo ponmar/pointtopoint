@@ -19,7 +19,8 @@ public class TcpMessengerTests
         var messenger = new TcpMessenger("localhost", 12345,
             fakePayloadSerializer,
             fakeMessageRouter,
-            fakeSocketFactory);
+            fakeSocketFactory,
+            TcpMessenger.DefaultSocketOptions);
 
         messenger.Start();
 
@@ -47,7 +48,8 @@ public class TcpMessengerTests
         var messenger = new TcpMessenger("localhost", 12345,
             fakePayloadSerializer,
             fakeMessageRouter,
-            fakeSocketFactory);
+            fakeSocketFactory,
+            TcpMessenger.DefaultSocketOptions);
 
         messenger.Start();
 

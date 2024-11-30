@@ -33,7 +33,8 @@ public class SystemTests
         var clientMessenger = new TcpMessenger("127.0.0.1", port,
             new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Assembly),
             new ReflectionMessageRouter(clientMessageReceiver),
-            new SocketFactory());
+            new SocketFactory(),
+            TcpMessenger.DefaultSocketOptions);
         clientMessenger.Start();
 
         // Act - send message from client to server

@@ -27,6 +27,8 @@ namespace PointToPoint.Server
 
         public TimeSpan KeepAliveSendInterval { get; set; } = TimeSpan.FromSeconds(1);
 
+        public SocketOptions SocketOptions { get; set; } = TcpMessenger.DefaultSocketOptions;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -61,7 +63,7 @@ namespace PointToPoint.Server
         {
             var clientHandler = clientHandlerFactory.Create<TClientHandler>();
             var messageRouter = messageRouterFactory.Create(clientHandler);
-            var messenger = new TcpMessenger(socket, payloadSerializer, messageRouter)
+            var messenger = new TcpMessenger(socket, payloadSerializer, messageRouter, SocketOptions)
             {
                 KeepAliveSendInterval = KeepAliveSendInterval
             };
