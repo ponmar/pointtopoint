@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Reflection;
 
-namespace PointToPoint.Payload
+namespace PointToPoint.Payload.MsJson
 {
     public class MsJsonPayloadSerializer : AbstractTextPayloadSerializer
     {

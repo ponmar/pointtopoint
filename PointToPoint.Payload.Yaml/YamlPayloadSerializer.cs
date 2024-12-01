@@ -3,7 +3,7 @@ using System.Reflection;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace PointToPoint.Payload
+namespace PointToPoint.Payload.Yaml
 {
     // This class requires that payload classes have parameterless constructors
     public class YamlPayloadSerializer : AbstractTextPayloadSerializer

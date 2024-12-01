@@ -7,6 +7,7 @@ using PointToPointProtocol;
 using PointToPoint.Server;
 using PointToPoint.Server.ClientHandler;
 using PointToPoint.Server.ClientHandler.Factories;
+using PointToPoint.Payload.NewtonsoftJson;
 
 namespace PointToPointTests;
 

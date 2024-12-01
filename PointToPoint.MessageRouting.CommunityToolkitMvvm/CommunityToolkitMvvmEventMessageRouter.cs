@@ -2,9 +2,9 @@
 using System.Reflection;
 using PointToPoint.Messenger;
 
-namespace PointToPoint.MessageRouting
+namespace PointToPoint.MessageRouting.CommunityToolkitMvvm
 {
-    public class CommunityToolkitEventMessageRouter : IMessageRouter
+    public class CommunityToolkitMvvmEventMessageRouter : IMessageRouter
     {
         private readonly CommunityToolkit.Mvvm.Messaging.IMessenger sender;
         private readonly int channel;
@@ -18,7 +18,7 @@ namespace PointToPoint.MessageRouting
         /// <param name="sender">WeakReferenceMessenger or StrongReferenceMessenger</param>
         /// <param name="channel">The event channel</param>
         /// <param name="executor">Can be used to route message on the UI thread in a WPF application by setting executor:Application.Current.Dispatcher.Invoke</param>
-        public CommunityToolkitEventMessageRouter(CommunityToolkit.Mvvm.Messaging.IMessenger sender, int channel, Action<Action>? executor = null)
+        public CommunityToolkitMvvmEventMessageRouter(CommunityToolkit.Mvvm.Messaging.IMessenger sender, int channel, Action<Action>? executor = null)
         {
             this.channel = channel;
             this.sender = sender;

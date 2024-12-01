@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using PointToPoint.MessageRouting;
+using PointToPoint.MessageRouting.CommunityToolkitMvvm;
 using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
 using PointToPointProtocol;
@@ -154,7 +154,7 @@ public partial class MainViewModel : ObservableObject
         {
             Messenger = new TcpMessenger(HostnameInput, port,
                 new XmlPayloadSerializer(typeof(PublishText).Assembly),
-                new CommunityToolkitEventMessageRouter(WeakReferenceMessenger.Default, MessageEventChannel, Dispatcher.UIThread.Invoke),
+                new CommunityToolkitMvvmEventMessageRouter(WeakReferenceMessenger.Default, MessageEventChannel, Dispatcher.UIThread.Invoke),
                 new SocketFactory(),
                 TcpMessenger.DefaultSocketOptions);
 

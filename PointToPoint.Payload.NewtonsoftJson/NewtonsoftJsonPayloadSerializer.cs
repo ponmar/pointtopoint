@@ -2,7 +2,7 @@
 using System.Reflection;
 using Newtonsoft.Json;
 
-namespace PointToPoint.Payload
+namespace PointToPoint.Payload.NewtonsoftJson
 {
     public class NewtonsoftJsonPayloadSerializer : AbstractTextPayloadSerializer
     {
