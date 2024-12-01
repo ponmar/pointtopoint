@@ -6,8 +6,4 @@
 	<Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\PointToPoint.Protocol\PointToPoint.Protocol.csproj" />
-  </ItemGroup>
-
 </Project>
