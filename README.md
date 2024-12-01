@@ -73,6 +73,17 @@ Object serializers:
 * YAML via YamlDotNet nuget package (see YamlPayloadSerializer)
 * Custom - Create your own!
 
+## Message Routing
+
+Received messages can be passed to application specific code in the following ways:
+
+* C# event (see EventMessageRouter)
+* Community.Toolkit.Mvvm event (see CommunityToolkitEventMessageRouter)
+* Reflection based callback on "void HandleMessage(MyMessagePayload payload, ...)" methods (see ReflectionMessageRouter)
+* Custom via lambda expression or action (see CustomMessageRouter)
+
+All message routers have the possibility to use an executor to run the message routing on an appropriate thread.
+
 ## Documentation
 
 See included example projects for how to setup communication, sending and receiving messages.
