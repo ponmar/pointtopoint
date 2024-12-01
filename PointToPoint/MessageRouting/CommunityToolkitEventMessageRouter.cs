@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using IMessenger = PointToPoint.Messenger.IMessenger;
+using PointToPoint.Messenger;
 
 namespace PointToPoint.MessageRouting
 {
