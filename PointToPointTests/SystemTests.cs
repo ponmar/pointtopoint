@@ -2,12 +2,11 @@
 using PointToPoint.MessageRouting.Factories;
 using PointToPoint.Messenger;
 using PointToPoint.Messenger.Tcp;
-using PointToPoint.Payload;
-using PointToPointProtocol;
 using PointToPoint.Server;
 using PointToPoint.Server.ClientHandler;
 using PointToPoint.Server.ClientHandler.Factories;
 using PointToPoint.Payload.NewtonsoftJson;
+using PointToPoint.Protocol;
 
 namespace PointToPointTests;
 

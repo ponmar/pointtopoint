@@ -1,6 +1,6 @@
 ﻿using PointToPoint.MessageRouting;
 using PointToPoint.Payload;
-using PointToPointProtocol;
+using PointToPoint.Protocol;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;

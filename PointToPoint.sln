@@ -25,8 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientAvalonia", "Examples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientAvalonia.Desktop", "Examples\Chat\ClientAvalonia.Desktop\ClientAvalonia.Desktop.csproj", "{1E1224A6-A9D8-4AA1-8835-D98CAF9144C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointToPointProtocol", "PointToPointProtocol\PointToPointProtocol.csproj", "{6DA940AF-C652-4536-837B-701F14BD6219}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointToPoint.Payload.NewtonsoftJson", "PointToPoint.Payload.NewtonsoftJson\PointToPoint.Payload.NewtonsoftJson.csproj", "{ECA1EA4C-439B-4ACF-8736-58856A769979}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointToPoint.Payload.MsJson", "PointToPoint.Payload.MsJson\PointToPoint.Payload.MsJson.csproj", "{C22D41D2-5AF7-49EC-BB4D-946757F29652}"
@@ -34,6 +32,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointToPoint.Payload.Yaml", "PointToPoint.Payload.Yaml\PointToPoint.Payload.Yaml.csproj", "{B3E04D06-66C3-40AC-A75B-DD6386436B98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointToPoint.MessageRouting.CommunityToolkitMvvm", "PointToPoint.MessageRouting.CommunityToolkitMvvm\PointToPoint.MessageRouting.CommunityToolkitMvvm.csproj", "{9BC884F9-A07E-4CBC-8EA2-644EFBFACD6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointToPoint.Protocol", "PointToPoint.Protocol\PointToPoint.Protocol.csproj", "{74F63996-F4A8-4065-9C6E-1094A99E8486}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,10 +65,6 @@ Global
 		{1E1224A6-A9D8-4AA1-8835-D98CAF9144C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E1224A6-A9D8-4AA1-8835-D98CAF9144C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E1224A6-A9D8-4AA1-8835-D98CAF9144C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6DA940AF-C652-4536-837B-701F14BD6219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6DA940AF-C652-4536-837B-701F14BD6219}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6DA940AF-C652-4536-837B-701F14BD6219}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6DA940AF-C652-4536-837B-701F14BD6219}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ECA1EA4C-439B-4ACF-8736-58856A769979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ECA1EA4C-439B-4ACF-8736-58856A769979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECA1EA4C-439B-4ACF-8736-58856A769979}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,6 +81,10 @@ Global
 		{9BC884F9-A07E-4CBC-8EA2-644EFBFACD6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BC884F9-A07E-4CBC-8EA2-644EFBFACD6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BC884F9-A07E-4CBC-8EA2-644EFBFACD6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74F63996-F4A8-4065-9C6E-1094A99E8486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74F63996-F4A8-4065-9C6E-1094A99E8486}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74F63996-F4A8-4065-9C6E-1094A99E8486}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74F63996-F4A8-4065-9C6E-1094A99E8486}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
 ﻿using PointToPoint.Payload;
 using PointToPoint.Payload.Yaml;
-using PointToPointProtocol;
+using PointToPoint.Protocol;
 using System.Text;
 
 namespace PointToPointTests.Payload;

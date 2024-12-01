@@ -1,4 +1,4 @@
-﻿namespace PointToPointProtocol
+﻿namespace PointToPoint.Protocol
 {
     public record KeepAlive();
 }

@@ -1,5 +1,5 @@
 ﻿using PointToPoint.Payload;
-using PointToPointProtocol;
+using PointToPoint.Protocol;
 using System.Text;
 
 namespace PointToPointTests.Payload;

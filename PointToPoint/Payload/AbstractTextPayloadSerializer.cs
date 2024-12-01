@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using PointToPointProtocol;
+using PointToPoint.Protocol;
 
 namespace PointToPoint.Payload
 {
