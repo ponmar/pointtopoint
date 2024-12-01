@@ -71,14 +71,14 @@ Object serializers:
 * JSON via System.Text.Json nuget package (see MsJsonPayloadSerializer)
 * XML (see XmlPayloadSerializer)
 * YAML via YamlDotNet nuget package (see YamlPayloadSerializer)
-* Custom - Create your own!
+* Custom - Create your own (see IPayloadSerializer)!
 
 ## Message Routing
 
 Received messages can be passed to application specific code in the following ways:
 
 * C# event (see EventMessageRouter)
-* Community.Toolkit.Mvvm event (see CommunityToolkitEventMessageRouter)
+* Community.Toolkit.Mvvm event (see CommunityToolkitMvvmEventMessageRouter)
 * Reflection based callback on "void HandleMessage(MyMessagePayload payload, ...)" methods (see ReflectionMessageRouter)
 * Custom via lambda expression or action (see CustomMessageRouter)
 
