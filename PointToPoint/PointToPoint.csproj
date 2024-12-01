@@ -4,13 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
 	<LangVersion>9.0</LangVersion>
 	<Nullable>enable</Nullable>
-	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<PackageProjectUrl>https://bitbucket.org/pontusmarkstrom/pointtopoint/</PackageProjectUrl>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<RepositoryUrl>https://pontusmarkstrom@bitbucket.org/pontusmarkstrom/pointtopoint.git</RepositoryUrl>
-	<RepositoryType>git</RepositoryType>
-	<Authors>Pontus Markström</Authors>
-	<Description>A library for easy-to-use message passing over TCP.</Description>
   </PropertyGroup>
 
   <ItemGroup>
