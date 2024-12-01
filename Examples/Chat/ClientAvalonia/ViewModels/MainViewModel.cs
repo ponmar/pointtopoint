@@ -1,8 +1,8 @@
 ﻿using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using PointToPoint.MessageRouting;
-using PointToPoint.Messenger;
 using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
 using PointToPointProtocol;
@@ -11,12 +11,14 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using IMessenger = PointToPoint.Messenger.IMessenger;
 
 namespace ClientAvalonia.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
     private const string ApplicationName = "Chat";
+    private const int MessageEventChannel = 10;
 
     public string Title => IsConnected ? $"{ApplicationName} - {HostnameInput}:{PortInput}" : ApplicationName;
 
@@ -101,6 +103,18 @@ public partial class MainViewModel : ObservableObject
         autoConnectTimer.Tick += AutoConnectTimer_Tick;
         keepAliveSupervisionTimer.Tick += KeepAliveSupervisionTimer_Tick;
         keepAliveSupervisionTimer.Start();
+
+        WeakReferenceMessenger.Default.Register<AssignName, int>(this, MessageEventChannel, (r, t) => Name = t.Name);
+        WeakReferenceMessenger.Default.Register<Text, int>(this, MessageEventChannel, (r, t) => ShowText(new ChatMessageViewModel(t.Sender, t.Time, t.Message, false)));
+        WeakReferenceMessenger.Default.Register<KeepAlive, int>(this, MessageEventChannel, (r, t) => keepAliveReceivedAt = DateTime.Now);
+        WeakReferenceMessenger.Default.Register<Users, int>(this, MessageEventChannel, (r, t) =>
+        {
+            Users.Clear();
+            foreach (var user in t.Names.Order())
+            {
+                Users.Add(user);
+            }
+        });
     }
 
     private void AutoConnectTimer_Tick(object? sender, EventArgs e)
@@ -140,7 +154,7 @@ public partial class MainViewModel : ObservableObject
         {
             Messenger = new TcpMessenger(HostnameInput, port,
                 new XmlPayloadSerializer(typeof(PublishText).Assembly),
-                new ReflectionMessageRouter(this, Dispatcher.UIThread.Invoke),
+                new CommunityToolkitEventMessageRouter(WeakReferenceMessenger.Default, MessageEventChannel, Dispatcher.UIThread.Invoke),
                 new SocketFactory(),
                 TcpMessenger.DefaultSocketOptions);
 
@@ -169,42 +183,6 @@ public partial class MainViewModel : ObservableObject
             Messenger.Disconnected -= Messenger_Disconnected;
             Messenger.Stop();
             Messenger = null;
-        }
-    }
-
-    public void HandleMessage(AssignName message, IMessenger messenger)
-    {
-        if (messenger == Messenger)
-        {
-            Name = message.Name;
-        }
-    }
-
-    public void HandleMessage(Text message, IMessenger messenger)
-    {
-        if (messenger == Messenger)
-        {
-            ShowText(new ChatMessageViewModel(message.Sender, message.Time, message.Message, false));
-        }        
-    }
-
-    public void HandleMessage(Users users, IMessenger messenger)
-    {
-        if (messenger == Messenger)
-        {
-            Users.Clear();
-            foreach (var user in users.Names.Order())
-            {
-                Users.Add(user);
-            }
-        }
-    }
-
-    public void HandleMessage(KeepAlive message, IMessenger messenger)
-    {
-        if (messenger == Messenger)
-        {
-            keepAliveReceivedAt = DateTime.Now;
         }
     }
 
