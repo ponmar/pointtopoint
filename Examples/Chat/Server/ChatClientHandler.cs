@@ -24,7 +24,7 @@ public class ChatClientHandler : IClientHandler
 
         clientRepo.AddClient(this);
 
-        messageSender.SendMessage(new AssignName() { Name = Name }, this);
+        messageSender.SendMessage(new AssignName(Name), this);
 
         var text = $"'{Name}' joined the chat";
         PublishText(ServerName, text);
@@ -35,7 +35,7 @@ public class ChatClientHandler : IClientHandler
 
     private void BroadcastUsers()
     {
-        messageSender!.SendBroadcast(new Users() { Names = clientRepo.GetUsernames() });
+        messageSender!.SendBroadcast(new Users(clientRepo.GetUsernames()));
     }
 
     public void Exit(Exception? e)
@@ -98,6 +98,6 @@ public class ChatClientHandler : IClientHandler
 
     private void PublishText(string sender, string text)
     {
-        messageSender!.SendBroadcast(new Text() { Sender = sender, Message = text, Time = DateTime.Now });
+        messageSender!.SendBroadcast(new Text(sender, text, DateTime.Now));
     }
 }

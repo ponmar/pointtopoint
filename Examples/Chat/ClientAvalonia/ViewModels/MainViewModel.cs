@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using PointToPoint.MessageRouting.CommunityToolkitMvvm;
 using PointToPoint.Messenger.Tcp;
-using PointToPoint.Payload;
+using PointToPoint.Payload.NewtonsoftJson;
 using PointToPoint.Protocol;
 using Protocol;
 using System;
@@ -153,7 +153,7 @@ public partial class MainViewModel : ObservableObject
         try
         {
             Messenger = new TcpMessenger(HostnameInput, port,
-                new XmlPayloadSerializer(typeof(PublishText).Assembly),
+                new NewtonsoftJsonPayloadSerializer(typeof(PublishText).Assembly),
                 new CommunityToolkitMvvmEventMessageRouter(WeakReferenceMessenger.Default, MessageEventChannel, Dispatcher.UIThread.Invoke),
                 new SocketFactory(),
                 TcpMessenger.DefaultSocketOptions);
@@ -201,13 +201,13 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void SetName()
     {
-        Messenger!.Send(new ChangeName() { NewName = Name });
+        Messenger!.Send(new ChangeName(Name));
     }
 
     [RelayCommand]
     private void SendText()
     {
-        Messenger!.Send(new PublishText() { Message = TextInput });
+        Messenger!.Send(new PublishText(TextInput));
         TextInput = string.Empty;
     }
 

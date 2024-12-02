@@ -1,14 +1,14 @@
 ﻿using PointToPoint.Server;
-using PointToPoint.Payload;
 using Protocol;
 using Server;
 using PointToPoint.Server.ClientHandler.Factories;
 using PointToPoint.MessageRouting.Factories;
+using PointToPoint.Payload.NewtonsoftJson;
 
 var port = Constants.DefaultPort;
 
 var clientsHandler = new ClientsHandler<ChatClientHandler>(
-    new XmlPayloadSerializer(typeof(Text).Assembly),
+    new NewtonsoftJsonPayloadSerializer(typeof(Text).Assembly),
     new ActivatorClientHandlerFactory(),
     new QueuingReflectionMessageRouterFactory());
 

@@ -1,30 +1,10 @@
 ﻿namespace Protocol;
 
 // Client -> Server
-public class ChangeName
-{
-    public string NewName { get; set; }
-}
-
-public class PublishText
-{
-    public string Message { get; set; }
-}
+public record ChangeName(string NewName);
+public record PublishText(string Message);
 
 // Server -> Client
-public class Users()
-{
-    public List<string> Names { get; set; }
-}
-
-public class AssignName()
-{
-    public string Name { get; set; }
-}
-
-public class Text()
-{
-    public string Sender { get; set; }
-    public string Message { get; set; }
-    public DateTime Time { get; set; }
-}
+public record Users(List<string> Names);
+public record AssignName(string Name);
+public record Text(string Sender, string Message, DateTime Time);

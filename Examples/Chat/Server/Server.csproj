@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\PointToPoint.Payload.NewtonsoftJson\PointToPoint.Payload.NewtonsoftJson.csproj" />
     <ProjectReference Include="..\..\..\PointToPoint\PointToPoint.csproj" />
     <ProjectReference Include="..\Protocol\Protocol.csproj" />
   </ItemGroup>

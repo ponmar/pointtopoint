@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\PointToPoint.MessageRouting.CommunityToolkitMvvm\PointToPoint.MessageRouting.CommunityToolkitMvvm.csproj" />
+    <ProjectReference Include="..\..\..\PointToPoint.Payload.NewtonsoftJson\PointToPoint.Payload.NewtonsoftJson.csproj" />
     <ProjectReference Include="..\..\..\PointToPoint\PointToPoint.csproj" />
     <ProjectReference Include="..\Protocol\Protocol.csproj" />
   </ItemGroup>
