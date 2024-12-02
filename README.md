@@ -22,7 +22,7 @@ Client setup:
 
 ```csharp
 Messenger = new TcpMessenger(HostnameInput, port,
-    new XmlPayloadSerializer(typeof(PublishText).Assembly),
+    new NewtonsoftJsonPayloadSerializer(typeof(PublishText).Assembly),
     new ReflectionMessageRouter(this, Dispatcher.UIThread.Invoke),
     new SocketFactory(),
     TcpMessenger.DefaultSocketOptions);
@@ -35,7 +35,7 @@ Server setup:
 
 ```csharp
 var clientsHandler = new ClientsHandler<ChatClientHandler>(
-    new XmlPayloadSerializer(typeof(Text).Assembly),
+    new NewtonsoftJsonPayloadSerializer(typeof(Text).Assembly),
     new ActivatorClientHandlerFactory(),
     new QueuingReflectionMessageRouterFactory());
 
@@ -46,7 +46,7 @@ tcpServerThread.Start();
 
 Message sending:
 ```csharp
-Messenger!.Send(new PublishText() { Message = TextInput });
+Messenger!.Send(new PublishText(TextInput));
 ```
 
 Message receiving (with the reflection based message router):
