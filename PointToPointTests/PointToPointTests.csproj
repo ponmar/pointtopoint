@@ -24,10 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Server\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\PointToPoint.MessageRouting.CommunityToolkitMvvm\PointToPoint.MessageRouting.CommunityToolkitMvvm.csproj" />
     <ProjectReference Include="..\PointToPoint.Payload.MsJson\PointToPoint.Payload.MsJson.csproj" />
     <ProjectReference Include="..\PointToPoint.Payload.NewtonsoftJson\PointToPoint.Payload.NewtonsoftJson.csproj" />
     <ProjectReference Include="..\PointToPoint.Payload.Yaml\PointToPoint.Payload.Yaml.csproj" />
