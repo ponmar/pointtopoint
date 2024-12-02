@@ -7,14 +7,26 @@ namespace PointToPointTests.Payload;
 public class XmlPayloadSerializerTests
 {
     [Fact]
-    public void SerializeDeserialize_CustomMessage()
+    public void SerializeDeserialize_PayloadRecord_NotSupported()
     {
-        var message = new PayloadWithParameterlessConstructorForTest() { Value = 10, Text = "text" };
+        var message = new PayloadForTest(10, "text");
         var serializer = new XmlPayloadSerializer(typeof(PayloadForTest).Assembly);
 
+        Assert.Throws<InvalidOperationException>(() => serializer.MessageToPayload(message));
+    }
+
+    [Fact]
+    public void SerializeDeserialize_PayloadWithParameterlessConstructor()
+    {
+        // Arrange
+        var message = new PayloadWithParameterlessConstructorForTest() { Value = 10, Text = "text" };
+        var serializer = new XmlPayloadSerializer(typeof(PayloadWithParameterlessConstructorForTest).Assembly);
+
+        // Act
         var payload = serializer.MessageToPayload(message);
         var deserializedMessage = (PayloadWithParameterlessConstructorForTest)serializer.PayloadToMessage(payload, payload.Length);
 
+        // Assert
         Assert.Equal(message.Value, deserializedMessage.Value);
         Assert.Equal(message.Text, deserializedMessage.Text);
     }
@@ -22,12 +34,15 @@ public class XmlPayloadSerializerTests
     [Fact]
     public void SerializeDeserialize_KeepAlive()
     {
+        // Arrange
         var message = new KeepAlive();
         var serializer = new XmlPayloadSerializer(typeof(PayloadWithParameterlessConstructorForTest).Assembly);
 
+        // Act
         var payload = serializer.MessageToPayload(message);
         var deserializedMessage = serializer.PayloadToMessage(payload, payload.Length);
 
+        // Assert
         Assert.Equal(message, deserializedMessage);
     }
 
