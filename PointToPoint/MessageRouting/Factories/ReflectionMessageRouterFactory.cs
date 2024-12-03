@@ -1,5 +1,4 @@
 ﻿using System;
-using PointToPoint.Server.ClientHandler;
 
 namespace PointToPoint.MessageRouting.Factories
 {
@@ -16,7 +15,7 @@ namespace PointToPoint.MessageRouting.Factories
             this.executor = executor;
         }
 
-        public IMessageRouter Create(IClientHandler clientHandler)
+        public IMessageRouter Create(object clientHandler)
         {
             return new ReflectionMessageRouter(clientHandler, executor);
         }

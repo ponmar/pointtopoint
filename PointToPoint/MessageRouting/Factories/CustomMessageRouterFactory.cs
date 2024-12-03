@@ -1,6 +1,5 @@
 ﻿using PointToPoint.Messenger;
 using System;
-using PointToPoint.Server.ClientHandler;
 
 namespace PointToPoint.MessageRouting.Factories
 {
@@ -13,7 +12,7 @@ namespace PointToPoint.MessageRouting.Factories
             this.routeAction = routeAction;
         }
 
-        public IMessageRouter Create(IClientHandler clientHandler)
+        public IMessageRouter Create(object clientHandler)
         {
             return new CustomMessageRouter(routeAction);
         }

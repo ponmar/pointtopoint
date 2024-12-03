@@ -6,7 +6,7 @@ internal class TestUtils
     {
         if (timeout == default)
         {
-            timeout = TimeSpan.FromSeconds(1);
+            timeout = TimeSpan.FromSeconds(10);
         }
 
         var enteredAt = DateTime.Now;

@@ -10,7 +10,7 @@ namespace PointToPointTests.MessageRouting
         public void RouteMessage_HandleMethodImplemented()
         {
             // Arrange
-            var messageHandler = new MessageHandler();
+            var messageHandler = new MessageHandlerForTest();
             var messageRouter = new QueueingReflectionMessageRouter(messageHandler);
             var message = new MyMessage();
             var messenger = A.Fake<IMessenger>();
@@ -39,7 +39,7 @@ namespace PointToPointTests.MessageRouting
         public void RouteMessage_HandleMethodNotImplemented_ExceptionThrown()
         {
             // Arrange
-            var messageHandler = new MessageHandler();
+            var messageHandler = new MessageHandlerForTest();
             var messageRouter = new QueueingReflectionMessageRouter(messageHandler);
 
             var message = new UnknownMessage();

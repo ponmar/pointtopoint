@@ -11,7 +11,7 @@ namespace PointToPointTests.MessageRouting
         public void RouteMessage_HandleMethodImplemented()
         {
             // Arrange
-            var messageHandler = new MessageHandler();
+            var messageHandler = new MessageHandlerForTest();
             var messageRouter = new ReflectionMessageRouter(messageHandler);
             var message = new MyMessage();
             var messenger = A.Fake<IMessenger>();
@@ -28,7 +28,7 @@ namespace PointToPointTests.MessageRouting
         public void RouteMessage_HandleMethodImplementedAndExecutorSpecified()
         {
             // Arrange
-            var messageHandler = new MessageHandler();
+            var messageHandler = new MessageHandlerForTest();
             var messageRouter = new ReflectionMessageRouter(messageHandler, (x) => x());
             var message = new MyMessage();
             var messenger = A.Fake<IMessenger>();
@@ -45,7 +45,7 @@ namespace PointToPointTests.MessageRouting
         public void RouteMessage_HandleMethodNotImplemented_ExceptionThrown()
         {
             // Arrange
-            var messageHandler = new MessageHandler();
+            var messageHandler = new MessageHandlerForTest();
             var messageRouter = new ReflectionMessageRouter(messageHandler);
 
             var message = new UnknownMessage();
@@ -68,7 +68,7 @@ namespace PointToPointTests.MessageRouting
 
     public record UnknownMessage();
 
-    public class MessageHandler
+    public class MessageHandlerForTest
     {
         public List<object> Messages { get; } = [];
 

@@ -1,10 +1,8 @@
-﻿using PointToPoint.Server.ClientHandler;
-
-namespace PointToPoint.MessageRouting.Factories
+﻿namespace PointToPoint.MessageRouting.Factories
 {
     public class QueueingReflectionMessageRouterFactory : IMessageRouterFactory
     {
-        public IMessageRouter Create(IClientHandler clientHandler)
+        public IMessageRouter Create(object clientHandler)
         {
             return new QueueingReflectionMessageRouter(clientHandler);
         }
