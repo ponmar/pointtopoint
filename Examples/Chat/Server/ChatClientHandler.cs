@@ -14,13 +14,13 @@ public class ChatClientHandler : IClientHandler
     private readonly ClientRepo clientRepo = ClientRepo.Instance;
 
     private IMessageSender? messageSender;
-    private QueuingReflectionMessageRouter? messageRouter;
+    private QueueingReflectionMessageRouter? messageRouter;
     public string Name { get; private set; } = NameCreator.CreateName();
 
     public void Init(IMessageSender messageSender, IMessageRouter messageRouter)
     {
         this.messageSender = messageSender;
-        this.messageRouter = (QueuingReflectionMessageRouter)messageRouter;
+        this.messageRouter = (QueueingReflectionMessageRouter)messageRouter;
 
         clientRepo.AddClient(this);
 

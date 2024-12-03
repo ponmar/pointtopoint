@@ -1,5 +1,8 @@
 ﻿using PointToPoint.Messenger;
+using PointToPoint.Protocol;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PointToPoint.MessageRouting
 {
@@ -18,39 +21,43 @@ namespace PointToPoint.MessageRouting
     {
         private const string handleMethodName = "HandleMessage";
 
-        private readonly object messageHandler;
-        private readonly Action<Action>? executor;
+        private readonly Dictionary<Type, Action<object, IMessenger>> routeActions = new();
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="messageHandler">Instance that implements the messeage handling methods</param>
+        /// <param name="messageHandler">Instance that implements the message handling methods</param>
         /// <param name="executor">Can be used to route message on the UI thread in a WPF application by setting executor:Application.Current.Dispatcher.Invoke</param>
         public ReflectionMessageRouter(object messageHandler, Action<Action>? executor = null)
         {
-            this.messageHandler = messageHandler;
-            this.executor = executor;
+            var handleMessageMethods = messageHandler.GetType().GetMethods().
+                Where(m => m.Name == handleMethodName && m.GetParameters().Length == 2 && m.GetParameters()[1].ParameterType == typeof(IMessenger));
+            foreach (var handleMessageMethod in handleMessageMethods)
+            {
+                var messageType = handleMessageMethod.GetParameters()[0].ParameterType;
+
+                Action<object, IMessenger> routeAction = executor is null ?
+                    (o, m) => handleMessageMethod.Invoke(messageHandler, new object[] { o, m }) :
+                    (o, m) => executor.Invoke(() => handleMessageMethod.Invoke(messageHandler, new object[] { o, m }));
+
+                routeActions[messageType] = routeAction;
+            }
+
+            if (!routeActions.ContainsKey(typeof(KeepAlive)))
+            {
+                throw new NotImplementedException($"Message handling method ({handleMethodName}) not implemented for message type {typeof(KeepAlive)}");
+            }
         }
 
         public void RouteMessage(object message, IMessenger messenger)
         {
-            var argTypes = new Type[] { message.GetType(), typeof(IMessenger) };
-
-            var handleMethod = messageHandler.GetType().GetMethod(handleMethodName, argTypes);
-            if (handleMethod is null)
+            if (!routeActions.TryGetValue(message.GetType(), out var routeAction))
             {
                 throw new NotImplementedException($"Message handling method ({handleMethodName}) not implemented for message type {message.GetType()}");
             }
-
-            var args = new object[] { message, messenger };
-            if (executor is not null)
-            {
-                executor.Invoke(() => handleMethod.Invoke(messageHandler, args));
-            }
-            else
-            {
-                handleMethod.Invoke(messageHandler, args);
-            }
+            DoRouteMessage(() => routeAction(message, messenger));
         }
+
+        protected virtual void DoRouteMessage(Action routeAction) => routeAction();
     }
 }

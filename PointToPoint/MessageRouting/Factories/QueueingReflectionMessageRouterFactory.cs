@@ -2,11 +2,11 @@
 
 namespace PointToPoint.MessageRouting.Factories
 {
-    public class QueuingReflectionMessageRouterFactory : IMessageRouterFactory
+    public class QueueingReflectionMessageRouterFactory : IMessageRouterFactory
     {
         public IMessageRouter Create(IClientHandler clientHandler)
         {
-            return new QueuingReflectionMessageRouter(clientHandler);
+            return new QueueingReflectionMessageRouter(clientHandler);
         }
     }
 }

@@ -1,40 +1,34 @@
 using FakeItEasy;
 using PointToPoint.MessageRouting;
 using PointToPoint.Messenger;
-using PointToPoint.Protocol;
 
 namespace PointToPointTests.MessageRouting
 {
-    public class ReflectionMessageRouterTests
+    public class QueueingReflectionMessageRouterTests
     {
         [Fact]
         public void RouteMessage_HandleMethodImplemented()
         {
             // Arrange
             var messageHandler = new MessageHandler();
-            var messageRouter = new ReflectionMessageRouter(messageHandler);
+            var messageRouter = new QueueingReflectionMessageRouter(messageHandler);
             var message = new MyMessage();
             var messenger = A.Fake<IMessenger>();
+
+            // Act
+            Assert.False(messageRouter.HandleMessage());
+
+            // Assert
+            Assert.Empty(messageHandler.Messages);
 
             // Act
             messageRouter.RouteMessage(message, messenger);
 
             // Assert
-            Assert.Single(messageHandler.Messages);
-            Assert.Same(message, messageHandler.Messages.First());
-        }
-
-        [Fact]
-        public void RouteMessage_HandleMethodImplementedAndExecutorSpecified()
-        {
-            // Arrange
-            var messageHandler = new MessageHandler();
-            var messageRouter = new ReflectionMessageRouter(messageHandler, (x) => x());
-            var message = new MyMessage();
-            var messenger = A.Fake<IMessenger>();
+            Assert.Empty(messageHandler.Messages);
 
             // Act
-            messageRouter.RouteMessage(message, messenger);
+            Assert.True(messageRouter.HandleMessage());
 
             // Assert
             Assert.Single(messageHandler.Messages);
@@ -46,7 +40,7 @@ namespace PointToPointTests.MessageRouting
         {
             // Arrange
             var messageHandler = new MessageHandler();
-            var messageRouter = new ReflectionMessageRouter(messageHandler);
+            var messageRouter = new QueueingReflectionMessageRouter(messageHandler);
 
             var message = new UnknownMessage();
             var messenger = A.Fake<IMessenger>();
@@ -62,22 +56,7 @@ namespace PointToPointTests.MessageRouting
             var messageHandler = new MessageHandlerWithMissingKeepAliveHandleMethod();
 
             // Act & Assert
-            Assert.Throws<NotImplementedException>(() => new ReflectionMessageRouter(messageHandler));
+            Assert.Throws<NotImplementedException>(() => new QueueingReflectionMessageRouter(messageHandler));
         }
-    }
-
-    public record UnknownMessage();
-
-    public class MessageHandler
-    {
-        public List<object> Messages { get; } = [];
-
-        public void HandleMessage(MyMessage message, IMessenger _) => Messages.Add(message);
-
-        public void HandleMessage(KeepAlive message, IMessenger _) => Messages.Add(message);
-    }
-
-    public class MessageHandlerWithMissingKeepAliveHandleMethod
-    {
     }
 }

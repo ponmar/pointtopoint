@@ -10,7 +10,7 @@ var port = Constants.DefaultPort;
 var clientsHandler = new ClientsHandler<ChatClientHandler>(
     new NewtonsoftJsonPayloadSerializer(typeof(Text).Assembly),
     new ActivatorClientHandlerFactory(),
-    new QueuingReflectionMessageRouterFactory());
+    new QueueingReflectionMessageRouterFactory());
 
 var tcpServer = new TcpServer(port);
 var tcpServerThread = new Thread(() => tcpServer.Run(clientsHandler));
