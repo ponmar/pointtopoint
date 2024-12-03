@@ -20,7 +20,7 @@ namespace PointToPoint.MessageRouting
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="executor">Can be used to route message on the UI thread in a WPF application by setting executor:Application.Current.Dispatcher.Invoke</param>
+        /// <param name="executor">Can be used to route message to the UI thread (in WPF: Application.Current.Dispatcher.Invoke, in Avalonia: Avalonia.Threading.Dispatcher.UIThread.Invoke)</param>
         public EventMessageRouter(Action<Action>? executor = null)
         {
             this.executor = executor;

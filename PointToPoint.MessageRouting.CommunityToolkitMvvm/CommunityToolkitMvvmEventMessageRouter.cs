@@ -17,7 +17,7 @@ namespace PointToPoint.MessageRouting.CommunityToolkitMvvm
         /// </summary>
         /// <param name="sender">WeakReferenceMessenger or StrongReferenceMessenger</param>
         /// <param name="channel">The event channel</param>
-        /// <param name="executor">Can be used to route message on the UI thread in a WPF application by setting executor:Application.Current.Dispatcher.Invoke</param>
+        /// <param name="executor">Can be used to route message to the UI thread (in WPF: Application.Current.Dispatcher.Invoke, in Avalonia: Avalonia.Threading.Dispatcher.UIThread.Invoke)</param>
         public CommunityToolkitMvvmEventMessageRouter(CommunityToolkit.Mvvm.Messaging.IMessenger sender, int channel, Action<Action>? executor = null)
         {
             this.channel = channel;
