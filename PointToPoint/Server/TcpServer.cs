@@ -1,23 +1,23 @@
-﻿using PointToPoint.Messenger.Tcp;
-using System;
+﻿using System;
 using System.Net;
-using System.Net.Sockets;
 
 namespace PointToPoint.Server
 {
     public class TcpServer
     {
+        private readonly ITcpListenerFactory tcpListenerFactory;
         private readonly string networkInterface;
         private readonly int port;
 
         private bool run = false;
 
-        public TcpServer(int port) : this(string.Empty, port)
+        public TcpServer(ITcpListenerFactory tcpListenerFactory, int port) : this(tcpListenerFactory, string.Empty, port)
         {
         }
 
-        public TcpServer(string networkInterface, int port)
+        public TcpServer(ITcpListenerFactory tcpListenerFactory, string networkInterface, int port)
         {
+            this.tcpListenerFactory = tcpListenerFactory;
             this.networkInterface = networkInterface;
             this.port = port;
         }
@@ -32,17 +32,14 @@ namespace PointToPoint.Server
                 throw new ArgumentException("Invalid network interface");
             }
 
-            // TODO: use an interface for TcpListener and a factory to be able to mock it during test
-            var listener = new TcpListener(ipAddress, port);
-
-            // May throw SocketException
+            var listener = tcpListenerFactory.Create(ipAddress, port);
             listener.Start();
 
             run = true;
             while (run)
             {
                 // TODO: how to timeout to stop earlier? listener.Server.Blocking = false?
-                var socket = new SocketWrapper(listener.AcceptSocket());
+                var socket = listener.AcceptSocket();
                 clientHandler.NewConnection(socket);
             }
         }

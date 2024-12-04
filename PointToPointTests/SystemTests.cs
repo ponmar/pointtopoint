@@ -25,7 +25,7 @@ public class SystemTests
             new ActivatorClientHandlerFactory(),
             new ReflectionMessageRouterFactory());
 
-        var tcpServer = new TcpServer(port);
+        var tcpServer = new TcpServer(new TcpListenerFactory(), port);
         var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));
         tcpServerThread.Start();
 
