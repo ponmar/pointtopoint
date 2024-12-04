@@ -12,7 +12,7 @@ var clientsHandler = new ClientsHandler<ChatClientHandler>(
     new ActivatorClientHandlerFactory(),
     new QueueingReflectionMessageRouterFactory());
 
-var tcpServer = new TcpServer(new TcpListenerFactory(), port);
+var tcpServer = new TcpServer(TcpServer.AnyIPv4, port, new TcpListenerFactory());
 var tcpServerThread = new Thread(() => tcpServer.Run(clientsHandler));
 tcpServerThread.Start();
 

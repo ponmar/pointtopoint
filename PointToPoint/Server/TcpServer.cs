@@ -6,6 +6,9 @@ namespace PointToPoint.Server
 {
     public class TcpServer
     {
+        public const string AnyIPv4 = "0.0.0.0";
+        public const string AnyIPv6 = "0:0:0:0:0:0:0:0";
+
         private readonly ITcpListenerFactory tcpListenerFactory;
         private ITcpListener? tcpListener;
 
@@ -14,23 +17,16 @@ namespace PointToPoint.Server
 
         private bool run = true;
 
-        public TcpServer(ITcpListenerFactory tcpListenerFactory, int port) : this(tcpListenerFactory, string.Empty, port)
+        public TcpServer(string networkInterface, int port, ITcpListenerFactory tcpListenerFactory)
         {
-        }
-
-        public TcpServer(ITcpListenerFactory tcpListenerFactory, string networkInterface, int port)
-        {
-            this.tcpListenerFactory = tcpListenerFactory;
             this.networkInterface = networkInterface;
             this.port = port;
+            this.tcpListenerFactory = tcpListenerFactory;
         }
 
         public void Run(IConnectionHandler clientHandler)
         {
-            var ipAddress = IPAddress.Any;
-
-            if (networkInterface != string.Empty &&
-                !IPAddress.TryParse(networkInterface, out ipAddress))
+            if (!IPAddress.TryParse(networkInterface, out var ipAddress))
             {
                 throw new ArgumentException("Invalid network interface");
             }

@@ -14,8 +14,10 @@ public class SystemTests
 {
     private readonly MessageReceiver clientMessageReceiver = new();
 
-    [Fact]
-    public void MessagesBetweenClientAndServer()
+    [Theory]
+    [InlineData(TcpServer.AnyIPv4)]
+    [InlineData(TcpServer.AnyIPv6)]
+    public void MessagesBetweenClientAndServer(string serverNetworkInterface)
     {
         // Arrange - start the server
         var port = 12345;
@@ -25,12 +27,12 @@ public class SystemTests
             new ActivatorClientHandlerFactory(),
             new ReflectionMessageRouterFactory());
 
-        var tcpServer = new TcpServer(new TcpListenerFactory(), port);
+        var tcpServer = new TcpServer(serverNetworkInterface, port, new TcpListenerFactory());
         var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));
         tcpServerThread.Start();
 
         // Arrange - start the client
-        var clientMessenger = new TcpMessenger("127.0.0.1", port,
+        var clientMessenger = new TcpMessenger("localhost", port,
             new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Assembly),
             new ReflectionMessageRouter(clientMessageReceiver),
             new SocketFactory(),

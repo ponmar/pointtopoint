@@ -24,14 +24,39 @@ namespace PointToPoint.Messenger.Tcp
         /// </summary>
         /// Note that this instance can not be re-used after it has disconnected.
         /// Exception will be thrown for errors.
-        public TcpMessenger(string serverHostname, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, ISocketFactory tcpSocketFactory, SocketOptions socketOptions)
+        public TcpMessenger(string serverHostnameOrAddress, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, ISocketFactory tcpSocketFactory, SocketOptions socketOptions)
             : base(payloadSerializer, messageRouter)
         {
-            var servers = Dns.GetHostEntry(serverHostname);
-            var server = servers.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
-            socket = tcpSocketFactory.Create(server.AddressFamily);
-            SetSocketOptions(socketOptions);
-            socket.Connect(new IPEndPoint(new IPAddress(server.GetAddressBytes()), serverPort));
+            var hosts = Dns.GetHostEntry(serverHostnameOrAddress);
+
+            var servers = hosts.AddressList.Where(x =>
+                x.AddressFamily == AddressFamily.InterNetwork ||
+                x.AddressFamily == AddressFamily.InterNetworkV6);
+
+            if (!servers.Any())
+            {
+                throw new Exception($"No such server hostname available: {serverHostnameOrAddress}");
+            }
+
+            Exception? lastConnectException = null;
+
+            // Connect with IPv4 first and then IPv6
+            foreach (var server in servers.OrderBy(x => x.AddressFamily))
+            {
+                try
+                {
+                    socket = tcpSocketFactory.Create(server.AddressFamily);
+                    SetSocketOptions(socketOptions);
+                    socket.Connect(new IPEndPoint(new IPAddress(server.GetAddressBytes()), serverPort));
+                    return;
+                }
+                catch (Exception e)
+                {
+                    lastConnectException = e;
+                }
+            }
+
+            throw new Exception("Unable to connect to any server", lastConnectException);
         }
 
         /// <summary>
