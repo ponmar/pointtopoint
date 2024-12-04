@@ -6,7 +6,8 @@ This library contains code for client-server communication. The code originates 
 
 ## Features
 
-* Lightweight message passing over TCP (JSON, XML, YAML or custom object serialization/deserialization)
+* Lightweight message passing over TCP (IPv4 and IPv6)
+* JSON, XML, YAML or custom object serialization and deserialization
 * Client side code for settings up a connection to a server, sending/receiving messages and different ways to deliver messages to application specific handling code
 * Server side code for accepting client connections, keeping track of connected clients, storing application specific data per client and sending/receiving messages
 * Keep alive message sending for detecting communication problems (supervision is however optionally implemented in the client/server application)
@@ -39,7 +40,7 @@ var clientsHandler = new ClientsHandler<ChatClientHandler>(
     new ActivatorClientHandlerFactory(),
     new QueuingReflectionMessageRouterFactory());
 
-var tcpServer = new TcpServer(port);
+var tcpServer = new TcpServer(TcpServer.AnyIPv4, port, new TcpListenerFactory());
 var tcpServerThread = new Thread(() => tcpServer.Run(clientsHandler));
 tcpServerThread.Start();
 ```
