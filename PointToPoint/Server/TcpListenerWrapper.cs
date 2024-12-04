@@ -13,6 +13,7 @@ namespace PointToPoint.Server
         }
 
         public void Start() => tcpListener.Start();
+        public void Stop() => tcpListener.Stop();
         public ISocket AcceptSocket() => new SocketWrapper(tcpListener.AcceptSocket());
     }
 }

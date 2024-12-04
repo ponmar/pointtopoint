@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Net;
+using System.Net.Sockets;
 
 namespace PointToPoint.Server
 {
     public class TcpServer
     {
         private readonly ITcpListenerFactory tcpListenerFactory;
+        private ITcpListener? tcpListener;
+
         private readonly string networkInterface;
         private readonly int port;
 
-        private bool run = false;
+        private bool run = true;
 
         public TcpServer(ITcpListenerFactory tcpListenerFactory, int port) : this(tcpListenerFactory, string.Empty, port)
         {
@@ -32,25 +35,34 @@ namespace PointToPoint.Server
                 throw new ArgumentException("Invalid network interface");
             }
 
-            var listener = tcpListenerFactory.Create(ipAddress, port);
-            listener.Start();
+            tcpListener = tcpListenerFactory.Create(ipAddress, port);
+            tcpListener.Start();
 
-            run = true;
             while (run)
             {
-                // TODO: how to timeout to stop earlier? listener.Server.Blocking = false?
-                var socket = listener.AcceptSocket();
-                clientHandler.NewConnection(socket);
+                try
+                {
+                    var socket = tcpListener.AcceptSocket();
+                    clientHandler.NewConnection(socket);
+                }
+                catch (SocketException e)
+                {
+                    // Stop method triggers this error during normal shutdown
+                    if (e.SocketErrorCode != SocketError.Interrupted)
+                    {
+                        throw;
+                    }
+                }
             }
         }
 
+        // This is threadsafe
         public void Stop()
         {
-            if (run)
-            {
-                //log.Info("Stopping server");
-                run = false;
-            }
+            run = false;
+
+            // Abort any ongoing blocking AcceptSocket
+            tcpListener?.Stop();
         }
     }
 }

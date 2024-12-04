@@ -44,6 +44,7 @@ public class SystemTests
 
         // Shutdown
         tcpServer.Stop();
+        tcpServerThread.Join();
         clientHandler.Stop();
         clientMessenger.Stop();
 
