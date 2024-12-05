@@ -16,7 +16,7 @@ namespace PointToPointTests.MessageRouting
             var messenger = A.Fake<IMessenger>();
 
             // Act
-            Assert.False(messageRouter.HandleMessage());
+            messageRouter.Update();
 
             // Assert
             Assert.Empty(messageHandler.Messages);
@@ -28,7 +28,7 @@ namespace PointToPointTests.MessageRouting
             Assert.Empty(messageHandler.Messages);
 
             // Act
-            Assert.True(messageRouter.HandleMessage());
+            messageRouter.Update();
 
             // Assert
             Assert.Single(messageHandler.Messages);

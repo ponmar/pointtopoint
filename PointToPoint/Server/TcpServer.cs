@@ -6,9 +6,6 @@ namespace PointToPoint.Server
 {
     public class TcpServer
     {
-        public const string AnyIPv4 = "0.0.0.0";
-        public const string AnyIPv6 = "0:0:0:0:0:0:0:0";
-
         private readonly ITcpListenerFactory tcpListenerFactory;
         private ITcpListener? tcpListener;
 

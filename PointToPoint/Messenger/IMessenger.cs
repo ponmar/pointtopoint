@@ -1,4 +1,5 @@
 ﻿using System;
+using PointToPoint.MessageRouting;
 
 namespace PointToPoint.Messenger
 {
@@ -37,5 +38,7 @@ namespace PointToPoint.Messenger
         event EventHandler<Exception?> Disconnected;
 
         public TimeSpan KeepAliveSendInterval { get; set; }
+
+        public IMessageRouter MessageRouter { get; }
     }
 }

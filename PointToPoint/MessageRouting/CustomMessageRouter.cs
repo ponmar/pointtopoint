@@ -34,5 +34,7 @@ namespace PointToPoint.MessageRouting
                 routeAction(message, messenger);
             }
         }
+
+        public void Update() { }
     }
 }

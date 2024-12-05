@@ -11,5 +11,7 @@ namespace PointToPoint.MessageRouting
         /// Note that this method is called from the internal message receiving thread.
         /// </summary>
         public void RouteMessage(object message, IMessenger messenger);
+
+        public void Update();
     }
 }

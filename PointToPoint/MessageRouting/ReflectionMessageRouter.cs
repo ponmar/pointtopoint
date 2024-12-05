@@ -59,5 +59,7 @@ namespace PointToPoint.MessageRouting
         }
 
         protected virtual void DoRouteMessage(Action routeAction) => routeAction();
+
+        public virtual void Update() { }
     }
 }

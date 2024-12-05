@@ -11,7 +11,7 @@ namespace PointToPoint.Messenger.Tcp
     public record SocketOptions(bool NoDelay, TimeSpan ReceiveTimeout);
 
     /// <summary>
-    /// Message sending over TCP/IP 
+    /// Message sending over TCP/IP
     /// </summary>
     public class TcpMessenger : Messenger
     {

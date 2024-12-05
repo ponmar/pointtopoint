@@ -2,7 +2,6 @@
 using Protocol;
 using PointToPoint.Messenger;
 using PointToPoint.Server.ClientHandler;
-using PointToPoint.MessageRouting;
 using PointToPoint.Protocol;
 
 namespace Server;
@@ -13,29 +12,23 @@ public class ChatClientHandler : IClientHandler
 
     private readonly ClientRepo clientRepo = ClientRepo.Instance;
 
-    private IMessageSender? messageSender;
-    private QueueingReflectionMessageRouter? messageRouter;
+    private Client? client;
+
     public string Name { get; private set; } = NameCreator.CreateName();
 
-    public void Init(IMessageSender messageSender, IMessageRouter messageRouter)
+    public void Init(Client client)
     {
-        this.messageSender = messageSender;
-        this.messageRouter = (QueueingReflectionMessageRouter)messageRouter;
+        this.client = client;
 
         clientRepo.AddClient(this);
 
-        messageSender.SendMessage(new AssignName(Name), this);
+        client.Messenger.Send(new AssignName(Name));
 
         var text = $"'{Name}' joined the chat";
         PublishText(ServerName, text);
         Console.WriteLine(text);
 
         BroadcastUsers();
-    }
-
-    private void BroadcastUsers()
-    {
-        messageSender!.SendBroadcast(new Users(clientRepo.GetUsernames()));
     }
 
     public void Exit(Exception? e)
@@ -54,12 +47,6 @@ public class ChatClientHandler : IClientHandler
 
     public void Update()
     {
-        if (messageRouter is not null)
-        {
-            while (messageRouter.HandleMessage())
-            {
-            }
-        }
     }
 
     public void HandleMessage(PublishText message, IMessenger messenger)
@@ -98,6 +85,11 @@ public class ChatClientHandler : IClientHandler
 
     private void PublishText(string sender, string text)
     {
-        messageSender!.SendBroadcast(new Text(sender, text, DateTime.Now));
+        client?.Messenger!.Send(new Text(sender, text, DateTime.Now));
+    }
+
+    private void BroadcastUsers()
+    {
+        client!.MessageBroadcaster.SendBroadcast(new Users(clientRepo.GetUsernames()));
     }
 }

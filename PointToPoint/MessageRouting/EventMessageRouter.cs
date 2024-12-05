@@ -37,5 +37,7 @@ namespace PointToPoint.MessageRouting
                 MessageReceived?.Invoke(this, new(message, messenger));
             }
         }
+
+        public void Update() { }
     }
 }
