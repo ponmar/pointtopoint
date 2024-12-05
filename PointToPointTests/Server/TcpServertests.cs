@@ -11,7 +11,7 @@ public class TcpServerTests
         var fakeTcpListenerFactory = A.Fake<ITcpListenerFactory>();
         var fakeConnectionHandler = A.Fake<IConnectionHandler>();
 
-        var tcpServer = new TcpServer(TcpServer.AnyIPv4, 12345, fakeTcpListenerFactory);
+        var tcpServer = new TcpServer(NetworkInterface.AnyIPv4, 12345, fakeTcpListenerFactory);
         var tcpServerThread = new Thread(() => tcpServer.Run(fakeConnectionHandler));
         tcpServerThread.Start();
 

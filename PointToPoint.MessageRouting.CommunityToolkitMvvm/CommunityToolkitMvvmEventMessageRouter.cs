@@ -44,5 +44,7 @@ namespace PointToPoint.MessageRouting.CommunityToolkitMvvm
                 executor.Invoke(() => genericSendMethod.Invoke(sender, parameters));
             }
         }
+
+        public void Update() { }
     }
 }

@@ -10,13 +10,10 @@ using System.Linq;
 
 namespace PointToPoint.Server
 {
-    record Client(IMessenger Messenger, IClientHandler ClientHandler);
-
     /// <summary>
     /// Keeps track of all connected clients and creates one application specific message handling instance per client connection.
     /// </summary>
-    /// This class sets up an ReflectionMessageRouter instance to forward messages to the application specific code.
-    public class ClientsHandler<TClientHandler> : IConnectionHandler, IMessageSender where TClientHandler : IClientHandler
+    public class ClientsHandler<TClientHandler> : IConnectionHandler, IMessageBroadcaster where TClientHandler : IClientHandler
     {
         private List<Client> Clients { get; } = new();
         private readonly object clientsLock = new();
@@ -25,7 +22,7 @@ namespace PointToPoint.Server
         private readonly IClientHandlerFactory clientHandlerFactory;
         private readonly IMessageRouterFactory messageRouterFactory;
 
-        public TimeSpan KeepAliveSendInterval { get; set; } = TimeSpan.FromSeconds(1);
+        public TimeSpan KeepAliveSendInterval { get; set; } = Messenger.Messenger.DefaultKeepAliveSendInterval;
 
         public SocketOptions SocketOptions { get; set; } = TcpMessenger.DefaultSocketOptions;
 
@@ -33,9 +30,8 @@ namespace PointToPoint.Server
         /// Constructor
         /// </summary>
         /// <param name="payloadSerializer"></param>
-        /// <param name="clientMessageHandlerType">Type of the class that will be created for handling application specific code per client</param>
+        /// <param name="clientHandlerFactory">The factory that creates the application specific instance handler per client</param>
         /// <param name="clientHandlerFactory">The factory for creating the client handler instance per connected client</param>
-        /// <param name="keepAliveSendInterval"></param>
         public ClientsHandler(IPayloadSerializer payloadSerializer, IClientHandlerFactory clientHandlerFactory, IMessageRouterFactory messageRouterFactory)
         {
             this.payloadSerializer = payloadSerializer;
@@ -67,20 +63,10 @@ namespace PointToPoint.Server
             {
                 KeepAliveSendInterval = KeepAliveSendInterval
             };
-            var client = new Client(messenger, clientHandler);
+            var client = new Client(clientHandler, messenger, this);
             AddClient(client);
-            clientHandler.Init(this, messageRouter);
+            clientHandler.Init(client);
             messenger.Start();
-        }
-
-        public void SendMessage(object message, IClientHandler sender)
-        {
-            Client? client = null;
-            lock (clientsLock)
-            {
-                client = Clients.FirstOrDefault(x => x.ClientHandler == sender);
-            }
-            client?.Messenger.Send(message);
         }
 
         public void SendBroadcast(object message)
@@ -125,10 +111,11 @@ namespace PointToPoint.Server
             }
         }
 
-        public void UpdateAll()
+        public void UpdateClients()
         {
             lock (clientsLock)
             {
+                Clients.ForEach(x => x.Messenger.MessageRouter.Update());
                 Clients.ForEach(x => x.ClientHandler.Update());
             }
         }

@@ -9,12 +9,14 @@ namespace PointToPoint.Messenger
 {
     public abstract class Messenger : IMessenger
     {
-        public TimeSpan KeepAliveSendInterval { get; set; } = TimeSpan.FromSeconds(1);
+        public static readonly TimeSpan DefaultKeepAliveSendInterval = TimeSpan.FromSeconds(1);
+
+        public TimeSpan KeepAliveSendInterval { get; set; } = DefaultKeepAliveSendInterval;
 
         public event EventHandler<Exception?>? Disconnected;
 
-        protected readonly IPayloadSerializer payloadSerializer;
-        protected readonly IMessageRouter messageRouter;
+        private readonly IPayloadSerializer payloadSerializer;
+        public IMessageRouter MessageRouter { get; }
 
         private readonly Thread receiveThread;
         private readonly Thread sendThread;
@@ -30,7 +32,7 @@ namespace PointToPoint.Messenger
         protected Messenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter)
         {
             this.payloadSerializer = payloadSerializer;
-            this.messageRouter = messageRouter;
+            MessageRouter = messageRouter;
 
             ResetLengthBuffer();
 
@@ -100,7 +102,7 @@ namespace PointToPoint.Messenger
                 try
                 {
                     var message = payloadSerializer.PayloadToMessage(messageBuffer.buffer, messageBuffer.numBytesToRead);
-                    messageRouter.RouteMessage(message, this);
+                    MessageRouter.RouteMessage(message, this);
                 }
                 catch (Exception e)
                 {

@@ -19,19 +19,13 @@ namespace PointToPoint.MessageRouting
         }
 
         protected override void DoRouteMessage(Action routeAction) => routeActions.Enqueue(routeAction);
-
-        /// <summary>
-        /// Thread safe method for handling messages queued from a messenger thread.
-        /// </summary>
-        /// <returns>true if a queued action was handled, otherwise false</returns>
-        public bool HandleMessage()
+                
+        public override void Update()
         {
-            if (routeActions.TryDequeue(out var messageAction))
+            while (routeActions.TryDequeue(out var messageAction))
             {
                 messageAction();
-                return true;
             }
-            return false;
         }
     }
 }

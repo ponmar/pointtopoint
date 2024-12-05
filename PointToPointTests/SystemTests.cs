@@ -15,20 +15,20 @@ public class SystemTests
     private readonly MessageReceiver clientMessageReceiver = new();
 
     [Theory]
-    [InlineData(TcpServer.AnyIPv4)]
-    [InlineData(TcpServer.AnyIPv6)]
+    [InlineData(NetworkInterface.AnyIPv4)]
+    [InlineData(NetworkInterface.AnyIPv6)]
     public void MessagesBetweenClientAndServer(string serverNetworkInterface)
     {
         // Arrange - start the server
         var port = 12345;
 
-        var clientHandler = new ClientsHandler<TestClientHandler>(
+        var clientsHandler = new ClientsHandler<TestClientHandler>(
             new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Assembly),
             new ActivatorClientHandlerFactory(),
             new ReflectionMessageRouterFactory());
 
         var tcpServer = new TcpServer(serverNetworkInterface, port, new TcpListenerFactory());
-        var tcpServerThread = new Thread(() => tcpServer.Run(clientHandler));
+        var tcpServerThread = new Thread(() => tcpServer.Run(clientsHandler));
         tcpServerThread.Start();
 
         // Arrange - start the client
@@ -44,13 +44,15 @@ public class SystemTests
 
         Thread.Sleep(3000);
 
+        clientsHandler.UpdateClients();
+
         // Shutdown
         tcpServer.Stop();
         tcpServerThread.Join();
-        clientHandler.Stop();
+        clientsHandler.Stop();
         clientMessenger.Stop();
 
-        TestUtils.WaitFor(clientHandler.IsStopped);
+        TestUtils.WaitFor(clientsHandler.IsStopped);
         TestUtils.WaitFor(clientMessenger.IsStopped);
 
         // Assert
@@ -79,10 +81,10 @@ public class TestClientHandler : IClientHandler
 {
     public readonly List<object> receivedMessages = [];
 
-    public void Init(IMessageSender messageSender, IMessageRouter messageRouter)
+    public void Init(Client client)
     {
-        messageSender.SendMessage(new ServerToClientMessage(), this);
-        messageSender.SendBroadcast(new ServerToClientBroadcastMessage());
+        client.Messenger.Send(new ServerToClientMessage());
+        client.MessageBroadcaster.SendBroadcast(new ServerToClientBroadcastMessage());
     }
 
     public void Exit(Exception? _)
@@ -91,7 +93,9 @@ public class TestClientHandler : IClientHandler
         Assert.True(receivedMessages.OfType<KeepAlive>().Count() > 1);
     }
 
-    public void Update() { }
+    public void Update()
+    {
+    }
 
     public void HandleMessage(ClientToServerMessage message, IMessenger messenger)
     {

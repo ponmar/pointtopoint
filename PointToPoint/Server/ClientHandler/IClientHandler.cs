@@ -1,5 +1,4 @@
 ﻿using System;
-using PointToPoint.MessageRouting;
 
 namespace PointToPoint.Server.ClientHandler
 {
@@ -12,9 +11,8 @@ namespace PointToPoint.Server.ClientHandler
         /// Called when messenger is ready
         /// </summary>
         /// This method executes on a messenger internal thread.
-        /// <param name="messageSender">This instance can be used to send messages</param>
-        /// <param name="messageRouter">The message router</param>
-        void Init(IMessageSender messageSender, IMessageRouter messageRouter);
+        /// <param name="client">TODO</param>
+        void Init(Client client);
 
         /// <summary>
         /// Called when the client has disconnected
@@ -24,7 +22,7 @@ namespace PointToPoint.Server.ClientHandler
         void Exit(Exception? e);
 
         /// <summary>
-        /// Can be used to handle queued messages when the QueuingReflectionMessageRouter is used.
+        /// This method is called continously
         /// </summary>
         void Update();
     }

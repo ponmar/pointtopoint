@@ -12,7 +12,7 @@ var clientsHandler = new ClientsHandler<ChatClientHandler>(
     new ActivatorClientHandlerFactory(),
     new QueueingReflectionMessageRouterFactory());
 
-var tcpServer = new TcpServer(TcpServer.AnyIPv4, port, new TcpListenerFactory());
+var tcpServer = new TcpServer(NetworkInterface.AnyIPv4, port, new TcpListenerFactory());
 var tcpServerThread = new Thread(() => tcpServer.Run(clientsHandler));
 tcpServerThread.Start();
 
@@ -20,6 +20,6 @@ Console.WriteLine($"Listening for connections on port {port}...");
 
 while (true)
 {
-    clientsHandler.UpdateAll();
+    clientsHandler.UpdateClients();
     Thread.Sleep(100);
 }
