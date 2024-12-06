@@ -14,6 +14,8 @@ namespace PointToPoint.Server
 
         private bool run = true;
 
+        public bool HasStarted { get; private set; }
+
         public TcpServer(string networkInterface, int port, ITcpListenerFactory tcpListenerFactory)
         {
             this.networkInterface = networkInterface;
@@ -30,6 +32,8 @@ namespace PointToPoint.Server
 
             tcpListener = tcpListenerFactory.Create(ipAddress, port);
             tcpListener.Start();
+
+            HasStarted = true;
 
             while (run)
             {

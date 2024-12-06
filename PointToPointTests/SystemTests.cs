@@ -31,6 +31,8 @@ public class SystemTests
         var tcpServerThread = new Thread(() => tcpServer.Run(clientsHandler));
         tcpServerThread.Start();
 
+        TestUtils.WaitFor(() => tcpServer.HasStarted);
+
         // Arrange - start the client
         var clientMessenger = new TcpMessenger("localhost", port,
             new NewtonsoftJsonPayloadSerializer(typeof(ClientToServerMessage).Assembly),
