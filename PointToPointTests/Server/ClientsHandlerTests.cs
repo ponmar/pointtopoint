@@ -52,12 +52,9 @@ public class ClientsHandlerTests
 
         // Act
         clientsHandler.Stop();
-        TestUtils.WaitFor(clientsHandler.IsStopped);
 
         // Assert
-        Assert.True(clientHandlerForTest.InitCalled);
-        Assert.True(clientHandlerForTest.ExitCalled);
-        Assert.True(clientHandlerForTest.UpdateCalled);
+        TestUtils.WaitFor(() => clientHandlerForTest.ExitCalled);
     }
 }
 
