@@ -63,9 +63,13 @@ namespace PointToPoint.Server
             {
                 KeepAliveSendInterval = KeepAliveSendInterval
             };
+
+            // Note that the order matters. The client shall be available in the list to make it possible
+            // for the application specific client handler to broadcast to all (with itself included) in
+            // its Init method.
             var client = new Client(clientHandler, messenger, this);
             AddClient(client);
-            clientHandler.Init(client);
+            client.Init();
             messenger.Start();
         }
 
@@ -115,8 +119,7 @@ namespace PointToPoint.Server
         {
             lock (clientsLock)
             {
-                Clients.ForEach(x => x.Messenger.MessageRouter.Update());
-                Clients.ForEach(x => x.ClientHandler.Update());
+                Clients.ForEach(x => x.Update());
             }
         }
     }
