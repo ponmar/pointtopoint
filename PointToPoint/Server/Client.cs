@@ -3,7 +3,7 @@ using PointToPoint.Server.ClientHandler;
 
 namespace PointToPoint.Server
 {
-    public class Client
+    public class Client : IClient
     {
         public IClientHandler ClientHandler { get; }
         public IMessenger Messenger { get; }

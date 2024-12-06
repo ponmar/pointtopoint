@@ -64,7 +64,7 @@ public class ClientHandlerForTest : IClientHandler
     public bool InitCalled { get; private set; } = false;
     public bool UpdateCalled { get; private set; } = false;
 
-    public void Init(Client client) => InitCalled = true;
+    public void Init(IClient client) => InitCalled = true;
 
     public void Exit(Exception? e) => ExitCalled = true;
 

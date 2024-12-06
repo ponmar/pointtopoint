@@ -83,7 +83,7 @@ public class TestClientHandler : IClientHandler
 {
     public readonly List<object> receivedMessages = [];
 
-    public void Init(Client client)
+    public void Init(IClient client)
     {
         client.Messenger.Send(new ServerToClientMessage());
         client.MessageBroadcaster.SendBroadcast(new ServerToClientBroadcastMessage());

@@ -12,11 +12,11 @@ public class ChatClientHandler : IClientHandler
 
     private readonly ClientRepo clientRepo = ClientRepo.Instance;
 
-    private Client? client;
+    private IClient? client;
 
     public string Name { get; private set; } = NameCreator.CreateName();
 
-    public void Init(Client client)
+    public void Init(IClient client)
     {
         this.client = client;
 

@@ -12,7 +12,7 @@ namespace PointToPoint.Server.ClientHandler
         /// </summary>
         /// This method executes on a messenger internal thread.
         /// <param name="client">TODO</param>
-        void Init(Client client);
+        void Init(IClient client);
 
         /// <summary>
         /// Called when the client has disconnected
