@@ -25,8 +25,10 @@ public class ChatClientHandler : IClientHandler
         client.Messenger.Send(new AssignName(Name));
 
         var text = $"'{Name}' joined the chat";
-        PublishText(ServerName, text);
         Console.WriteLine(text);
+
+        PublishText(ServerName, text);
+        PublishHelp();
 
         BroadcastUsers();
     }
@@ -51,31 +53,63 @@ public class ChatClientHandler : IClientHandler
 
     public void HandleMessage(PublishText message, IMessenger messenger)
     {
-        Console.WriteLine($"'{Name}': {message.Message}");
-        PublishText(Name, message.Message);
-
-        switch (message.Message.ToLower())
+        if (message.Message.StartsWith("/"))
         {
-            case "hi server":
-            case "hello server":
+            var commandParts = message.Message.Split(" ");
+            var command = commandParts[0].ToLower();
+            var commandArguments = commandParts[1..];
+            HandleCommand(command, commandArguments);
+            return;
+        }
+        else
+        {
+            Console.WriteLine($"'{Name}': {message.Message}");
+            PublishText(Name, message.Message);
+        }
+    }
+
+    private void HandleCommand(string command, IEnumerable<string> arguments)
+    {
+        switch (command)
+        {
+            case "/?":
+            case "/help":
+                PublishHelp();
+                break;
+
+            case "/hi":
+            case "/hello":
                 PublishText(ServerName, "And hi to you!");
+                break;
+            
+            case "/name":
+                var newName = string.Join(' ', arguments);
+                ChangeName(newName);
+                break;
+
+            case "/quit":
+                client?.Messenger.Stop();
+                break;
+
+            default:
+                PublishText(ServerName, $"Invalid command: {command}");
                 break;
         }
     }
 
-    public void HandleMessage(ChangeName message, IMessenger messenger)
+    private void ChangeName(string newName)
     {
-        if (message.NewName != Name && !string.IsNullOrEmpty(message.NewName) && message.NewName.Length < 50)
+        if (newName != Name && !string.IsNullOrEmpty(newName) && newName.Length < 50)
         {
-            var text = $"'{Name}' -> '{message.NewName}'";
+            var text = $"'{Name}' -> '{newName}'";
             Console.WriteLine(text);
             PublishText(ServerName, text);
-            Name = message.NewName;
+            Name = newName;
             BroadcastUsers();
         }
         else
         {
-            PublishText(ServerName, "Invalid name");
+            PublishText(ServerName, $"Invalid name: {newName}");
         }
     }
 
@@ -86,6 +120,20 @@ public class ChatClientHandler : IClientHandler
     private void PublishText(string sender, string text)
     {
         client?.Messenger!.Send(new Text(sender, text, DateTime.Now));
+    }
+
+    private void PublishHelp()
+    {
+        var commands = new List<string>()
+        {
+            "/?",
+            "/help",
+            "/hi",
+            "/hello",
+            "/name <name>",
+            "/quit",
+        };
+        client?.Messenger!.Send(new Text(ServerName, string.Join('\n', commands), DateTime.Now));
     }
 
     private void BroadcastUsers()

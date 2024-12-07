@@ -17,43 +17,31 @@
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 
-		<Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" Classes="Normal">
-			<StackPanel Orientation="Vertical">
-				<WrapPanel Orientation="Horizontal" Margin="3" HorizontalAlignment="Center">
-					<StackPanel Orientation="Horizontal" Margin="3">
-						<TextBlock Text="Server:" Margin="3" VerticalAlignment="Center"/>
-						<TextBox Text="{Binding HostnameInput}" Width="100" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
-					</StackPanel>
-
-					<StackPanel Orientation="Horizontal" Margin="3">
-						<TextBlock Text="Port:" Margin="3" VerticalAlignment="Center"/>
-						<TextBox Text="{Binding PortInput}" Width="50" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
-					</StackPanel>
-
-					<StackPanel Orientation="Horizontal" Margin="3">
-						<CheckBox VerticalAlignment="Center" Margin="3" IsChecked="{Binding AutoConnect}">Auto-connect</CheckBox>
-					</StackPanel>
-
-					<StackPanel Orientation="Horizontal" Margin="3">
-						<Button Content="Connect" Command="{Binding ConnectCommand}" IsEnabled="{Binding CanConnect}" Margin="3" VerticalAlignment="Center"/>
-						<Button Content="Disconnect" Command="{Binding DisconnectCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
-					</StackPanel>
-				</WrapPanel>
-				
-				<WrapPanel Orientation="Horizontal" Margin="3" HorizontalAlignment="Center" IsVisible="{Binding IsConnected}">
-					<StackPanel Orientation="Horizontal" Margin="3">
-						<TextBlock Text="Name:" Margin="3" VerticalAlignment="Center"/>
-						<TextBox Text="{Binding Name}" Width="160" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center" AcceptsReturn="False"/>
-						<Button Width="40" Content="Set" IsEnabled="{Binding CanSetName}" Command="{Binding SetNameCommand}" Margin="3" VerticalAlignment="Center"/>
-					</StackPanel>
-
-					<StackPanel Orientation="Horizontal" Margin="3">
-						<TextBlock Text="Keep alive supervision:" Margin="3" VerticalAlignment="Center"/>
-						<TextBlock Text="{Binding KeepAliveSupervisionStatus}" Margin="3" VerticalAlignment="Center"/>
-					</StackPanel>
-				</WrapPanel>
+		<WrapPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="3">
+			<StackPanel Orientation="Horizontal" Margin="3">
+				<TextBlock Text="Server:" Margin="3" VerticalAlignment="Center"/>
+				<TextBox Text="{Binding HostnameInput}" Width="100" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
 			</StackPanel>
-		</Border>
+
+			<StackPanel Orientation="Horizontal" Margin="3">
+				<TextBlock Text="Port:" Margin="3" VerticalAlignment="Center"/>
+				<TextBox Text="{Binding PortInput}" Width="50" IsEnabled="{Binding IsDisconnected}" Margin="3" VerticalAlignment="Center"/>
+			</StackPanel>
+
+			<StackPanel Orientation="Horizontal" Margin="3">
+				<CheckBox VerticalAlignment="Center" Margin="3" IsChecked="{Binding AutoConnect}">Auto-connect</CheckBox>
+			</StackPanel>
+
+			<StackPanel Orientation="Horizontal" Margin="3">
+				<Button Content="Connect" Command="{Binding ConnectCommand}" IsEnabled="{Binding CanConnect}" Margin="3" VerticalAlignment="Center"/>
+				<Button Content="Disconnect" Command="{Binding DisconnectCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
+			</StackPanel>
+
+			<StackPanel Orientation="Horizontal" Margin="3" IsVisible="{Binding IsConnected}">
+				<TextBlock Text="Connection:" Margin="3" VerticalAlignment="Center"/>
+				<TextBlock Text="{Binding KeepAliveSupervisionStatus}" Margin="3" VerticalAlignment="Center"/>
+			</StackPanel>
+		</WrapPanel>
 
 		<ListBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="3" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" MaxWidth="250" IsVisible="{Binding IsConnected}">
 			<ListBox.ItemTemplate>
@@ -81,12 +69,10 @@
 			</ListBox.ItemTemplate>
 		</ListBox>
 
-		<Border Grid.Row="2" Grid.Column="1" Margin="3" Classes="Normal" IsVisible="{Binding IsConnected}">
-			<Grid ColumnDefinitions="auto,*,auto">
-				<TextBlock Grid.Column="0" Text="Chat:" VerticalAlignment="Center"/>
-				<TextBox Grid.Column="1" Text="{Binding TextInput}" IsEnabled="{Binding IsConnected}" Margin="3,0" VerticalAlignment="Center" AcceptsReturn="False"/>
-				<Button Grid.Column="2" Content="Send" IsEnabled="{Binding CanSendText}" Command="{Binding SendTextCommand}" IsDefault="True" VerticalAlignment="Center"/>
-			</Grid>
-		</Border>
+		<Grid Grid.Row="2" Grid.Column="1" Margin="3" IsVisible="{Binding IsConnected}" ColumnDefinitions="auto,*,auto">
+			<TextBlock Grid.Column="0" Text="Chat:" VerticalAlignment="Center"/>
+			<TextBox Grid.Column="1" Text="{Binding TextInput}" IsEnabled="{Binding IsConnected}" Margin="3,0" VerticalAlignment="Center" AcceptsReturn="False"/>
+			<Button Grid.Column="2" Content="Send" IsEnabled="{Binding CanSendText}" Command="{Binding SendTextCommand}" IsDefault="True" VerticalAlignment="Center"/>
+		</Grid>
 	</Grid>
 </UserControl>

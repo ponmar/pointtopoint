@@ -30,7 +30,6 @@ public partial class MainViewModel : ObservableObject
     public bool IsDisconnected => !IsConnected;
 
     public bool CanSendText => IsConnected && !string.IsNullOrEmpty(TextInput);
-    public bool CanSetName => IsConnected && !string.IsNullOrEmpty(Name);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanConnect))]
@@ -47,10 +46,6 @@ public partial class MainViewModel : ObservableObject
     {
         EvaluateAutoConnectTimer();
     }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CanSetName))]
-    private string name = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanSendText))]
@@ -81,7 +76,6 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsConnected))]
     [NotifyPropertyChangedFor(nameof(IsDisconnected))]
     [NotifyPropertyChangedFor(nameof(CanSendText))]
-    [NotifyPropertyChangedFor(nameof(CanSetName))]
     [NotifyPropertyChangedFor(nameof(Title))]
     private IMessenger? messenger = null;
 
@@ -104,7 +98,6 @@ public partial class MainViewModel : ObservableObject
         keepAliveSupervisionTimer.Tick += KeepAliveSupervisionTimer_Tick;
         keepAliveSupervisionTimer.Start();
 
-        WeakReferenceMessenger.Default.Register<AssignName, int>(this, MessageEventChannel, (r, t) => Name = t.Name);
         WeakReferenceMessenger.Default.Register<Text, int>(this, MessageEventChannel, (r, t) => ShowText(new ChatMessageViewModel(t.Sender, t.Time, t.Message, false)));
         WeakReferenceMessenger.Default.Register<KeepAlive, int>(this, MessageEventChannel, (r, t) => keepAliveReceivedAt = DateTime.Now);
         WeakReferenceMessenger.Default.Register<Users, int>(this, MessageEventChannel, (r, t) =>
@@ -196,12 +189,6 @@ public partial class MainViewModel : ObservableObject
                 CloseMessenger();
             }
         });
-    }
-
-    [RelayCommand]
-    private void SetName()
-    {
-        Messenger!.Send(new ChangeName(Name));
     }
 
     [RelayCommand]

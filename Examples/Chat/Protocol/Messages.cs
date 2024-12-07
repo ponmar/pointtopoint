@@ -1,7 +1,6 @@
 ﻿namespace Protocol;
 
 // Client -> Server
-public record ChangeName(string NewName);
 public record PublishText(string Message);
 
 // Server -> Client
