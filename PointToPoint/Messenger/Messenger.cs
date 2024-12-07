@@ -16,7 +16,7 @@ namespace PointToPoint.Messenger
         public event EventHandler<Exception?>? Disconnected;
 
         private readonly IPayloadSerializer payloadSerializer;
-        public IMessageRouter MessageRouter { get; }
+        private readonly IMessageRouter messageRouter;
 
         private readonly Thread receiveThread;
         private readonly Thread sendThread;
@@ -32,7 +32,7 @@ namespace PointToPoint.Messenger
         protected Messenger(IPayloadSerializer payloadSerializer, IMessageRouter messageRouter)
         {
             this.payloadSerializer = payloadSerializer;
-            MessageRouter = messageRouter;
+            this.messageRouter = messageRouter;
 
             ResetLengthBuffer();
 
@@ -102,7 +102,7 @@ namespace PointToPoint.Messenger
                 try
                 {
                     var message = payloadSerializer.PayloadToMessage(messageBuffer.buffer, messageBuffer.numBytesToRead);
-                    MessageRouter.RouteMessage(message, this);
+                    messageRouter.RouteMessage(message, this);
                 }
                 catch (Exception e)
                 {
@@ -170,5 +170,10 @@ namespace PointToPoint.Messenger
 
         protected abstract void ReceiveBytes(ByteBuffer buffer);
         protected abstract void SendBytes(byte[] bytes);
+
+        public void Update()
+        {
+            messageRouter.Update();
+        }
     }
 }

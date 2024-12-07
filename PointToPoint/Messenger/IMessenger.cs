@@ -1,5 +1,4 @@
 ﻿using System;
-using PointToPoint.MessageRouting;
 
 namespace PointToPoint.Messenger
 {
@@ -9,7 +8,7 @@ namespace PointToPoint.Messenger
     public interface IMessenger
     {
         /// <summary>
-        /// Starts the sending and receiving communication threads
+        /// Called internally to start the sending and receiving communication threads
         /// </summary>
         void Start();
 
@@ -39,6 +38,9 @@ namespace PointToPoint.Messenger
 
         public TimeSpan KeepAliveSendInterval { get; set; }
 
-        public IMessageRouter MessageRouter { get; }
+        /// <summary>
+        /// Called internally to handle queued messages for some message routers
+        /// </summary>
+        void Update();
     }
 }

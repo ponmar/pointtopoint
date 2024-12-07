@@ -28,7 +28,7 @@ namespace PointToPoint.Server
         {
             if (initialized)
             {
-                Messenger.MessageRouter.Update();
+                Messenger.Update();
                 ClientHandler.Update();
             }
         }
