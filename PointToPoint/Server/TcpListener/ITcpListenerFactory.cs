@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace PointToPoint.Server
+namespace PointToPoint.Server.TcpListener
 {
     public interface ITcpListenerFactory
     {

@@ -1,13 +1,13 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-namespace PointToPoint.Server
+namespace PointToPoint.Server.TcpListener
 {
     public class TcpListenerFactory : ITcpListenerFactory
     {
         public ITcpListener Create(IPAddress host, int port)
         {
-            return new TcpListenerWrapper(new TcpListener(host, port));
+            return new TcpListenerWrapper(new(host, port));
         }
     }
 }

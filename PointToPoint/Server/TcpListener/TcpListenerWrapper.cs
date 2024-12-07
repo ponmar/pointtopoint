@@ -1,13 +1,12 @@
 ﻿using PointToPoint.Messenger.Tcp;
-using System.Net.Sockets;
 
-namespace PointToPoint.Server
+namespace PointToPoint.Server.TcpListener
 {
     public class TcpListenerWrapper : ITcpListener
     {
-        private readonly TcpListener tcpListener;
+        private readonly System.Net.Sockets.TcpListener tcpListener;
 
-        public TcpListenerWrapper(TcpListener tcpListener)
+        public TcpListenerWrapper(System.Net.Sockets.TcpListener tcpListener)
         {
             this.tcpListener = tcpListener;
         }

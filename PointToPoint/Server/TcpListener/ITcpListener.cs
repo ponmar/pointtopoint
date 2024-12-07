@@ -1,6 +1,6 @@
 ﻿using PointToPoint.Messenger.Tcp;
 
-namespace PointToPoint.Server
+namespace PointToPoint.Server.TcpListener
 {
     public interface ITcpListener
     {

@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 namespace PointToPoint.MessageRouting
 {
     /// <summary>
-    /// Same callback handling as for ReflectionMessageRouter, but message handling is queued and polled from the application
+    /// Same callback handling as for ReflectionMessageRouter, but message handling is queued and handled via ClientsHandler.UpdateClients
     /// </summary>
     public class QueueingReflectionMessageRouter : ReflectionMessageRouter
     {

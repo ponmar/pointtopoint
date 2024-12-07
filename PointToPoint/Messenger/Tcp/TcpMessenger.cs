@@ -72,7 +72,7 @@ namespace PointToPoint.Messenger.Tcp
         private void SetSocketOptions(SocketOptions socketOptions)
         {
             socket.NoDelay = socketOptions.NoDelay;
-            socket.ReceiveTimeout = (int)socketOptions.ReceiveTimeout.TotalMilliseconds;
+            socket.ReceiveTimeout = socketOptions.ReceiveTimeout;
         }
 
         public override void Stop()

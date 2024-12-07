@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace PointToPoint.Messenger.Tcp
@@ -13,7 +14,7 @@ namespace PointToPoint.Messenger.Tcp
         }
 
         public bool NoDelay { set => socket.NoDelay = value; }
-        public int ReceiveTimeout { set => socket.ReceiveTimeout = value; }
+        public TimeSpan ReceiveTimeout { set => socket.ReceiveTimeout = (int)value.TotalMilliseconds; }
 
         public bool Connected => socket.Connected;
 

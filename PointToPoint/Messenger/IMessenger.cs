@@ -39,7 +39,7 @@ namespace PointToPoint.Messenger
         public TimeSpan KeepAliveSendInterval { get; set; }
 
         /// <summary>
-        /// Called internally to handle queued messages for some message routers
+        /// Called internally to handle queued message handling for some message routers
         /// </summary>
         void Update();
     }
