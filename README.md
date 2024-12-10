@@ -89,6 +89,10 @@ All message routers have the possibility to use an executor to run the message r
 
 See included example projects for how to setup communication, sending and receiving messages.
 
+## Contributions
+
+Please create pull requests towards the dev branch.
+
 ## License
 
 This project uses the [MIT license](LICENSE.txt).
