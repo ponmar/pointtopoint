@@ -27,4 +27,28 @@ internal class TestUtils
             Thread.Sleep(100);
         }
     }
+
+    public static void WaitForAssert(Action assertCondition, TimeSpan timeout = default)
+    {
+        var enteredAt = DateTime.Now;
+
+        while (true)
+        {
+            try
+            {
+                assertCondition();
+                return;
+            }
+            catch
+            {
+                var now = DateTime.Now;
+                if (now - enteredAt > timeout)
+                {
+                    throw;
+                }
+
+                Thread.Sleep(100);
+            }            
+        }
+    }
 }
