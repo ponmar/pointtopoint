@@ -39,5 +39,15 @@ namespace PointToPointTests.MessageRouting
             Assert.Equal(typeof(MyMessage), routedMessages.First().Item1.GetType());
             Assert.Equal(messenger, routedMessages.First().Item2);
         }
+
+        [Fact]
+        public void Update_NotUsed_Coverage()
+        {
+            // Arrange
+            var messageRouter = new CustomMessageRouter((message, messenger) => { }, (a) => a());
+
+            // Act
+            messageRouter.Update();
+        }
     }
 }

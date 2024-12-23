@@ -57,6 +57,16 @@ namespace PointToPointTests.MessageRouting
             Assert.Same(message, messageInfo.Message);
             Assert.Equal(messenger, messageInfo.Messenger);
         }
+
+        [Fact]
+        public void Update_NotUsed_Coverage()
+        {
+            // Arrange
+            var messageRouter = new EventMessageRouter((a) => a());
+
+            // Act
+            messageRouter.Update();
+        }
     }
 
     public record MyMessage();

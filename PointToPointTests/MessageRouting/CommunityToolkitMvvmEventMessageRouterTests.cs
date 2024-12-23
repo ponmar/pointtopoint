@@ -1,3 +1,4 @@
+using System.Diagnostics.Tracing;
 using CommunityToolkit.Mvvm.Messaging;
 using FakeItEasy;
 using PointToPoint.MessageRouting.CommunityToolkitMvvm;
@@ -45,6 +46,17 @@ namespace PointToPointTests.MessageRouting
 
             // Assert
             Assert.Single(routedMessages);
+        }
+
+        [Fact]
+        public void Update_NotUsed_Coverage()
+        {
+            // Arrange
+            var eventChannel = 1337;
+            var messageRouter = new CommunityToolkitMvvmEventMessageRouter(WeakReferenceMessenger.Default, eventChannel);
+
+            // Act
+            messageRouter.Update();
         }
     }
 }
