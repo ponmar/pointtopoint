@@ -76,9 +76,6 @@ public class TcpMessengerTests : IDisposable
         var serializedKeepAlivePayload = new byte[] { 1, 2 };
         var serializedKeepAlivePayloadLength = serializedKeepAlivePayload.Length;
 
-        //var fakeSocket = A.Fake<ISocket>();
-        //A.CallTo(() => fakeSocketFactory.Create(A<AddressFamily>._)).Returns(fakeSocket);
-
         A.CallTo(() => fakePayloadSerializer.MessageToPayload(message)).Returns(serializedPayload);
         A.CallTo(() => fakeSocket.Send(A<byte[]>._, 0, 4 + serializedPayloadLength, SocketFlags.None)).Returns(4 + serializedPayloadLength);
 
@@ -98,7 +95,8 @@ public class TcpMessengerTests : IDisposable
 
         // Assert
         TestUtils.WaitForAssert(() =>
-            A.CallTo(() => fakeSocket.Send(A<byte[]>._, 0, 4 + serializedPayloadLength, SocketFlags.None)).MustHaveHappenedOnceExactly()
+            A.CallTo(() => fakeSocket.Send(A<byte[]>._, 0, 4 + serializedPayloadLength, SocketFlags.None)).MustHaveHappenedOnceExactly(),
+            TimeSpan.FromSeconds(10)
         );
     }
 }

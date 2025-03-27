@@ -28,7 +28,7 @@ internal class TestUtils
         }
     }
 
-    public static void WaitForAssert(Action assertCondition, TimeSpan timeout = default)
+    public static void WaitForAssert(Action assertCondition, TimeSpan timeout)
     {
         var enteredAt = DateTime.Now;
 
