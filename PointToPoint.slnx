@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/Docs/">
+    <File Path="LICENSE.txt" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Examples/" />
+  <Folder Name="/Examples/Chat/">
+    <Project Path="Examples/Chat/ClientAvalonia.Desktop/ClientAvalonia.Desktop.csproj" />
+    <Project Path="Examples/Chat/ClientAvalonia/ClientAvalonia.csproj" />
+    <Project Path="Examples/Chat/Protocol/Protocol.csproj" />
+    <Project Path="Examples/Chat/Server/Server.csproj" />
+  </Folder>
+  <Project Path="PointToPoint.MessageRouting.CommunityToolkitMvvm/PointToPoint.MessageRouting.CommunityToolkitMvvm.csproj" />
+  <Project Path="PointToPoint.Payload.MsJson/PointToPoint.Payload.MsJson.csproj" />
+  <Project Path="PointToPoint.Payload.NewtonsoftJson/PointToPoint.Payload.NewtonsoftJson.csproj" />
+  <Project Path="PointToPoint.Payload.Yaml/PointToPoint.Payload.Yaml.csproj" />
+  <Project Path="PointToPoint/PointToPoint.csproj" />
+  <Project Path="PointToPointTests/PointToPointTests.csproj" />
+</Solution>
