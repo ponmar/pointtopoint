@@ -33,14 +33,14 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanConnect))]
-    private string hostnameInput = "127.0.0.1";
+    public partial string HostnameInput { get; set; } = "127.0.0.1";
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanConnect))]
-    private string portInput = Constants.DefaultPort.ToString();
+    public partial string PortInput { get; set; } = Constants.DefaultPort.ToString();
 
     [ObservableProperty]
-    private bool autoConnect;
+    public partial bool AutoConnect { get; set; }
 
     partial void OnAutoConnectChanged(bool value)
     {
@@ -49,19 +49,19 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanSendText))]
-    private string textInput = string.Empty;
+    public partial string TextInput { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private ObservableCollection<ChatMessageViewModel> messages = [];
+    public partial ObservableCollection<ChatMessageViewModel> Messages { get; set; } = [];
 
     [ObservableProperty]
-    private ChatMessageViewModel? selectedMessage;
+    public partial ChatMessageViewModel? SelectedMessage { get; set; }
 
     [ObservableProperty]
-    private ObservableCollection<string> users = [];
+    public partial ObservableCollection<string> Users { get; set; } = [];
 
     [ObservableProperty]
-    private string? selectedUser;
+    public partial string? SelectedUser { get; set; }
 
     partial void OnSelectedUserChanged(string? value)
     {
@@ -77,7 +77,7 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsDisconnected))]
     [NotifyPropertyChangedFor(nameof(CanSendText))]
     [NotifyPropertyChangedFor(nameof(Title))]
-    private IMessenger? messenger = null;
+    public partial IMessenger? Messenger { get; set; } = null;
 
     partial void OnMessengerChanged(IMessenger? value)
     {
@@ -90,7 +90,7 @@ public partial class MainViewModel : ObservableObject
     private DateTime keepAliveReceivedAt = DateTime.MinValue;
 
     [ObservableProperty]
-    private string keepAliveSupervisionStatus = string.Empty;
+    public partial string KeepAliveSupervisionStatus { get; set; } = string.Empty;
 
     public MainViewModel()
     {

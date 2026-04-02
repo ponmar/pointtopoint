@@ -6,16 +6,16 @@ namespace ClientAvalonia.ViewModels;
 public partial class ChatMessageViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string sender;
+    public partial string Sender { get; set; }
 
     [ObservableProperty]
-    private DateTime time;
+    public partial DateTime Time { get; set; }
 
     [ObservableProperty]
-    private string message;
+    public partial string Message { get; set; }
 
     [ObservableProperty]
-    private bool isLocalMessage;
+    public partial bool IsLocalMessage { get; set; }
 
     public ChatMessageViewModel(string sender, DateTime time, string message, bool isLocalMessage)
     {
