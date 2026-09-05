@@ -37,11 +37,7 @@ public class ChatClientHandler : IClientHandler
     {
         ClientRepo.Instance.RemoveClient(this);
 
-        var text = $"'{Name}' left the chat";
-        if (e is not null)
-        {
-            text += $" ({e.Message})";
-        }
+        var text = $"'{Name}' left the chat" + (e is not null ? $" ({e.Message})" : "");
         Console.WriteLine(text);
         PublishText(ServerName, text);
         BroadcastUsers();
@@ -53,7 +49,7 @@ public class ChatClientHandler : IClientHandler
 
     public void HandleMessage(PublishText message, IMessenger messenger)
     {
-        if (message.Message.StartsWith("/"))
+        if (message.Message.StartsWith('/'))
         {
             var commandParts = message.Message.Split(" ");
             var command = commandParts[0].ToLower();
@@ -88,7 +84,7 @@ public class ChatClientHandler : IClientHandler
                 break;
 
             case "/quit":
-                client?.Messenger.Stop();
+                client?.Disconnect();
                 break;
 
             default:

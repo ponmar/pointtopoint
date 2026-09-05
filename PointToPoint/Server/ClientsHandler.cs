@@ -67,7 +67,8 @@ namespace PointToPoint.Server
             // Note that the order matters. The client shall be available in the list to make it possible
             // for the application specific client handler to broadcast to all (with itself included) in
             // its Init method.
-            var client = new Client(clientHandler, messenger, this);
+            Client? client = null;
+            client = new Client(clientHandler, messenger, this, e => RemoveClient(client!.Messenger, e));
             AddClient(client);
             client.Init();
             messenger.Start();
@@ -110,17 +111,30 @@ namespace PointToPoint.Server
             if (client is not null)
             {
                 client.Messenger.Disconnected -= Client_Disconnected;
-                client.Messenger.Stop();
-                client.ClientHandler.Exit(e);
+
+                if (e is null)
+                {
+                    client.ClientHandler.Exit(e);
+                    client.Messenger.Stop();
+                }
+                else
+                {
+                    client.Messenger.Stop();
+                    client.ClientHandler.Exit(e);
+                }
             }
         }
 
         public void UpdateClients()
         {
+            List<Client> clientsSnapshot;
             lock (clientsLock)
             {
-                Clients.ForEach(x => x.Update());
+                // Iterate a snapshot so re-entrant RemoveClient() calls from Update() do not mutate the active enumeration.
+                clientsSnapshot = Clients.ToList();
             }
+
+            clientsSnapshot.ForEach(x => x.Update());
         }
     }
 }

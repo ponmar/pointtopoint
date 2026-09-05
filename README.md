@@ -32,6 +32,8 @@ Messenger.Disconnected += Messenger_Disconnected;
 Messenger.Start();
 ```
 
+`Disconnected` is raised for unexpected connection loss; a normal `Stop()` shuts down the messenger without firing it.
+
 Server setup:
 
 ```csharp

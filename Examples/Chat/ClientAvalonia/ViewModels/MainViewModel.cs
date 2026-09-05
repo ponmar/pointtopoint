@@ -136,7 +136,7 @@ public partial class MainViewModel : ObservableObject
 
         if (!int.TryParse(PortInput, out var port))
         {
-            ShowText($"$Invalid port: {PortInput}");
+            ShowText($"Invalid port: {PortInput}");
             return;
         }
 
@@ -163,9 +163,9 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Disconnect()
+    private void CloseConnection()
     {
-        ShowText("Disconnected from server");
+        ShowText("Disconnecting from server");
         CloseMessenger();
     }
 
@@ -179,13 +179,13 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    private void Messenger_Disconnected(object? sender, Exception? e)
+    private void Messenger_Disconnected(object? sender, Exception e)
     {
         Dispatcher.UIThread.Invoke(() =>
         {
             if (IsConnected)
             {
-                ShowText("Disconnected from server" + (e is not null ? $" ({e.Message})" : ""));
+                ShowText($"Disconnected from server ({e.Message})");
                 CloseMessenger();
             }
         });

@@ -4,11 +4,12 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PointToPoint.Messenger.Tcp
 {
-    // Note that ReceiveTimeout affects how fast the receive thread can be shut down.
-    public record SocketOptions(bool NoDelay, TimeSpan ReceiveTimeout);
+    public record SocketOptions(bool NoDelay);
 
     /// <summary>
     /// Message sending over TCP/IP
@@ -17,7 +18,7 @@ namespace PointToPoint.Messenger.Tcp
     {
         private readonly ISocket socket;
 
-        public static readonly SocketOptions DefaultSocketOptions = new(false, TimeSpan.FromMilliseconds(500));
+        public static readonly SocketOptions DefaultSocketOptions = new(false);
 
         /// <summary>
         /// Constructor to be used on the client side of the communication
@@ -25,9 +26,14 @@ namespace PointToPoint.Messenger.Tcp
         /// Note that this instance can not be re-used after it has disconnected.
         /// Exception will be thrown for errors.
         public TcpMessenger(string serverHostnameOrAddress, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, ISocketFactory tcpSocketFactory, SocketOptions socketOptions)
+            : this(serverHostnameOrAddress, serverPort, payloadSerializer, messageRouter, tcpSocketFactory, socketOptions, new SystemDnsResolver())
+        {
+        }
+
+        internal TcpMessenger(string serverHostnameOrAddress, int serverPort, IPayloadSerializer payloadSerializer, IMessageRouter messageRouter, ISocketFactory tcpSocketFactory, SocketOptions socketOptions, IDnsResolver dnsResolver)
             : base(payloadSerializer, messageRouter)
         {
-            var hosts = Dns.GetHostEntry(serverHostnameOrAddress);
+            var hosts = dnsResolver.GetHostEntry(serverHostnameOrAddress);
 
             var servers = hosts.AddressList.Where(x =>
                 x.AddressFamily == AddressFamily.InterNetwork ||
@@ -72,32 +78,63 @@ namespace PointToPoint.Messenger.Tcp
         private void SetSocketOptions(SocketOptions socketOptions)
         {
             socket.NoDelay = socketOptions.NoDelay;
-            socket.ReceiveTimeout = socketOptions.ReceiveTimeout;
         }
 
         public override void Stop()
         {
             base.Stop();
-            if (socket.Connected)
+            Exception? shutdownException = null;
+
+            try
             {
-                socket.Shutdown(SocketShutdown.Both);
+                if (socket.Connected)
+                {
+                    socket.Shutdown(SocketShutdown.Both);
+                }
+            }
+            catch (Exception e)
+            {
+                shutdownException = e;
+            }
+
+            try
+            {
                 socket.Close();
             }
-            socket.Dispose();
+            finally
+            {
+                socket.Dispose();
+            }
+
+            if (shutdownException is not null)
+            {
+                throw shutdownException;
+            }
         }
 
-        protected override void ReceiveBytes(ByteBuffer buffer)
+        protected override async Task ReceiveBytes(ByteBuffer buffer, CancellationToken cancellationToken)
         {
-            var numBytesReceived = socket.Receive(buffer.buffer, buffer.offset, buffer.NumBytesLeft, SocketFlags.None);
+            var numBytesReceived = await socket.ReceiveAsync(buffer.buffer, buffer.offset, buffer.NumBytesLeft, SocketFlags.None, cancellationToken).ConfigureAwait(false);
+            if (numBytesReceived == 0)
+            {
+                throw new SocketException((int)SocketError.ConnectionReset);
+            }
+
             buffer.offset += numBytesReceived;
         }
 
-        protected override void SendBytes(byte[] bytes)
+        protected override async Task SendBytes(byte[] bytes, CancellationToken cancellationToken)
         {
             int numSentBytes = 0;
             while (numSentBytes < bytes.Length)
             {
-                numSentBytes += socket.Send(bytes, numSentBytes, bytes.Length - numSentBytes, SocketFlags.None);
+                var sentBytes = await socket.SendAsync(bytes, numSentBytes, bytes.Length - numSentBytes, SocketFlags.None, cancellationToken).ConfigureAwait(false);
+                if (sentBytes == 0)
+                {
+                    throw new SocketException((int)SocketError.ConnectionReset);
+                }
+
+                numSentBytes += sentBytes;
             }
         }
     }

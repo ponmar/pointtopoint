@@ -1,4 +1,5 @@
 ﻿using PointToPoint.Messenger;
+using System;
 
 namespace PointToPoint.Server
 {
@@ -6,5 +7,6 @@ namespace PointToPoint.Server
     {
         IMessenger Messenger { get; }
         IMessageBroadcaster MessageBroadcaster { get; }
+        void Disconnect(Exception? e = null);
     }
 }

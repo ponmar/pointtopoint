@@ -1,6 +1,7 @@
-﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PointToPoint.Messenger.Tcp
 {
@@ -13,8 +14,6 @@ namespace PointToPoint.Messenger.Tcp
 
         bool NoDelay { set; }
 
-        TimeSpan ReceiveTimeout { set; }
-
         bool Connected { get; }
 
         void Shutdown(SocketShutdown how);
@@ -26,5 +25,9 @@ namespace PointToPoint.Messenger.Tcp
         int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags);
 
         int Send(byte[] buffer, int offset, int size, SocketFlags socketFlags);
+
+        Task<int> ReceiveAsync(byte[] buffer, int offset, int size, SocketFlags socketFlags, CancellationToken cancellationToken);
+
+        Task<int> SendAsync(byte[] buffer, int offset, int size, SocketFlags socketFlags, CancellationToken cancellationToken);
     }
 }

@@ -24,7 +24,7 @@ namespace PointToPoint.Payload.NewtonsoftJson
 
         protected override object? DeserializeObject(string text, Type type)
         {
-            return JsonConvert.DeserializeObject(text, type);
+            return JsonConvert.DeserializeObject(text, type, serializerSettings);
         }
     }
 }

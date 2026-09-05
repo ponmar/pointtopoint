@@ -34,7 +34,7 @@
 
 			<StackPanel Orientation="Horizontal" Margin="3">
 				<Button Content="Connect" Command="{Binding ConnectCommand}" IsEnabled="{Binding CanConnect}" Margin="3" VerticalAlignment="Center"/>
-				<Button Content="Disconnect" Command="{Binding DisconnectCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
+				<Button Content="Disconnect" Command="{Binding CloseConnectionCommand}" IsEnabled="{Binding IsConnected}" Margin="3" VerticalAlignment="Center"/>
 			</StackPanel>
 
 			<StackPanel Orientation="Horizontal" Margin="3" IsVisible="{Binding IsConnected}">

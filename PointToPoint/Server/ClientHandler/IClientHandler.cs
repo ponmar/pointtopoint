@@ -15,10 +15,10 @@ namespace PointToPoint.Server.ClientHandler
         void Init(IClient client);
 
         /// <summary>
-        /// Called when the client has disconnected
+        /// Called when the client has disconnected.
         /// </summary>
         /// This method executes on a messenger internal thread.
-        /// <param name="e">The exception that caused the disconnect</param>
+        /// <param name="e">The exception that caused the disconnect, or null for a graceful disconnect</param>
         void Exit(Exception? e);
 
         /// <summary>

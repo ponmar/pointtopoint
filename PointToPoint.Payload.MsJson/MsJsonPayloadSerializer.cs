@@ -15,7 +15,7 @@ namespace PointToPoint.Payload.MsJson
 
         protected override string SerializeObject(object message)
         {
-            return JsonSerializer.Serialize(message);
+            return JsonSerializer.Serialize(message, serializerOptions);
         }
 
         protected override object? DeserializeObject(string text, Type type)

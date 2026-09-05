@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -9,7 +9,7 @@ namespace PointToPoint.Payload
     // This class requires that payload classes have parameterless constructors
     public class XmlPayloadSerializer : AbstractTextPayloadSerializer
     {
-        private readonly Dictionary<Type, XmlSerializer> serializers = new();
+        private readonly ConcurrentDictionary<Type, XmlSerializer> serializers = new();
 
         public XmlPayloadSerializer(Assembly messagesAssembly) : base(messagesAssembly)
         {
@@ -39,14 +39,7 @@ namespace PointToPoint.Payload
 
         private XmlSerializer GetSerializer(Type messageType)
         {
-            if (serializers.TryGetValue(messageType, out var serializer))
-            {
-                return serializer;
-            }
-
-            serializer = new XmlSerializer(messageType);
-            serializers.Add(messageType, serializer);
-            return serializer;
+            return serializers.GetOrAdd(messageType, static type => new XmlSerializer(type));
         }
     }
 }

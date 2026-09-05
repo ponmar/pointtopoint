@@ -1,6 +1,8 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PointToPoint.Messenger.Tcp
 {
@@ -14,8 +16,6 @@ namespace PointToPoint.Messenger.Tcp
         }
 
         public bool NoDelay { set => socket.NoDelay = value; }
-        public TimeSpan ReceiveTimeout { set => socket.ReceiveTimeout = (int)value.TotalMilliseconds; }
-
         public bool Connected => socket.Connected;
 
         public void Shutdown(SocketShutdown how) => socket.Shutdown(how);
@@ -29,5 +29,25 @@ namespace PointToPoint.Messenger.Tcp
         public int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags) => socket.Receive(buffer, offset, size, socketFlags);
 
         public int Send(byte[] buffer, int offset, int size, SocketFlags socketFlags) => socket.Send(buffer, offset, size, socketFlags);
+
+        public Task<int> ReceiveAsync(byte[] buffer, int offset, int size, SocketFlags socketFlags, CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Task.FromCanceled<int>(cancellationToken);
+            }
+
+            return socket.ReceiveAsync(new ArraySegment<byte>(buffer, offset, size), socketFlags);
+        }
+
+        public Task<int> SendAsync(byte[] buffer, int offset, int size, SocketFlags socketFlags, CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Task.FromCanceled<int>(cancellationToken);
+            }
+
+            return socket.SendAsync(new ArraySegment<byte>(buffer, offset, size), socketFlags);
+        }
     }
 }

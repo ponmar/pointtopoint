@@ -1,7 +1,10 @@
 ﻿using PointToPoint.Payload;
 using PointToPoint.Payload.MsJson;
 using PointToPoint.Protocol;
+using System.Globalization;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PointToPointTests.Payload;
 
@@ -66,4 +69,35 @@ public class MsJsonPayloadSerializerTests
         Assert.Throws<PayloadDeserializeException>(() => serializer.PayloadToMessage(bytes, bytes.Length));
     }
 
+    [Fact]
+    public void SerializeDeserialize_UsesSerializerOptions()
+    {
+        // Arrange
+        var message = new MsJsonConverterPayload(10);
+        var serializer = new MsJsonPayloadSerializer(
+            typeof(MsJsonConverterPayload).Assembly,
+            new JsonSerializerOptions { Converters = { new MsJsonConverterPayloadJsonConverter() } });
+
+        // Act
+        var payload = serializer.MessageToPayload(message);
+        var deserializedMessage = serializer.PayloadToMessage(payload, payload.Length);
+
+        // Assert
+        Assert.Equal(message, deserializedMessage);
+    }
+}
+
+public record MsJsonConverterPayload(int Value);
+
+public sealed class MsJsonConverterPayloadJsonConverter : JsonConverter<MsJsonConverterPayload>
+{
+    public override MsJsonConverterPayload Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return new MsJsonConverterPayload(int.Parse(reader.GetString()!, CultureInfo.InvariantCulture));
+    }
+
+    public override void Write(Utf8JsonWriter writer, MsJsonConverterPayload value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.Value.ToString(CultureInfo.InvariantCulture));
+    }
 }

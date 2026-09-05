@@ -8,18 +8,18 @@ namespace PointToPoint.Messenger
     public interface IMessenger
     {
         /// <summary>
-        /// Called internally to start the sending and receiving communication threads
+        /// Called internally to start the sending and receiving communication loops
         /// </summary>
         void Start();
 
         /// <summary>
-        /// Indicate that the internal communication threads shall stop
+        /// Indicate that the internal communication loops shall stop
         /// </summary>
         /// This method should not be called from a disconnected-callback-thread.
         void Stop();
 
         /// <summary>
-        /// Check if the internal communication threads have stopped
+        /// Check if the internal communication loops have stopped
         /// </summary>
         /// <returns></returns>
         bool IsStopped();
@@ -31,10 +31,11 @@ namespace PointToPoint.Messenger
         void Send(object message);
 
         /// <summary>
-        /// Fired when disconnected
+        /// Fired when the connection is lost unexpectedly.
         /// </summary>
-        /// The event is fired from an internal communication thread.
-        event EventHandler<Exception?> Disconnected;
+        /// The event is fired from an internal communication loop. A normal <see cref="Stop"/> call
+        /// shuts down the messenger without raising this event.
+        event EventHandler<Exception> Disconnected;
 
         public TimeSpan KeepAliveSendInterval { get; set; }
 

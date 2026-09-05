@@ -1,4 +1,3 @@
-using System.Diagnostics.Tracing;
 using CommunityToolkit.Mvvm.Messaging;
 using FakeItEasy;
 using PointToPoint.MessageRouting.CommunityToolkitMvvm;
@@ -58,5 +57,46 @@ namespace PointToPointTests.MessageRouting
             // Act
             messageRouter.Update();
         }
+
+        [Fact]
+        public void Constructor_SenderWithoutPublicSend_Throws()
+        {
+            // Arrange
+            var sender = new ExplicitInterfaceOnlyMessenger();
+            var eventChannel = 1337;
+
+            // Act
+            var exception = Assert.Throws<ArgumentException>(() => new CommunityToolkitMvvmEventMessageRouter(sender, eventChannel));
+
+            // Assert
+            Assert.Contains("Could not find Send method", exception.Message);
+        }
+    }
+
+    internal sealed class ExplicitInterfaceOnlyMessenger : CommunityToolkit.Mvvm.Messaging.IMessenger
+    {
+        bool CommunityToolkit.Mvvm.Messaging.IMessenger.IsRegistered<TMessage, TToken>(object recipient, TToken token)
+            => throw new NotImplementedException();
+
+        void CommunityToolkit.Mvvm.Messaging.IMessenger.Register<TRecipient, TMessage, TToken>(TRecipient recipient, TToken token, MessageHandler<TRecipient, TMessage> handler)
+            => throw new NotImplementedException();
+
+        void CommunityToolkit.Mvvm.Messaging.IMessenger.UnregisterAll(object recipient)
+            => throw new NotImplementedException();
+
+        void CommunityToolkit.Mvvm.Messaging.IMessenger.UnregisterAll<TToken>(object recipient, TToken token)
+            => throw new NotImplementedException();
+
+        void CommunityToolkit.Mvvm.Messaging.IMessenger.Unregister<TMessage, TToken>(object recipient, TToken token)
+            => throw new NotImplementedException();
+
+        TMessage CommunityToolkit.Mvvm.Messaging.IMessenger.Send<TMessage, TToken>(TMessage message, TToken token)
+            => throw new NotImplementedException();
+
+        void CommunityToolkit.Mvvm.Messaging.IMessenger.Cleanup()
+            => throw new NotImplementedException();
+
+        void CommunityToolkit.Mvvm.Messaging.IMessenger.Reset()
+            => throw new NotImplementedException();
     }
 }
