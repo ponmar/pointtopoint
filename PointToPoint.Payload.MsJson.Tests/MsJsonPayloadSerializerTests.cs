@@ -1,12 +1,13 @@
 ﻿using PointToPoint.Payload;
 using PointToPoint.Payload.MsJson;
 using PointToPoint.Protocol;
+using PointToPointTests.Payload;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace PointToPointTests.Payload;
+namespace PointToPoint.Payload.MsJson.Tests;
 
 public class MsJsonPayloadSerializerTests
 {

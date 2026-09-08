@@ -10,10 +10,14 @@
     <Project Path="Examples/Chat/Protocol/Protocol.csproj" />
     <Project Path="Examples/Chat/Server/Server.csproj" />
   </Folder>
+  <Project Path="PointToPoint.MessageRouting.CommunityToolkitMvvm.Tests/PointToPoint.MessageRouting.CommunityToolkitMvvm.Tests.csproj" Id="821cb764-8a6a-4195-9dbe-56f58d2ac186" />
   <Project Path="PointToPoint.MessageRouting.CommunityToolkitMvvm/PointToPoint.MessageRouting.CommunityToolkitMvvm.csproj" />
+  <Project Path="PointToPoint.Payload.MsJson.Tests/PointToPoint.Payload.MsJson.Tests.csproj" Id="0e59d9d7-b67a-400e-910c-93daf4ebbb31" />
   <Project Path="PointToPoint.Payload.MsJson/PointToPoint.Payload.MsJson.csproj" />
+  <Project Path="PointToPoint.Payload.NewtonsoftJson.Tests/PointToPoint.Payload.NewtonsoftJson.Tests.csproj" Id="0f6fcaab-ea1b-4eda-8b0b-9381c56a4610" />
   <Project Path="PointToPoint.Payload.NewtonsoftJson/PointToPoint.Payload.NewtonsoftJson.csproj" />
+  <Project Path="PointToPoint.Payload.Yaml.Tests/PointToPoint.Payload.Yaml.Tests.csproj" Id="d8528942-e6ef-4154-9997-f855d223ce04" />
   <Project Path="PointToPoint.Payload.Yaml/PointToPoint.Payload.Yaml.csproj" />
   <Project Path="PointToPoint/PointToPoint.csproj" />
-  <Project Path="PointToPointTests/PointToPointTests.csproj" />
+  <Project Path="PointToPointTests/PointToPoint.Tests.csproj" />
 </Solution>
