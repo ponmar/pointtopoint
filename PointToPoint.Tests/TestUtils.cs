@@ -1,4 +1,4 @@
-﻿namespace PointToPointTests;
+namespace PointToPoint.Tests;
 
 internal class TestUtils
 {

@@ -3,7 +3,7 @@ using PointToPoint.MessageRouting;
 using PointToPoint.Messenger;
 using PointToPoint.Protocol;
 
-namespace PointToPointTests.MessageRouting
+namespace PointToPoint.Tests.MessageRouting
 {
     public class ReflectionMessageRouterTests
     {

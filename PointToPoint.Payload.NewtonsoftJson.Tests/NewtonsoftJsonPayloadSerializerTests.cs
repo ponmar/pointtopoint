@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace PointToPointTests.Payload;
+namespace PointToPoint.Tests.Payload;
 
 public class NewtonsoftJsonPayloadSerializerTests
 {

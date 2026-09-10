@@ -19,5 +19,5 @@
   <Project Path="PointToPoint.Payload.Yaml.Tests/PointToPoint.Payload.Yaml.Tests.csproj" Id="d8528942-e6ef-4154-9997-f855d223ce04" />
   <Project Path="PointToPoint.Payload.Yaml/PointToPoint.Payload.Yaml.csproj" />
   <Project Path="PointToPoint/PointToPoint.csproj" />
-  <Project Path="PointToPointTests/PointToPoint.Tests.csproj" />
+  <Project Path="PointToPoint.Tests/PointToPoint.Tests.csproj" />
 </Solution>

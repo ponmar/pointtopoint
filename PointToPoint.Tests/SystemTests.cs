@@ -1,4 +1,4 @@
-﻿using PointToPoint.MessageRouting;
+using PointToPoint.MessageRouting;
 using PointToPoint.MessageRouting.Factories;
 using PointToPoint.Messenger;
 using PointToPoint.Messenger.Tcp;
@@ -9,7 +9,7 @@ using PointToPoint.Payload.NewtonsoftJson;
 using PointToPoint.Protocol;
 using PointToPoint.Server.TcpListener;
 
-namespace PointToPointTests;
+namespace PointToPoint.Tests;
 
 public class SystemTests
 {

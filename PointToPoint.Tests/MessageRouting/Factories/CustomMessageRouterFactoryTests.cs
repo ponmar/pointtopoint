@@ -1,9 +1,9 @@
-﻿using FakeItEasy;
+using FakeItEasy;
 using PointToPoint.MessageRouting;
 using PointToPoint.MessageRouting.Factories;
 using PointToPoint.Server.ClientHandler;
 
-namespace PointToPointTests.MessageRouting.Factories;
+namespace PointToPoint.Tests.MessageRouting.Factories;
 
 public class CustomMessageRouterFactoryTests
 {

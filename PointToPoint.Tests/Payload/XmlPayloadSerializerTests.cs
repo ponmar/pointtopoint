@@ -1,9 +1,9 @@
-﻿using PointToPoint.Payload;
+using PointToPoint.Payload;
 using PointToPoint.Protocol;
 using System.Collections.Concurrent;
 using System.Text;
 
-namespace PointToPointTests.Payload;
+namespace PointToPoint.Tests.Payload;
 
 public class XmlPayloadSerializerTests
 {

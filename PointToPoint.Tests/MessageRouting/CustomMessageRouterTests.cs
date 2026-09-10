@@ -2,7 +2,7 @@ using FakeItEasy;
 using PointToPoint.MessageRouting;
 using PointToPoint.Messenger;
 
-namespace PointToPointTests.MessageRouting
+namespace PointToPoint.Tests.MessageRouting
 {
     public class CustomMessageRouterTests
     {

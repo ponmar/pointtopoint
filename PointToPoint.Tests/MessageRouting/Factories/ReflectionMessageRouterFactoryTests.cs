@@ -1,7 +1,7 @@
-﻿using PointToPoint.MessageRouting.Factories;
+using PointToPoint.MessageRouting.Factories;
 using PointToPoint.MessageRouting;
 
-namespace PointToPointTests.MessageRouting.Factories;
+namespace PointToPoint.Tests.MessageRouting.Factories;
 
 public class ReflectionMessageRouterFactoryTests
 {

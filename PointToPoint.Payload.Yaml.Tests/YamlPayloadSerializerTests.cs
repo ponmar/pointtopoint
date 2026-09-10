@@ -4,7 +4,7 @@ using PointToPoint.Protocol;
 using System.Text;
 using YamlDotNet.Core;
 
-namespace PointToPointTests.Payload;
+namespace PointToPoint.Tests.Payload;
 
 public class YamlPayloadSerializerTests
 {

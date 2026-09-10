@@ -1,6 +1,6 @@
-﻿using PointToPoint.Messenger;
+using PointToPoint.Messenger;
 
-namespace PointToPointTests.Messenger;
+namespace PointToPoint.Tests.Messenger;
 
 public class ByteBufferTests
 {

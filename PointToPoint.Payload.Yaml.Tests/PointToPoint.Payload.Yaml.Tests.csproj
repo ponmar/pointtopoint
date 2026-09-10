@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PointToPoint.Payload.Yaml\PointToPoint.Payload.Yaml.csproj" />
-    <ProjectReference Include="..\PointToPointTests\PointToPoint.Tests.csproj" />
+    <ProjectReference Include="..\PointToPoint.Tests\PointToPoint.Tests.csproj" />
     <ProjectReference Include="..\PointToPoint\PointToPoint.csproj" />
   </ItemGroup>
 

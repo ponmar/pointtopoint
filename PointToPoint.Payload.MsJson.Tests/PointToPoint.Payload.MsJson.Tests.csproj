@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PointToPointTests\PointToPoint.Tests.csproj" />
+    <ProjectReference Include="..\PointToPoint.Tests\PointToPoint.Tests.csproj" />
     <ProjectReference Include="..\PointToPoint\PointToPoint.csproj" />
   </ItemGroup>
 

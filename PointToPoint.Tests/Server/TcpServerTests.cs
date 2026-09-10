@@ -1,9 +1,9 @@
-﻿using FakeItEasy;
+using FakeItEasy;
 using PointToPoint.Server;
 using PointToPoint.Server.TcpListener;
 using System.Net.Sockets;
 
-namespace PointToPointTests.Server;
+namespace PointToPoint.Tests.Server;
 
 public class TcpServerTests
 {

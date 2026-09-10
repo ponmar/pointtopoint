@@ -2,7 +2,7 @@ using PointToPoint.Messenger.Tcp;
 using System.Net;
 using System.Net.Sockets;
 
-namespace PointToPointTests.Messenger.Tcp;
+namespace PointToPoint.Tests.Messenger.Tcp;
 
 public class SocketWrapperTests
 {

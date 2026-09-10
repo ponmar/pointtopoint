@@ -1,4 +1,4 @@
-﻿using FakeItEasy;
+using FakeItEasy;
 using PointToPoint.MessageRouting.Factories;
 using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
@@ -6,10 +6,8 @@ using PointToPoint.Server;
 using PointToPoint.Server.ClientHandler;
 using PointToPoint.Server.ClientHandler.Factories;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace PointToPointTests.Server;
+namespace PointToPoint.Tests.Server;
 
 public class ClientsHandlerTests
 {

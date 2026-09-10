@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PointToPoint.Payload.NewtonsoftJson\PointToPoint.Payload.NewtonsoftJson.csproj" />
-    <ProjectReference Include="..\PointToPointTests\PointToPoint.Tests.csproj" />
+    <ProjectReference Include="..\PointToPoint.Tests\PointToPoint.Tests.csproj" />
     <ProjectReference Include="..\PointToPoint\PointToPoint.csproj" />
   </ItemGroup>
 

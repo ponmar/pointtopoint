@@ -1,4 +1,4 @@
-﻿using FakeItEasy;
+using FakeItEasy;
 using PointToPoint.MessageRouting;
 using PointToPoint.Messenger.Tcp;
 using PointToPoint.Payload;
@@ -6,10 +6,8 @@ using PointToPoint.Protocol;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace PointToPointTests.Messenger.Tcp;
+namespace PointToPoint.Tests.Messenger.Tcp;
 
 public class TcpMessengerTests : IDisposable
 {
@@ -179,7 +177,7 @@ public class TcpMessengerTests : IDisposable
         messenger.Start();
 
         // Assert
-        Assert.True(disconnected.Wait(TimeSpan.FromSeconds(10)));
+        Assert.True(disconnected.Wait(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
         TestUtils.WaitForAssert(() => Assert.Equal(1, Volatile.Read(ref disconnectedCount)), TimeSpan.FromSeconds(2));
         Assert.Same(sendException, disconnectedException);
 
@@ -228,7 +226,7 @@ public class TcpMessengerTests : IDisposable
         messenger.Start();
 
         // Assert
-        Assert.True(disconnected.Wait(TimeSpan.FromSeconds(10)));
+        Assert.True(disconnected.Wait(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
         TestUtils.WaitForAssert(() => Assert.Equal(1, Volatile.Read(ref disconnectedCount)), TimeSpan.FromSeconds(2));
         Assert.Contains(disconnectedException, new[] { sendException, receiveException });
 
@@ -295,7 +293,7 @@ public class TcpMessengerTests : IDisposable
         messenger.Start();
 
         // Assert
-        Assert.True(disconnected.Wait(TimeSpan.FromSeconds(10)));
+        Assert.True(disconnected.Wait(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
         Assert.Same(deserializeException, disconnectedException);
 
         messenger.Stop();

@@ -1,4 +1,4 @@
-﻿namespace PointToPointTests.Payload;
+namespace PointToPoint.Tests.Payload;
 
 public record PayloadForTest(int Value, string Text);
 

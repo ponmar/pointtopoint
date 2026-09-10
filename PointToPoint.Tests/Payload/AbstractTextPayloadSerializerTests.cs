@@ -1,8 +1,8 @@
-﻿using PointToPoint.Payload;
+using PointToPoint.Payload;
 using System.Text;
 using System.Reflection;
 
-namespace PointToPointTests.Payload;
+namespace PointToPoint.Tests.Payload;
 
 public class TextPayloadSerializerForTest : AbstractTextPayloadSerializer
 {

@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using FakeItEasy;
-using PointToPointTests.MessageRouting;
-using Xunit;
+using PointToPoint.Tests.MessageRouting;
 
 namespace PointToPoint.MessageRouting.CommunityToolkitMvvm.Tests;
 

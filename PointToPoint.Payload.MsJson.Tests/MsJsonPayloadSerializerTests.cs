@@ -1,7 +1,5 @@
-﻿using PointToPoint.Payload;
-using PointToPoint.Payload.MsJson;
-using PointToPoint.Protocol;
-using PointToPointTests.Payload;
+﻿using PointToPoint.Protocol;
+using PointToPoint.Tests.Payload;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
@@ -62,7 +60,7 @@ public class MsJsonPayloadSerializerTests
     {
         // Arrange
         var protocolNamespace = typeof(PayloadForTest).Namespace!;
-        var assemblyName = "PointToPointTests";
+        var assemblyName = "PointToPoint.Tests";
         var bytes = Encoding.Unicode.GetBytes($"{protocolNamespace}.{nameof(PayloadForTest)},{assemblyName} ");
         var serializer = new MsJsonPayloadSerializer(typeof(PayloadForTest).Assembly);
 
